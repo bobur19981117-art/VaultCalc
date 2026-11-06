@@ -30,19 +30,8 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Setup Clean Android Platform
-        run: |
-          mkdir -p /tmp/custom_files
-          cp -r android/app/src/main/kotlin /tmp/custom_files/
-          cp -r android/app/src/main/res/xml /tmp/custom_files/
-          cp android/app/src/main/AndroidManifest.xml /tmp/custom_files/
-          rm -rf android
-          flutter create --platforms=android --org uz.qoriqchi .
-          mkdir -p android/app/src/main/kotlin/uz/qoriqchi/apkguard
-          cp -r /tmp/custom_files/kotlin/uz/qoriqchi/apkguard/* android/app/src/main/kotlin/uz/qoriqchi/apkguard/
-          mkdir -p android/app/src/main/res/xml
-          cp -r /tmp/custom_files/xml/* android/app/src/main/res/xml/
-          cp /tmp/custom_files/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+      - name: Grant Execute Permission to gradlew
+        run: chmod +x android/gradlew
 
       - name: Get Dependencies
         run: flutter pub get

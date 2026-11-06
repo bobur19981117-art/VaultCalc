@@ -46,10 +46,14 @@ object ApkAnalyzer {
         val results = mutableListOf<Map<String, Any?>>()
         val searchDirs = listOf(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            File(Environment.getExternalStorageDirectory(), "Download"),
             File(Environment.getExternalStorageDirectory(), "Download/Telegram"),
             File(Environment.getExternalStorageDirectory(), "Telegram/Telegram Documents"),
             File(Environment.getExternalStorageDirectory(), "Android/media/org.telegram.messenger/Telegram/Telegram Documents"),
+            File(Environment.getExternalStorageDirectory(), "Android/media/org.telegram.messenger/Telegram"),
+            File(Environment.getExternalStorageDirectory(), "Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Documents"),
             File(Environment.getExternalStorageDirectory(), "WhatsApp/Media/WhatsApp Documents"),
+            File(Environment.getExternalStorageDirectory(), "Documents"),
             Environment.getExternalStorageDirectory()
         )
 

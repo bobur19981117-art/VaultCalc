@@ -210,7 +210,7 @@ class _ApkDetailScreenState extends State<ApkDetailScreen> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                RiskBadge(riskLevel: apk.riskLevel, compact: true),
+                                RiskBadge(category: apk.category, compact: true),
                                 const SizedBox(width: 8),
                                 Text(
                                   'v${apk.versionName}',

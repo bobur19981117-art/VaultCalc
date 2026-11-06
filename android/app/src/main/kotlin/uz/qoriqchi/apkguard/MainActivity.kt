@@ -133,6 +133,14 @@ class MainActivity : FlutterActivity() {
                     }
                     result.success(isEnabled)
                 }
+                "isStorageManagePermissionGranted" -> {
+                    val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Environment.isExternalStorageManager()
+                    } else {
+                        true
+                    }
+                    result.success(granted)
+                }
                 "requestStorageManagePermission" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         if (!Environment.isExternalStorageManager()) {

@@ -102,6 +102,15 @@ class ApkScannerService {
     }
   }
 
+  static Future<bool> isStorageManagePermissionGranted() async {
+    try {
+      final bool? granted = await _channel.invokeMethod('isStorageManagePermissionGranted');
+      return granted ?? true;
+    } catch (_) {
+      return true;
+    }
+  }
+
   static Future<void> requestStorageManagePermission() async {
     try {
       await _channel.invokeMethod('requestStorageManagePermission');

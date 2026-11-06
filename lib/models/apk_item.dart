@@ -1,5 +1,67 @@
 import 'package:flutter/material.dart';
 
+enum ApkCategory {
+  xavfli,
+  shubhali,
+  xavfsiz;
+
+  static ApkCategory fromRiskLevel(RiskLevel level) {
+    switch (level) {
+      case RiskLevel.critical:
+        return ApkCategory.xavfli;
+      case RiskLevel.high:
+      case RiskLevel.medium:
+        return ApkCategory.shubhali;
+      case RiskLevel.safe:
+        return ApkCategory.xavfsiz;
+    }
+  }
+
+  String get labelUz {
+    switch (this) {
+      case ApkCategory.xavfli:
+        return "Xavfli";
+      case ApkCategory.shubhali:
+        return "Shubhali";
+      case ApkCategory.xavfsiz:
+        return "Xavfsiz";
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case ApkCategory.xavfli:
+        return const Color(0xFFFF3366);
+      case ApkCategory.shubhali:
+        return const Color(0xFFFFB300);
+      case ApkCategory.xavfsiz:
+        return const Color(0xFF00E676);
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case ApkCategory.xavfli:
+        return Icons.gpp_bad_rounded;
+      case ApkCategory.shubhali:
+        return Icons.warning_amber_rounded;
+      case ApkCategory.xavfsiz:
+        return Icons.verified_user_rounded;
+    }
+  }
+
+  String get descriptionUz {
+    switch (this) {
+      case ApkCategory.xavfli:
+        return "Bank, SMS, ekran va shaxsiy parollarni o'g'irlash xavfi mavjud.";
+      case ApkCategory.shubhali:
+        return "Kontaktlar, kamera yoki joylashuv kabi sezgir ruxsatlarni talab qiladi.";
+      case ApkCategory.xavfsiz:
+        return "Hech qanday zararli yoki shubhali ruxsatlar aniqlanmadi.";
+    }
+  }
+}
+
 enum RiskLevel {
   critical,
   high,
@@ -9,12 +71,15 @@ enum RiskLevel {
   static RiskLevel fromString(String val) {
     switch (val.toUpperCase()) {
       case 'CRITICAL':
+      case 'XAVFLI':
         return RiskLevel.critical;
       case 'HIGH':
+      case 'SHUBHALI':
         return RiskLevel.high;
       case 'MEDIUM':
         return RiskLevel.medium;
       case 'SAFE':
+      case 'XAVFSIZ':
       default:
         return RiskLevel.safe;
     }
@@ -23,11 +88,11 @@ enum RiskLevel {
   String get labelUz {
     switch (this) {
       case RiskLevel.critical:
-        return "O'TA XAVFLI";
+        return "XAVFLI";
       case RiskLevel.high:
-        return "YUQORI XAVF";
+        return "SHUBHALI";
       case RiskLevel.medium:
-        return "O'RTACHA XAVF";
+        return "SHUBHALI";
       case RiskLevel.safe:
         return "XAVFSIZ";
     }
@@ -38,7 +103,7 @@ enum RiskLevel {
       case RiskLevel.critical:
         return const Color(0xFFFF3366);
       case RiskLevel.high:
-        return const Color(0xFFFF9900);
+        return const Color(0xFFFFB300);
       case RiskLevel.medium:
         return const Color(0xFFFFCC00);
       case RiskLevel.safe:
@@ -51,9 +116,8 @@ enum RiskLevel {
       case RiskLevel.critical:
         return Icons.gpp_bad_rounded;
       case RiskLevel.high:
-        return Icons.warning_amber_rounded;
       case RiskLevel.medium:
-        return Icons.info_outline_rounded;
+        return Icons.warning_amber_rounded;
       case RiskLevel.safe:
         return Icons.verified_user_rounded;
     }
@@ -94,6 +158,16 @@ class ApkItem {
     required this.riskScore,
     this.iconBase64,
   });
+
+  ApkCategory get category {
+    if (criticalCount > 0 || riskLevel == RiskLevel.critical || riskScore >= 50) {
+      return ApkCategory.xavfli;
+    } else if (highCount > 0 || riskLevel == RiskLevel.high || riskLevel == RiskLevel.medium || riskScore >= 15) {
+      return ApkCategory.shubhali;
+    } else {
+      return ApkCategory.xavfsiz;
+    }
+  }
 
   factory ApkItem.fromMap(Map<dynamic, dynamic> map) {
     return ApkItem(
@@ -140,6 +214,16 @@ class InstalledAppAudit {
     required this.criticalPermissions,
     this.iconBase64,
   });
+
+  ApkCategory get category {
+    if (criticalPermissions.isNotEmpty) {
+      return ApkCategory.xavfli;
+    } else if (permissions.any((p) => p.contains("CONTACTS") || p.contains("CAMERA") || p.contains("RECORD_AUDIO") || p.contains("LOCATION"))) {
+      return ApkCategory.shubhali;
+    } else {
+      return ApkCategory.xavfsiz;
+    }
+  }
 
   factory InstalledAppAudit.fromMap(Map<dynamic, dynamic> map) {
     return InstalledAppAudit(

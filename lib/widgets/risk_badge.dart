@@ -2,18 +2,30 @@ import 'package:flutter/material.dart';
 import '../models/apk_item.dart';
 
 class RiskBadge extends StatelessWidget {
-  final RiskLevel riskLevel;
+  final ApkCategory category;
   final bool compact;
 
   const RiskBadge({
     super.key,
-    required this.riskLevel,
+    required this.category,
     this.compact = false,
   });
 
+  factory RiskBadge.fromRiskLevel({
+    Key? key,
+    required RiskLevel riskLevel,
+    bool compact = false,
+  }) {
+    return RiskBadge(
+      key: key,
+      category: ApkCategory.fromRiskLevel(riskLevel),
+      compact: compact,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final color = riskLevel.color;
+    final color = category.color;
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -28,10 +40,10 @@ class RiskBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(riskLevel.icon, size: compact ? 13 : 16, color: color),
+          Icon(category.icon, size: compact ? 13 : 16, color: color),
           const SizedBox(width: 5),
           Text(
-            riskLevel.labelUz,
+            category.labelUz.toUpperCase(),
             style: TextStyle(
               color: color,
               fontSize: compact ? 10 : 12,

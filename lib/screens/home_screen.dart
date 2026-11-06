@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = true;
   bool _isRealtimeActive = true;
+  bool _hasStoragePermission = true;
   List<ApkItem> _recentApks = [];
 
   @override
@@ -32,11 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = true);
     try {
       final running = await ApkScannerService.isWatcherRunning();
+      final hasPerm = await ApkScannerService.isStorageManagePermissionGranted();
       final apks = await ApkScannerService.scanAllApks();
 
       if (mounted) {
         setState(() {
           _isRealtimeActive = running;
+          _hasStoragePermission = hasPerm;
           _recentApks = apks;
           _isLoading = false;
         });
@@ -73,11 +76,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _openScanCategory(ApkCategory category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ScanScreen(initialCategory: category),
+      ),
+    ).then((_) => _initApp());
+  }
+
   @override
   Widget build(BuildContext context) {
-    final criticalCount = _recentApks.where((a) => a.riskLevel == RiskLevel.critical).length;
-    final highCount = _recentApks.where((a) => a.riskLevel == RiskLevel.high).length;
-    final safeCount = _recentApks.where((a) => a.riskLevel == RiskLevel.safe).length;
+    final xavfliCount = _recentApks.where((a) => a.category == ApkCategory.xavfli).length;
+    final shubhaliCount = _recentApks.where((a) => a.category == ApkCategory.shubhali).length;
+    final xavfsizCount = _recentApks.where((a) => a.category == ApkCategory.xavfsiz).length;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F1117),
@@ -120,12 +132,50 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  // Storage permission warning banner
+                  if (!_hasStoragePermission) ...[
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2E2211),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFFFB300).withOpacity(0.5)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.folder_special_rounded, color: Color(0xFFFFB300), size: 28),
+                          const SizedBox(width: 10),
+                          const Expanded(
+                            child: Text(
+                              'To\'liq skanerlash uchun «Barcha fayllarga ruxsat»ni yoqing',
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFFB300),
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () async {
+                              await ApkScannerService.requestStorageManagePermission();
+                              _initApp();
+                            },
+                            child: const Text('Ruxsat', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
                   // Shield Hero Card
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: criticalCount > 0
+                        colors: xavfliCount > 0
                             ? [
                                 const Color(0xFF3B1522),
                                 const Color(0xFF1B1F2A),
@@ -139,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: criticalCount > 0
+                        color: xavfliCount > 0
                             ? const Color(0xFFFF3366).withOpacity(0.4)
                             : const Color(0xFF00E676).withOpacity(0.3),
                       ),
@@ -148,21 +198,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         ShieldPulse(
                           isScanning: false,
-                          isDangerous: criticalCount > 0,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const ScanScreen()),
-                            ).then((_) => _initApp());
-                          },
+                          isDangerous: xavfliCount > 0,
+                          onTap: () => _openScanCategory(ApkCategory.xavfli),
                         ),
                         const SizedBox(height: 14),
                         Text(
-                          criticalCount > 0
-                              ? '$criticalCount ta xavfli APK aniqlandi!'
+                          xavfliCount > 0
+                              ? '$xavfliCount ta xavfli APK aniqlandi!'
                               : 'Qurilmangiz himoyalangan',
                           style: TextStyle(
-                            color: criticalCount > 0 ? const Color(0xFFFF3366) : const Color(0xFF00E676),
+                            color: xavfliCount > 0 ? const Color(0xFFFF3366) : const Color(0xFF00E676),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -170,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          criticalCount > 0
+                          xavfliCount > 0
                               ? 'Xavfli ilovalarni ochmang va zudlik bilan o\'chirib tashlang!'
                               : 'Real-vaqt monitoringi barcha yangi yuklamalarni nazorat qilmoqda.',
                           style: const TextStyle(color: Colors.white70, fontSize: 13),
@@ -187,12 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                               elevation: 4,
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => const ScanScreen()),
-                              ).then((_) => _initApp());
-                            },
+                            onPressed: () => _openScanCategory(ApkCategory.xavfli),
                             icon: const Icon(Icons.radar_rounded),
                             label: const Text(
                               'To\'liq skanerlashni boshlash',
@@ -211,25 +251,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1B1F2A),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.06)),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: Colors.white.withOpacity(0.04)),
                     ),
                     child: Row(
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF00E5FF).withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(12),
+                            color: (_isRealtimeActive ? const Color(0xFF00E676) : Colors.grey).withOpacity(0.12),
+                            shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.bolt_rounded, color: Color(0xFF00E5FF), size: 24),
+                          child: Icon(
+                            Icons.bolt_rounded,
+                            color: _isRealtimeActive ? const Color(0xFF00E676) : Colors.grey,
+                            size: 20,
+                          ),
                         ),
-                        const SizedBox(width: 14),
-                        const Expanded(
+                        const SizedBox(width: 12),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Real-vaqt himoyasi',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -237,84 +281,79 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 14,
                                 ),
                               ),
-                              SizedBox(height: 2),
                               Text(
-                                'Telegram va Downloads doimiy nazoratda',
-                                style: TextStyle(color: Colors.grey, fontSize: 11),
+                                _isRealtimeActive ? 'Faol nazorat qilinmoqda' : 'Himoya o\'chirilgan',
+                                style: TextStyle(
+                                  color: _isRealtimeActive ? const Color(0xFF00E676) : Colors.grey,
+                                  fontSize: 11,
+                                ),
                               ),
                             ],
                           ),
                         ),
                         Switch(
                           value: _isRealtimeActive,
-                          activeColor: const Color(0xFF00E676),
                           onChanged: _toggleRealtime,
+                          activeColor: const Color(0xFF00E676),
+                          activeTrackColor: const Color(0xFF00E676).withOpacity(0.3),
                         ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
-                  // Statistics Grid
-                  Row(
-                    children: [
-                      Expanded(
-                        child: StatCard(
-                          title: 'Jami APK',
-                          value: '${_recentApks.length}',
-                          icon: Icons.android_rounded,
-                          color: const Color(0xFF00E5FF),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: StatCard(
-                          title: 'Xavflilar',
-                          value: '$criticalCount',
-                          icon: Icons.gpp_bad_rounded,
-                          color: const Color(0xFFFF3366),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: StatCard(
-                          title: 'Shubhalilar',
-                          value: '$highCount',
-                          icon: Icons.warning_amber_rounded,
-                          color: const Color(0xFFFF9900),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: StatCard(
-                          title: 'Toza APK',
-                          value: '$safeCount',
-                          icon: Icons.verified_user_rounded,
-                          color: const Color(0xFF00E676),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Quick Action Menu
+                  // ==========================================
+                  // 3 TA KATEGORIYA KARTALARI (Xavfli, Shubhali, Xavfsiz)
+                  // ==========================================
                   const Text(
-                    'Himoya vositalari',
+                    'Kategoriyalar bo\'yicha tahlil',
                     style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
 
+                  Row(
+                    children: [
+                      Expanded(
+                        child: StatCard(
+                          title: 'Xavfli',
+                          value: '$xavfliCount ta',
+                          icon: Icons.gpp_bad_rounded,
+                          color: const Color(0xFFFF3366),
+                          onTap: () => _openScanCategory(ApkCategory.xavfli),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: StatCard(
+                          title: 'Shubhali',
+                          value: '$shubhaliCount ta',
+                          icon: Icons.warning_amber_rounded,
+                          color: const Color(0xFFFFB300),
+                          onTap: () => _openScanCategory(ApkCategory.shubhali),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: StatCard(
+                          title: 'Xavfsiz',
+                          value: '$xavfsizCount ta',
+                          icon: Icons.verified_user_rounded,
+                          color: const Color(0xFF00E676),
+                          onTap: () => _openScanCategory(ApkCategory.xavfsiz),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  // Action Buttons List
                   _buildActionCard(
                     title: 'O\'rnatilgan ilovalar auditi',
-                    subtitle: 'Qaysi ilova SMS o\'qiyotganini aniqlash',
-                    icon: Icons.security_update_good_rounded,
-                    color: const Color(0xFF4364F7),
+                    subtitle: 'Barcha o\'rnatilgan dasturlarning xavfsizlik darajasi',
+                    icon: Icons.apps_rounded,
+                    color: const Color(0xFF00E5FF),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -323,17 +362,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
+
                   _buildActionCard(
-                    title: 'O\'rnatish blokirovkasi (Accessibility)',
-                    subtitle: 'Ilovalar o\'rnatilishida ogohlantirish oynasi',
+                    title: 'O\'rnatishni ushlash (Accessibility)',
+                    subtitle: 'Shubhali ilova ochilganda avtomatik ogohlantirish',
                     icon: Icons.accessibility_new_rounded,
                     color: const Color(0xFFFF9900),
-                    onTap: () {
-                      ApkScannerService.openAccessibilitySettings();
-                    },
+                    onTap: () => ApkScannerService.openAccessibilitySettings(),
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 22),
 
                   // Recent APKs
                   Row(
@@ -344,12 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const ScanScreen()),
-                          ).then((_) => _initApp());
-                        },
+                        onPressed: () => _openScanCategory(ApkCategory.xavfli),
                         child: const Text('Barchasi', style: TextStyle(color: Color(0xFF00E5FF))),
                       ),
                     ],
@@ -371,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   else
-                    ..._recentApks.take(3).map((apk) => _buildApkTile(apk)),
+                    ..._recentApks.take(5).map((apk) => _buildApkTile(apk)),
 
                   const SizedBox(height: 24),
                 ],
@@ -418,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: const Color(0xFF1B1F2A),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: apk.riskLevel == RiskLevel.critical
+          color: apk.category == ApkCategory.xavfli
               ? const Color(0xFFFF3366).withOpacity(0.3)
               : Colors.white.withOpacity(0.04),
         ),
@@ -449,10 +482,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Image.memory(
                     base64Decode(apk.iconBase64!),
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Icon(Icons.android_rounded, color: apk.riskLevel.color),
+                    errorBuilder: (_, __, ___) => Icon(Icons.android_rounded, color: apk.category.color),
                   ),
                 )
-              : Icon(Icons.android_rounded, color: apk.riskLevel.color),
+              : Icon(Icons.android_rounded, color: apk.category.color),
         ),
         title: Text(
           apk.appName,
@@ -462,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         subtitle: Row(
           children: [
-            RiskBadge(riskLevel: apk.riskLevel, compact: true),
+            RiskBadge(category: apk.category, compact: true),
             const SizedBox(width: 8),
             Text(apk.formattedSize, style: const TextStyle(color: Colors.grey, fontSize: 11)),
           ],

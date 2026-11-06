@@ -37,7 +37,13 @@ jobs:
         run: flutter pub get
 
       - name: Build Release APK
-        run: flutter build apk --release --no-tree-shake-icons
+        run: |
+          if ! flutter build apk --release --no-tree-shake-icons > build_log.txt 2>&1; then
+            ERR_MSG=$(tail -n 20 build_log.txt | tr '\r\n' '  ')
+            echo "::error title=FlutterBuildFailure::$ERR_MSG"
+            cat build_log.txt | tail -n 80
+            exit 1
+          fi
 
       - name: Prepare Output APK
         run: |

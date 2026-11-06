@@ -30,13 +30,27 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Setup Clean Android Platform
+        run: |
+          mkdir -p /tmp/custom_files
+          cp -r android/app/src/main/kotlin /tmp/custom_files/
+          cp -r android/app/src/main/res/xml /tmp/custom_files/
+          cp android/app/src/main/AndroidManifest.xml /tmp/custom_files/
+          rm -rf android
+          flutter create --platforms=android --org uz.qoriqchi .
+          mkdir -p android/app/src/main/kotlin/uz/qoriqchi/apkguard
+          cp -r /tmp/custom_files/kotlin/uz/qoriqchi/apkguard/* android/app/src/main/kotlin/uz/qoriqchi/apkguard/
+          mkdir -p android/app/src/main/res/xml
+          cp -r /tmp/custom_files/xml/* android/app/src/main/res/xml/
+          cp /tmp/custom_files/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+
       - name: Get Dependencies
         run: flutter pub get
 
       - name: Build Release APK
         run: flutter build apk --release --no-tree-shake-icons
 
-      - name: Prepare APK
+      - name: Prepare Output APK
         run: |
           mkdir -p output
           cp build/app/outputs/flutter-apk/app-release.apk output/APK_Qoriqchi_Pro.apk
@@ -52,5 +66,5 @@ jobs:
         with:
           tag_name: v1.0.0-qoriqchi
           name: "APK Qo'riqchi Pro v1.0.0"
-          body: "🛡 APK Qo'riqchi Pro - Android qurilmalar uchun zamonaviy APK tahlilchi va xavfsizlik himoyachisi."
+          body: "🛡 APK Qo'riqchi Pro - Android qurilmalar uchun xavfsizlik va APK tahlilchi ilovasi."
           files: output/APK_Qoriqchi_Pro.apk

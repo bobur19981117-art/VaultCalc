@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: userbot-album-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: TELEGRAM_API_ID
+        value: "31163417"
+      - key: TELEGRAM_API_HASH
+        value: "ef7338d736ea3037bac99ffa66e6c577"
+      - key: ALBUM_CHANNEL_ID
+        value: "-1004342721043"
+      - key: TELEGRAM_STRING_SESSION
+        sync: false

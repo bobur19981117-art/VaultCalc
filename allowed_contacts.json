@@ -1,0 +1,42 @@
+{
+  "allowed_users": [],
+  "auto_reply": false,
+  "custom_persona": "",
+  "album_settings": {
+    "enabled": true,
+    "channel_id": -1004342721043,
+    "allowed_users": [
+      {
+        "id": 8577897810,
+        "name": "Bobur Men",
+        "username": "Bobur19981117"
+      },
+      {
+        "id": 7531752464,
+        "name": "❤️❤️❤️",
+        "username": ""
+      },
+      {
+        "id": 7820432591,
+        "name": "Onam",
+        "username": ""
+      },
+      {
+        "id": 8909974827,
+        "name": "Baxodir",
+        "username": "bahodir7975"
+      },
+      {
+        "id": 1041716231,
+        "name": "OTABEK",
+        "username": ""
+      },
+      {
+        "id": 6377510094,
+        "name": "Otajonim",
+        "username": ""
+      }
+    ],
+    "include_all_allowed": false
+  }
+}

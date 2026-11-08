@@ -1,0 +1,6 @@
+.env
+session_secret.txt
+__pycache__/
+*.session
+*.session-journal
+temp_downloads/

@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import time
 import asyncio
@@ -22,8 +23,21 @@ logger = logging.getLogger(__name__)
 # ==========================================================
 # SOZLAMALAR — faqat environment variable'dan o'qiladi
 # ==========================================================
-API_ID = int(os.environ.get("TELEGRAM_API_ID", "31163417"))
-API_HASH = os.environ.get("TELEGRAM_API_HASH", "ef7338d736ea3037bac99ffa66e6c577")
+if "TELEGRAM_API_ID" not in os.environ or not os.environ["TELEGRAM_API_ID"].strip():
+    logger.critical("TELEGRAM_API_ID environment variable o'rnatilmagan")
+    sys.exit(1)
+
+if "TELEGRAM_API_HASH" not in os.environ or not os.environ["TELEGRAM_API_HASH"].strip():
+    logger.critical("TELEGRAM_API_HASH environment variable o'rnatilmagan")
+    sys.exit(1)
+
+try:
+    API_ID = int(os.environ["TELEGRAM_API_ID"])
+except ValueError:
+    logger.critical("TELEGRAM_API_ID butun son (int) bo'lishi kerak")
+    sys.exit(1)
+
+API_HASH = os.environ["TELEGRAM_API_HASH"].strip()
 SESSION_STRING = os.environ.get("TELEGRAM_STRING_SESSION", "").strip()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

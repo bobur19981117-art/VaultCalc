@@ -7,10 +7,12 @@ services:
     startCommand: python main.py
     envVars:
       - key: TELEGRAM_API_ID
-        value: "31163417"
+        sync: false
       - key: TELEGRAM_API_HASH
-        value: "ef7338d736ea3037bac99ffa66e6c577"
+        sync: false
       - key: ALBUM_CHANNEL_ID
         value: "-1004342721043"
       - key: TELEGRAM_STRING_SESSION
+        sync: false
+      - key: RENDER_EXTERNAL_URL
         sync: false

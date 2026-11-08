@@ -26,9 +26,9 @@ Ushbu loyiha shaxsiy Telegram lichkangizga kelgan video xabarlar (krujok), rasml
    - **Start Command:** `python main.py`
    - **Plan:** `Free` (0$/oy)
 5. **Environment Variables** (o'zgaruvchilar) bo'limiga quyidagilarni kiriting:
-   - `TELEGRAM_STRING_SESSION`: `session_secret.txt` faylidagi maxfiy kalit
-   - `TELEGRAM_API_ID`: `31163417`
-   - `TELEGRAM_API_HASH`: `ef7338d736ea3037bac99ffa66e6c577`
+   - `TELEGRAM_STRING_SESSION`: Telegram session maxfiy kaliti
+   - `TELEGRAM_API_ID`: Telegram API ID raqami
+   - `TELEGRAM_API_HASH`: Telegram API Hash satri
    - `ALBUM_CHANNEL_ID`: `-1004342721043`
 6. **"Deploy Web Service"** tugmasini bosing!
 

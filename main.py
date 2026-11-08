@@ -23,6 +23,7 @@ import subprocess
 from datetime import datetime
 from html import escape as html_escape
 
+from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -693,6 +694,9 @@ def handle_message(message):
 # --- Telegram Polling Loop ---
 
 def telegram_polling_loop():
+    if not BOT_TOKEN:
+        logger.error("BOT_TOKEN is not configured! Telegram polling skipped.")
+        return
     logger.info("Starting Telegram Bot Polling (24/7 Cloud)...")
     # Delete webhook if set
     try:
@@ -720,14 +724,14 @@ def telegram_polling_loop():
 
 # --- FastAPI Web Service (for Render keep-alive & health check) ---
 
-app = FastAPI(title="@boburchat_bot Cloud Service")
-
-@app.on_event("startup")
-def startup_event():
-    # Start polling loop in daemon background thread
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     t = threading.Thread(target=telegram_polling_loop, daemon=True)
     t.start()
-    logger.info(f"Bot polling thread started. HTTP Web server listening on port {PORT}")
+    logger.info("Bot polling thread started in background.")
+    yield
+
+app = FastAPI(title="@boburchat_bot Cloud Service", lifespan=lifespan)
 
 @app.get("/")
 def index():
@@ -743,13 +747,14 @@ def index():
         ]
     }
 
-@app.get("/health")
-def health():
-    return {
+@app.api_route("/health", methods=["GET", "HEAD"])
+def health(request: Request):
+    return JSONResponse(content={
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat() + "Z",
-        "bot_online": True
-    }
+        "bot_online": bool(BOT_TOKEN)
+    })
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=PORT, log_level="info")
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")

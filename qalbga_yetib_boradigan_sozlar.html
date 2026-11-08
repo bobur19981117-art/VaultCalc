@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALBGA YETIB BORADIGAN SO‘ZLAR — Hayot, Mehr, Sabr va O‘zlikni Anglash Falsafasi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0f12;
+            --bg-card: #15181e;
+            --bg-card-hover: #1c2028;
+            --gold-primary: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-dark: #997d22;
+            --text-main: #e8e6e3;
+            --text-muted: #9ba1a6;
+            --accent-border: rgba(212, 175, 55, 0.25);
+            --font-display: 'Cinzel', serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 18px;
+            line-height: 1.85;
+            letter-spacing: 0.2px;
+            overflow-x: hidden;
+        }
+
+        /* Subtle gold grain pattern overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(13, 15, 18, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--accent-border);
+            z-index: 999;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            color: var(--gold-primary);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        /* Cover Page */
+        .cover-page {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px solid var(--accent-border);
+            padding: 60px 30px;
+            margin-bottom: 80px;
+            position: relative;
+            background: linear-gradient(180deg, rgba(21, 24, 30, 0.8) 0%, rgba(13, 15, 18, 0.95) 100%);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border-radius: 4px;
+        }
+
+        .cover-border-inner {
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            pointer-events: none;
+        }
+
+        .ornament {
+            color: var(--gold-primary);
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            letter-spacing: 6px;
+        }
+
+        .cover-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            color: var(--gold-primary);
+            letter-spacing: 4px;
+            line-height: 1.25;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .cover-subtitle {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            color: var(--gold-light);
+            font-style: italic;
+            max-width: 650px;
+            margin-bottom: 40px;
+        }
+
+        .cover-divider {
+            width: 140px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            margin: 25px auto;
+        }
+
+        .cover-motto {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            margin-bottom: 45px;
+            font-style: italic;
+        }
+
+        .cover-author {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            color: var(--text-main);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cover-meta {
+            font-size: 0.9rem;
+            color: var(--gold-dark);
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Section Styling */
+        .section-block {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-border);
+            padding: 50px 40px;
+            margin-bottom: 60px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-num {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--gold-primary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            color: var(--gold-light);
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* Epigraph */
+        .epigraph-box {
+            border-left: 3px solid var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
+            padding: 24px 30px;
+            margin: 30px 0 40px;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Story Box */
+        .story-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            border-radius: 4px;
+            padding: 30px 35px;
+            margin: 35px 0;
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            color: var(--gold-primary);
+            margin-bottom: 18px;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.25);
+            padding-bottom: 10px;
+        }
+
+        /* Quotes Showcase */
+        .quotes-list {
+            list-style: none;
+            margin: 35px 0;
+        }
+
+        .quote-item {
+            position: relative;
+            background: rgba(212, 175, 55, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 18px 24px 18px 45px;
+            margin-bottom: 16px;
+            border-radius: 3px;
+            font-style: italic;
+            color: var(--text-main);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .quote-item:hover {
+            transform: translateX(4px);
+            border-color: var(--gold-primary);
+        }
+
+        .quote-item::before {
+            content: "“";
+            position: absolute;
+            left: 16px;
+            top: 8px;
+            font-size: 2.2rem;
+            color: var(--gold-primary);
+            font-family: var(--font-heading);
+            line-height: 1;
+        }
+
+        /* Deep Question Callout */
+        .question-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(13, 15, 18, 0.9) 100%);
+            border: 1px solid var(--gold-primary);
+            border-radius: 4px;
+            padding: 26px 30px;
+            margin: 35px 0;
+            text-align: center;
+        }
+
+        .question-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: #fff;
+            font-style: italic;
+        }
+
+        /* Practical Conclusion */
+        .conclusion-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 2px solid var(--gold-dark);
+            padding: 24px 28px;
+            margin-top: 35px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .conclusion-title {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Table of Contents */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .toc-card {
+            background: rgba(212, 175, 55, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 16px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toc-card:hover {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+        }
+
+        .toc-num {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            color: var(--gold-primary);
+            min-width: 38px;
+            font-weight: 700;
+        }
+
+        .toc-info h4 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            color: var(--gold-light);
+            margin-bottom: 4px;
+        }
+
+        .toc-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Top 100 Quotes Carousel / Grid */
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .quote-card-100 {
+            background: rgba(21, 24, 30, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            padding: 22px 24px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            transition: border-color 0.3s;
+        }
+
+        .quote-card-100:hover {
+            border-color: var(--gold-primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid var(--accent-border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer .gold {
+            color: var(--gold-primary);
+        }
+
+        /* Print Style */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #222 !important;
+                font-size: 12pt;
+                line-height: 1.6;
+            }
+            .navbar, footer, .toc-grid {
+                display: none !important;
+            }
+            .cover-page, .section-block {
+                border: none !important;
+                background: none !important;
+                box-shadow: none !important;
+                page-break-after: always;
+                padding: 0 !important;
+                margin-bottom: 30pt !important;
+            }
+            .cover-title, .section-title, .ornament, .story-header {
+                color: #000 !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px 14px; }
+            .section-block { padding: 30px 20px; }
+            .toc-grid, .quotes-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#cover" class="nav-logo">QALB SO‘ZLARI</a>
+        <div class="nav-links">
+            <a href="#mundarija">Mundarija</a>
+            <a href="#muallif">Muallifdan</a>
+            <a href="#bob-1">O‘qish</a>
+            <a href="#iqtiboslar-100">100 Iqtibos</a>
+            <a href="#yakuniy-xat">Yakun</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Cover Page -->
+        <header id="cover" class="cover-page">
+            <div class="cover-border-inner"></div>
+            <div class="ornament">❖ ❖ ❖</div>
+            <h1 class="cover-title">QALBGA YETIB BORADIGAN SO‘ZLAR</h1>
+            <p class="cover-subtitle">Hayot, Mehr, Sabr va O‘zlikni Anglash Falsafasi</p>
+            <div class="cover-divider"></div>
+            <p class="cover-motto">«Bu shunchaki o‘qiladigan kitob emas. Bu — inson o‘z qalbini tinglashni boshlaydigan kitob».</p>
+            <div class="cover-author">Boburjon & AI Antigravity Hamkorligi</div>
+            <div class="cover-meta">2026 • Maxsus Premium Nashr</div>
+            <div class="ornament" style="margin-top: 25px;">❖ ❖ ❖</div>
+        </header>
+
+        <!-- Author's Note -->
+        <section id="muallif" class="section-block">
+            <div class="section-header">
+                <div class="section-num">Kirish So‘zi</div>
+                <h2 class="section-title">Muallifdan Ko‘ngil Xati</h2>
+                <div class="cover-divider"></div>
+            </div>
+            <div style="white-space: pre-line; font-size: 1.1rem; line-height: 2;">
+                Aziz Qadrdonim!
+
+Qo‘lingizdagi ushbu satrlar tasodifan sizning nigohingizga tushmadi. Hayotda hech bir uchrashuv, hech bir sahifa va hech bir so‘z bejizga ro‘para kelmaydi. Ehtimol, ayni damda qalbingiz charchagandir, ehtimol, hayotning shiddatli oqimida o‘zingizni yo‘qotib qo‘ygandek his qilayotgandirsiz, yoki shunchaki bir og‘iz iliq, rostgo‘y va dardkash so‘zga muhtojdirsiz.
+
+Biz shovqinli dunyoda yashayapmiz. Hamma gapiradi, lekin kamdan-kam inson tinglaydi. Hamma shoshadi, lekin qayerga ketayotganini ko‘pchilik bilmaydi. Tashqi dunyoda baland binolar, hashamatli mashinalar va ulkan boyliklar qad rostlagani sari, insonning ichki olami xarobazorga aylanib borayotgandek.
+
+Ushbu kitob sizga aql o‘rgatish uchun yozilmadi. Bu kitob — sukunatda siz bilan yonma-yon o‘tirib, ko‘zlaringizga qarab gaplashadigan sirdosh do‘st. Bu sahifalarda balandparvoz motivatsion shiorlar yo‘q. Unda hayotning achchiq, ammo qutqaruvchi haqiqatlari, qalbimizni yorituvchi mehr chirog‘i va yo‘qotishlardan keyin ham qayta oyoqqa turishga kuch beradigan umid nuri bor.
+
+Har bir sahifani shoshilmasdan o‘qing. Agar biror jumla yuragingizni zirillatsa, kitobni bir lahzaga yoping va chuqur nafas oling. O‘z qalbingiz bilan yolg‘iz qoling. Chunki eng buyuk mo‘jizalar tashqarida emas, aynan sizning ichingizda yashiringan.
+
+Qalbingizga oqib kirayotgan har bir so‘z nurga aylansin.
+
+— Muallifdan
+            </div>
+        </section>
+
+        <!-- Table of Contents -->
+        <section id="mundarija" class="section-block">
+            <div class="section-header">
+                <div class="section-num">Reja & Bosqichlar</div>
+                <h2 class="section-title">Mundarija</h2>
+                <p class="section-subtitle">Qalb safari uchun 20 ta ma'naviy bekat</p>
+                <div class="cover-divider"></div>
+            </div>
+            <div class="toc-grid">
+                
+        <a href="#bob-1" class="toc-card">
+            <div class="toc-num">01</div>
+            <div class="toc-info">
+                <h4>HAYOTNING ASL MAZMUNI</h4>
+                <p>Nega bu dunyoga keldik va qayerga ketyapmiz?</p>
+            </div>
+        </a>
+        
+        <a href="#bob-2" class="toc-card">
+            <div class="toc-num">02</div>
+            <div class="toc-info">
+                <h4>VAQTNING QADRI VA QAYTARILMASLIGI</h4>
+                <p>Har bir soniya — o‘tib ketgan umr parchasi</p>
+            </div>
+        </a>
+        
+        <a href="#bob-3" class="toc-card">
+            <div class="toc-num">03</div>
+            <div class="toc-info">
+                <h4>OTA-ONA — TIRIK JANNATING VA BEMINNAT SOYABON</h4>
+                <p>Dunyodagi eng buyuk muhabbat va eng og‘ir yo‘qotish haqida</p>
+            </div>
+        </a>
+        
+        <a href="#bob-4" class="toc-card">
+            <div class="toc-num">04</div>
+            <div class="toc-info">
+                <h4>INSONIYLIK, MEHR VA OQIBAT</h4>
+                <p>Qalbning eng go‘zal libosi — bu samimiy mehrdir</p>
+            </div>
+        </a>
+        
+        <a href="#bob-5" class="toc-card">
+            <div class="toc-num">05</div>
+            <div class="toc-info">
+                <h4>YOLG‘IZLIK VA SUKUTNING MA’NOSI</h4>
+                <p>O‘zing bilan uchrashuv va ichki sukunat kuchi</p>
+            </div>
+        </a>
+        
+        <a href="#bob-6" class="toc-card">
+            <div class="toc-num">06</div>
+            <div class="toc-info">
+                <h4>ORZULAR VA MAQSADLAR SARI INTILISH</h4>
+                <p>Ichki alanga, qo‘rquvni yengish va jasorat yo‘li</p>
+            </div>
+        </a>
+        
+        <a href="#bob-7" class="toc-card">
+            <div class="toc-num">07</div>
+            <div class="toc-info">
+                <h4>MUAFFAQIYATSIZLIKDAN SABOQ OLISH</h4>
+                <p>Yiqilish bu mag‘lubiyat emas, balki qayta kuchliroq turish darsidir</p>
+            </div>
+        </a>
+        
+        <a href="#bob-8" class="toc-card">
+            <div class="toc-num">08</div>
+            <div class="toc-info">
+                <h4>SABR, SHUKR VA MATONAT</h4>
+                <p>Qorong‘u tun ortidagi nurlar va minnatdor qalb qudrati</p>
+            </div>
+        </a>
+        
+        <a href="#bob-9" class="toc-card">
+            <div class="toc-num">09</div>
+            <div class="toc-info">
+                <h4>DO‘STLIK, ISHONCH VA XIYONAT SABOQLARI</h4>
+                <p>Qalb eshigini kimga ochish kerak va xiyonatdan qanday tuzalish mumkin?</p>
+            </div>
+        </a>
+        
+        <a href="#bob-10" class="toc-card">
+            <div class="toc-num">10</div>
+            <div class="toc-info">
+                <h4>PUL, BOYLIQ VA HAQIQIY BAXT</h4>
+                <p>Mol-dunyo to‘ldira olmaydigan qalb bo‘shlig‘i va haqiqiy boylik</p>
+            </div>
+        </a>
+        
+        <a href="#bob-11" class="toc-card">
+            <div class="toc-num">11</div>
+            <div class="toc-info">
+                <h4>O‘ZINI ANGLASH VA O‘Z USTIDA ISHLASH</h4>
+                <p>Eng buyuk g‘alaba — o‘z nafsi va zaifliklari ustidan qozonilgan g‘alabadir</p>
+            </div>
+        </a>
+        
+        <a href="#bob-12" class="toc-card">
+            <div class="toc-num">12</div>
+            <div class="toc-info">
+                <h4>KECHIRIMLILIK VA QALB XOTIRJAMLIGI</h4>
+                <p>Ginalar zanjirini uzish va o‘z qalbingni ozodlikka chiqarish</p>
+            </div>
+        </a>
+        
+        <a href="#bob-13" class="toc-card">
+            <div class="toc-num">13</div>
+            <div class="toc-info">
+                <h4>BUGUNGI KUNNING QADRI</h4>
+                <p>Ayni lahzada yashash va hozirgi damning mo‘jizasini his qilish</p>
+            </div>
+        </a>
+        
+        <a href="#bob-14" class="toc-card">
+            <div class="toc-num">14</div>
+            <div class="toc-info">
+                <h4>O‘Z QADR-QIMMATING VA ICHKI ISHONCH</h4>
+                <p>Birovning bahosiga qaram bo‘lmaslik va o‘zligingni kashf etish</p>
+            </div>
+        </a>
+        
+        <a href="#bob-15" class="toc-card">
+            <div class="toc-num">15</div>
+            <div class="toc-info">
+                <h4>QIYINCHILIKLAR VA QALB SINOVLARI</h4>
+                <p>Olmos bosim ostida yaraladi va sinovlar bizni toblaydi</p>
+            </div>
+        </a>
+        
+        <a href="#bob-16" class="toc-card">
+            <div class="toc-num">16</div>
+            <div class="toc-info">
+                <h4>ICHKI OVOZ VA QALB KO‘ZI</h4>
+                <p>Aql tahlil qilganda, qalb allaqachon haqiqatni biladi</p>
+            </div>
+        </a>
+        
+        <a href="#bob-17" class="toc-card">
+            <div class="toc-num">17</div>
+            <div class="toc-info">
+                <h4>SEVGI, MEHR-MUHABBAT VA MINNATDORLIK</h4>
+                <p>Koinotni ushlab turgan qudrat va qalbni tiriltiruvchi nur</p>
+            </div>
+        </a>
+        
+        <a href="#bob-18" class="toc-card">
+            <div class="toc-num">18</div>
+            <div class="toc-info">
+                <h4>MAS’ULIYAT VA HAYOT TANLOVLARI</h4>
+                <p>Taqdiringni o‘z qo‘ling bilan yarat va oqibatlardan qo‘rqma</p>
+            </div>
+        </a>
+        
+        <a href="#bob-19" class="toc-card">
+            <div class="toc-num">19</div>
+            <div class="toc-info">
+                <h4>ICHKI XOTIRJAMLIK VA SOKINLIK SAN’ATI</h4>
+                <p>Shovqinli dunyoda qalb xotirjamligini saqlash sirlari</p>
+            </div>
+        </a>
+        
+        <a href="#bob-20" class="toc-card">
+            <div class="toc-num">20</div>
+            <div class="toc-info">
+                <h4>UMID VA YANGI TONG</h4>
+                <p>Har doim yangidan boshlash mumkin va hech qachon kech emas</p>
+            </div>
+        </a>
+        
+            </div>
+        </section>
+
+        <!-- 20 Chapters -->
+        
+        <article id="bob-1" class="section-block">
+            <div class="section-header">
+                <div class="section-num">01-BOB</div>
+                <h2 class="section-title">1-BOB: HAYOTNING ASL MAZMUNI</h2>
+                <p class="section-subtitle">Nega bu dunyoga keldik va qayerga ketyapmiz?</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Inson tirik ekanini nafas olayotganida emas, boshqa bir qalbning og‘rig‘ini his qila olganida anglaydi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Dunyoda hamma narsaning narxi bor, ammo hamma narsaning ham qadri yo‘q. Biz ertalab uyg‘onamiz, shoshib ko‘chaga chiqamiz, pul topamiz, reja tuzamiz, charchaymiz va yana uxlaymiz. Yillar shu zaylda bir zumda o‘tib ketadi. Bir kuni esa sochga oq tushib, qad bukilganda, deraza yonida o‘tirib o‘zimizga beixtiyor savol beramiz: «Men rostdan ham yashadimmi yoki shunchaki mavjud bo‘ldimmi?»
+
+Hayotning asl mazmuni — ko‘proq to‘plashda emas, ko‘proq anglashda. U katta binolarda emas, kichik bir samimiy tabassumda yashiringan. Mazmun — tashqi olam bilan kurashishda emas, ichki dunyongda nurni yoqishda.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Oqsoq chol va bog‘dagi ko‘chat</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir kuni shahar chetidagi qishloqda yashovchi to‘qson yoshli oqsoq chol hovlisiga yong‘oq ko‘chati ekayotgan edi. Yo‘ldan o‘tib ketayotgan bir yosh savdogar to‘xtab, unga kulimsirab qarab dedi:
+— Otaxon, nega bu qadar mashaqqat chekyapsiz? Axir bu yong‘oq hosil berguncha o‘ttiz-qirq yil o‘tadi. Siz esa keksa ekansiz, uning mevasini yeyish sizga nasib etmaydi-ku?
+
+Keksa chol peshonasidagi terni artib, ko‘chat ildiziga muloyimlik bilan tuproq tortarkan, yigitga qarab shunday dedi:
+— O‘g‘lim, men bolaligimda yegan yong‘oqlarni men ekmagan edim. Ularni mendan oldin o‘tganlar ekib ketishgan edi. Men butun umr birovlarning mevasidan bahramand bo‘lib yashadim. Endi esa mening navbatim. Hayotning ma’nosi faqat o‘zing yeyishingda emas, orqangda keladiganlar uchun ham soya va meva qoldira olishingdadir.
+
+Bu javob yosh savdogarning butun fikrini ostin-ustun qilib yubordi. U o‘z boyliklari orasida ilk bor o‘zini qashshoq his qildi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Ko‘pchilik insonlar baxtni qidirish bilan butun umrini sovuradilar. Ular o‘ylashadiki, baxt qachondir keladi: diplom olganda, katta uy qurilganda, mashina sotib olinganda yoki mansabga erishilganda. Ammo o‘sha kutilgan kun kelgach, qalb yana bo‘shab qoladi. 
+
+Chunki baxt — manzil emas, u sayohatning o‘zidir. Baxt — ertalab sog‘-omon ko‘zingni ochganingda, toza havoni ichingga tortganingda, sevikli insoningning ko‘zlariga qaraganingda his qilinadigan ayni damdagi holatdir.
+
+Agar sen hayotning mazmunini faqat moddiyatdan qidirsang, uning tubi yo‘qligini ko‘rasan. Dunyodagi barcha daryolar dengizga quyiladi, ammo dengiz hech qachon to‘lmaydi. Insonning nafsi ham shunday. Faqat qanoat, minnatdorlik va ezgulik urug‘ini ekish orqaligina inson o‘z qalbida to‘liqlik hissini topadi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Hayot — biz reja tuzayotganimizda yonimizdan o‘tib ketayotgan lahzalarning yig‘indisidir.</li><li class="quote-item">Dunyodan nima olganing emas, o‘zingdan keyin qanday iz qoldirganing sening haqiqiy bahongdir.</li><li class="quote-item">Har bir tong senga berilgan ikkinchi imkoniyatdir. Kechagi xatolar bugungi kuningni o‘g‘irlashiga yo‘l qo‘yma.</li><li class="quote-item">Mazmunli yashash — ko‘p yil yashash degani emas, balki har bir yilni qalb bilan to‘ldirish demakdir.</li><li class="quote-item">Inson nima uchun yashayotganini bilsa, har qanday qiyinchilikka chidashga kuchi yetadi.</li><li class="quote-item">Eng katta donolik — oddiy narsalardan mo‘jiza ko‘ra bilishdir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Agar bugungi kuning umringdagi so‘nggi kun bo‘lganida, uni ayni damda qilayotgan ishing bilan o‘tkazgan bo‘larmiding?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Hayotning asl mazmuni buyuk ishlarda emas, balki buyuk muhabbat bilan qilingan kichik ezgu amallarda yashaydi. Bugunoq bir insonning qalbiga quvonch ulash, shunda hayoting ma’noga to‘ladi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-2" class="section-block">
+            <div class="section-header">
+                <div class="section-num">02-BOB</div>
+                <h2 class="section-title">2-BOB: VAQTNING QADRI VA QAYTARILMASLIGI</h2>
+                <p class="section-subtitle">Har bir soniya — o‘tib ketgan umr parchasi</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Biz vaqtni o‘ldiryapmiz deb o‘ylaymiz, aslida esa vaqt bizni jimgina yemirib bormoqda».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Soat millarining har bir chertishi — bu koinotning bizga bergan ogohlantirishidir. Taq-tuq... Bir soniya ketdi. Va u hech qachon, hech qanday boylik evaziga qaytib kelmaydi. Tarixdagi eng qudratli shohlar ham, dunyoning eng boy milliarderlari ham o‘lim to‘shagida yotganida butun boyligini yana bir nafas, yana bitta kun yashash uchun berishga tayyor bo‘lishgan. Ammo vaqt hech qachon sotilmagan.
+
+Biz esa ko‘pincha vaqtni go‘yo u cheksizdek, oldimizda yuzlab umrlar bordek behuda sovuramiz: g‘iybatlarga, keraksiz bahslarga, ijtimoiy tarmoqlardagi soxta hayotlarni kuzatishga va 'ertaga qilaman' degan illyuziyaga sarflaymiz.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Bankdagi g‘aroyib hisob raqami</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Tasavvur qiling, har tong sizning nomingizga ochilgan hisob raqamiga aynan 86 400 dollar mablag‘ tushadi. Ammo bitta qat'iy qoida bor: siz bu pullarni jamg‘arib qo‘ya olmaysiz. Kun oxirida ishlatilmay qolgan har bir tiyin yonib ketadi, hisobingiz esa nolga tenglashadi. Ertasi kuni ertalab yana 86 400 dollar beriladi.
+
+Siz nima qilardingiz? Albatta, har bir sentdan unumli foydalanishga, o‘zingiz va yaqinlaringiz uchun eng yaxshi narsalarga sarflashga intilardingiz, to‘g‘rimi?
+
+Bunday hisob raqami har birimizda bor. Uning nomi — VAQT! Har kuni tongda Parvardigor sizga aynan 86 400 soniyani hadya qiladi. Kun botganda esa ishlatilmagan, g‘aflatda o‘tkazilgan har bir soniya manguga yo‘qoladi. U ertangi kunga o‘tmaydi. Undan qarz olib bo‘lmaydi. Siz bugungi kuningizni nimaga sarfladingiz?
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+'Vaqtim yo‘q' — bu insoniyat o‘ylab topgan eng katta yolg‘ondir. Bizda sevikli insonimizga qo‘ng‘iroq qilishga vaqt yo‘q, kitob o‘qishga vaqt yo‘q, ota-onamizni ziyorat qilishga vaqt yo‘q, lekin soatlab behuda narsalarga chalg‘ishga vaqt topiladi. Masala vaqtda emas, masala ustuvorlikda.
+
+Vaqt daryoga o‘xshaydi. Sen bitta suvga ikki marta qo‘l tiqa olmaysan, chunki oqib ketgan suv endi hech qachon qaytib kelmaydi. Har bir daqiqa — bu sening umringning qisqarishidir. 
+
+Yoshlik — bu shamoldek o‘tib ketadigan fasl. Bugun kuch-quvvatga to‘lib turgan tanang ertaga oqsoqlanishi mumkin. Bugun ko‘rayotgan ko‘zlaring xiralashishi mumkin. Shunday ekan, orzularingni, tavbangni, mehr ko‘rsatishingni 'keyinga' qoldirma. 'Keyin' degan vaqt hech qachon kelmasligi mumkin.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Vaqt — bu inson sarflaydigan eng qimmatbaho, ammo eng kam e'zozlaydigan xazinadir.</li><li class="quote-item">Kecha — tarixga aylandi. Erta — sirdir. Bugungi kun esa — tuhfadir. Shuning uchun uni 'hozirgi dam' deydilar.</li><li class="quote-item">Hayotingizdagi eng katta xato — sizda hali vaqt bor deb o‘ylashingizdir.</li><li class="quote-item">Soatning ovozini eshitganingda, umringning poydevoridan yana bir g‘isht tushib ketganini unutma.</li><li class="quote-item">Kechiktirish — bu orzularning qotilidir.</li><li class="quote-item">Vaqtingni kimga va nimaga sarflayotganing — sening kimligingni belgilaydi.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Agar senga umringdan yana roppa-rosa bir oy qolgani aytilsa, aynan nimalardan butunlay voz kecharding va nimalarni zudlik bilan boshlarding?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Bugun — sening eng qimmatli kuning. Muhim so‘zlarni bugun ayt, kechirimni bugun so‘ra, orzularing sari ilk qadamni bugun tashla. Vaqt seni kutmaydi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-3" class="section-block">
+            <div class="section-header">
+                <div class="section-num">03-BOB</div>
+                <h2 class="section-title">3-BOB: OTA-ONA — TIRIK JANNATING VA BEMINNAT SOYABON</h2>
+                <p class="section-subtitle">Dunyodagi eng buyuk muhabbat va eng og‘ir yo‘qotish haqida</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Ota-onang tirik ekan — boshing uzra ko‘rinmas qalqon bor. Ular ketgach, sovuq shamollar to‘g‘ridan-to‘g‘ri yuragingga uriladi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz ulg‘ayganimiz sari ota-onamiz keksayib borayotganini sezmay qolamiz. Biz o‘z ishimiz, kareramiz, do‘stlarimiz va shaxsiy muammolarimiz bilan band bo‘lamiz. Onamizning 'Bolam, ovqatlandingmi?' degan oddiygina savoli ba'zan g‘ashimizga tegadi. Otamizning sokin nigohidagi charchoqni ko‘rmay o‘tib ketamiz.
+
+Ammo unutmang: bu dunyoda sizning yutuqlaringizdan o‘zinikidan ham ko‘ra ko‘proq quvonadigan, sizning yiqilishingizdan o‘zingizdan ham battar azob chekadigan faqat ikki inson bor — bu ota va onadir. Ularning sevgisi hech qanday shartga bog‘liq emas. Ular sizni boy bo‘lganingiz uchun emas, shunchaki bor bo‘lganingiz uchun sevadilar.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Otaning daftari va yomg‘irli kun</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir yigit o‘zining keksa otasining vafotidan so‘ng uning eski javonidagi narsalarini yig‘ishtirayotgan edi. Javonning eng to‘rida, sarg‘aygan qog‘ozlar orasida otasining eski kundaligiga ko‘zi tushdi.
+
+Yigit daftarni ochib, o‘zining bolalik yillari yozilgan sahifani topdi. Unda shunday satrlar bor edi:
+«Bugun o‘g‘lim bilan bog‘da aylandik. U mendan daraxtdagi qarg‘ani ko‘rsatib: 'Dada, bu nima?' deb so‘radi. Men: 'Bu qarg‘a, o‘g‘lim', dedim. U bir ozdan so‘ng yana shu savolni berdi. Men yana tabassum bilan javob qaytardim. U bir soat ichida aynan shu savolni yigirma uch marta berdi. Men esa yigirma uch marta uni mehr bilan bag‘rimga bosib, javob berdim. Xudoyimga shukr, o‘g‘limning tili chiqdi, u dunyoni o‘rganmoqda...»
+
+Buni o‘qigan yigitning ko‘zlaridan yosh quyildi. Chunki bundan bir necha hafta oldin, otasi kasalxonada yotganida undan bitta dorining nomini uch marta so‘raganida, yigit: «Dada, nega qayta-qayta so‘rayverasiz, aytdim-ku!» deb jerkib bergan edi. Yigit yig‘lardi, ammo endi kech edi. Otasining ovozi manguga o‘chgan edi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Ota-ona — bu uyning poydevori. Biz qanchalik balandga parvoz qilmaylik, bizni ushlab turgan ildiz — ularning duosidir. 
+
+Onaning qo‘llari — qanchalik qadoq bo‘lmasin, dunyodagi eng yumshoq shifobaxsh malhamdir. Otaning yelkalari — qanchalik egilgan bo‘lmasin, siz suyanishingiz mumkin bo‘lgan eng mustahkam tog‘dir. Ular sizdan qimmatbaho sovg‘alar, sarpo yoki hashamat kutishmaydi. Ularga sizning bir daqiqalik samimiy e'tiboringiz, ko‘zlariga mehr bilan boqishingiz va 'Men sizni yaxshi ko‘raman, ota, ona' degan so‘zingiz kifoya.
+
+Bir kun keladi... Ularning poyafzali dahlizda bo‘sh qoladi. Ularning xonasi huvillab, telefoningizda 'Onam' yoki 'Otam' degan yozuv hech qachon jiringlamaydi. O‘shanda butun dunyo boyligini berib bo‘lsa ham, ularning birgina nafasini qaytarishni orzu qilasiz. Shunday ekan, fursat borida ularni bag‘ringizga bosing.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Ota-onangning borligi — hayotning senga bergan eng qimmatbaho sug‘urtasidir.</li><li class="quote-item">Onaning duosi — taqdirning eng qorong‘u yo‘llarini ham yorituvchi so‘nmas mayoqdir.</li><li class="quote-item">Otaning qadrini o‘zing ota bo‘lganingda, onaning mehrini esa boshingga tashvish tushganida tushunasan.</li><li class="quote-item">Uyning haqiqiy fayzi uning mebellarida emas, to‘rida o‘tirgan ota-onaning nafasidadir.</li><li class="quote-item">Dunyodagi hech bir taom onang mehr bilan uzatgan bir burda nonchalik lazzatli bo‘lolmaydi.</li><li class="quote-item">Ota-onangni xursand qil — bu dunyodagi barcha eshiklar senga ochilishining eng oson yo‘lidir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Oxirgi marta qachon ota-onangizning ko‘zlariga mehr bilan qarab, ularni shunchaki quchoqladingiz va minnatdorlik bildirdingiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Hozirning o‘zidayoq qo‘lingizga telefonni oling yoki yonlariga boring. Ularga qo‘ng‘iroq qiling, hol-ahvol so‘rang. Ularning duosini oling — zero bu duo sizni barcha balolardan asraguvchi qalqondir.</p>
+            </div>
+        </article>
+        
+        <article id="bob-4" class="section-block">
+            <div class="section-header">
+                <div class="section-num">04-BOB</div>
+                <h2 class="section-title">4-BOB: INSONIYLIK, MEHR VA OQIBAT</h2>
+                <p class="section-subtitle">Qalbning eng go‘zal libosi — bu samimiy mehrdir</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Biz bu dunyoga bir-birimizni sinash uchun emas, bir-birimizga suyanish uchun yuborilganmiz».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Bugungi kunda texnologiyalar shu qadar rivojlandiki, dunyoning narigi burchagidagi inson bilan bir soniyada bog‘lana olamiz. Ammo qo‘shnimizning qanday dard bilan yashayotganidan bexabarmiz. Yuraklar sovuqlashdi, nigohlar befarq bo‘lib qoldi. Hamma o‘zining qobig‘iga o‘ralgan.
+
+Biroq insonni hayvondan, aqlli robotdan ajratib turadigan yagona narsa — bu uning rahm-shafqati, birovning dardiga achina olish qobiliyatidir. Qalbida mehri bo‘lmagan odam qanchalik go‘zal kiyinmasin, qanchalik bilimdon bo‘lmasin — u ma'nan yalang‘ochdir. Mehr — bu qalbning issiqligidir. U bor joyda muzlar eriydi, eng qattiq toshlar ham yumshaydi.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Qorli ko‘chadagi ikki piyola choy</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Qishning qahraton kunlaridan birida, qalin qor yog‘ayotgan paytda, bir hashamatli qahvaxona oynasi yonida o‘tirgan boy tadbirkor ko‘chani kuzatib turardi. Ko‘chada ko‘k kiyim kiygan keksa farrosh qaltirab, qorni kurayotgan edi. Uning qo‘lqoplari yirtilgan, yuzlari sovuqdan qizarib ketgan edi.
+
+Tadbirkor ofitsiantni chaqirib, eng qimmat, qaynoq choy va issiq shirinliklardan tayyorlatdi. Keyin o‘zi shoshib ko‘chaga chiqdi va o‘sha qariyaga yaqinlashdi:
+— Otaxon, to‘xtang. Bir lahzaga bu yerga keling, mana bu issiq choyni ichib oling, — dedi.
+
+Farrosh hayron bo‘lib, titroq qo‘llari bilan piyolani oldi. U choyni ichar ekan, ko‘zlarida yosh qalqidi:
+— O‘g‘lim, ertalabdan beri bu ko‘chadan yuzlab odamlar o‘tdi. Hamma mening ishimdan xalaqit ko‘rgandek jerkib o‘tdi. Ammo sen menga faqat issiq choy emas, o‘zimning ham inson ekanimni eslatding. Rahmat senga!
+
+Tadbirkor o‘sha kuni hayotidagi eng katta daromadini olgan kundan ham ko‘ra ko‘proq baxtli bo‘lib qaytdi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Yaxshilik qilish uchun boy bo‘lish shart emas. Yaxshilik — bu pul bilan o‘lchanmaydi. Bir odamga berilgan samimiy tabassum, yiqilganga cho‘zilgan qo‘l, xafa bo‘lganga aytilgan dalda so‘zi, eshikni ochib berish yoki shunchaki bir kishini tinglay olish — bularning barchasi qalb sadaqasidir.
+
+Insoniylik — bu kimgadir yaxshilik qilganingda, uning evaziga minnatdorlik yoki javob qaytarishni kutmaslikdir. Agar sen yaxshilik qilib, evaziga bir narsa kutsang, bu mehr emas — bu savdo-sotiqdir.
+
+Dunyoda yovuzlik ko‘pdek tuyulishi mumkin. Ammo yovuzlik qanchalik baqirmasin, yaxshilikning sokin ovozi hamisha kuchliroq bo‘lib qolaveradi. Chunki zulmatni qanchalik qarg‘ama, u ketmaydi — faqat bitta kichik sham yoqsang, zulmat o‘z-o‘zidan chekinadi. Sening mehring — o‘sha shamdir.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Insonning qadri — uning boshqalarga qanchalik foydasi tegayotgani bilan o‘lchanadi.</li><li class="quote-item">Qalb go‘zalligi — hech kim ko‘rmaydigan joyda ham yaxshilik qila olishdadir.</li><li class="quote-item">Mehr ulashish — sening boyligingni kamaytirmaydi, aksincha qalbingni cheksiz xazinaga aylantiradi.</li><li class="quote-item">Birovning ko‘z yoshini artgan qo‘l — eng muqaddas qo‘ldir.</li><li class="quote-item">Har bir uchrashgan insoning o‘ziga xos og‘ir yukni ko‘tarib yuribdi. Shuning uchun hamisha muloyim bo‘l.</li><li class="quote-item">Yaxshilik suvga o‘xshaydi — u qayerga borsa, o‘sha yerda hayot gullab-yashnaydi.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Bugun sizning borligingizdan, qilgan kichik bir yaxshiligingizdan biror kimsaning yuzi yorishdimi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Mehr berishni kechiktirmang. Odamlarga minnatdorlik bildiring, shirin so‘zingizni qizg‘anmang. Unutmang: bu dunyodan faqat boshqalarga bergan mehringiznigina o‘zingiz bilan olib keta olasiz.</p>
+            </div>
+        </article>
+        
+        <article id="bob-5" class="section-block">
+            <div class="section-header">
+                <div class="section-num">05-BOB</div>
+                <h2 class="section-title">5-BOB: YOLG‘IZLIK VA SUKUTNING MA’NOSI</h2>
+                <p class="section-subtitle">O‘zing bilan uchrashuv va ichki sukunat kuchi</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Sukut — bu so‘zlarning yo‘qligi emas, balki qalbning eng chuqur haqiqatlarni gapira boshlagan lahzasidir».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Zamonaviy inson yolg‘iz qolishdan dahshatli darajada qo‘rqadi. Uyga kelsak — darhol televizorni yoqamiz, ko‘chada yursak — qulog‘imizga naushnik taqamiz, bir necha daqiqa bo‘sh qolsak — telefon titkilaymiz. Biz har qanday yo‘l bilan o‘zimiz bilan o‘zimiz yolg‘iz qolishdan qochamiz. Nega?
+
+Chunki sukunatda insonning ichki ovozi jaranglay boshlaydi. Sukunatda soxtaliklar, niqoblar va o‘z-o‘zini aldashlar parchalanib ketadi. Biz ichimizdagi haqiqat bilan yuzlashishdan qo‘rqamiz. Ammo unutmang: o‘zi bilan yolg‘iz qolishdan qo‘rqqan inson — hech qachon o‘zligini topa olmaydi.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Dengiz tubidagi marvarid</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Qadimda bir donishmanddan so‘rashibdi:
+— Siz doimo tog‘larda, xilvatda yolg‘iz yurasiz. Sizga yolg‘izlik og‘ir botmaydimi? Zerikib qolmaysizmi?
+
+Donishmand jilmayib, daryo bo‘yidagi tosh ustiga o‘tiribdi va shunday javob beribdi:
+— Bolam, men odamlar orasida bo‘lganimda ko‘proq yolg‘izlikni his qilaman. Chunki u yerda hamma bir-biriga quloq solmaydi, hamma o‘z manfaati bilan band. Sukunatda esa men Parvardigor bilan, o‘z qalbim bilan suhbatlashaman. Dengizning yuzasida doimo to‘lqinlar, shovqin va ko‘piklar bo‘ladi. Ammo eng qimmatbaho marvaridlar faqat tubsiz, sokin va qorong‘u chuqurlikda yetiladi. Sukunat — qalbning marvaridlar teradigan joyidir.
+
+Shundan so‘ng savol bergan yigit jim bo‘lib qoldi va birinchi bor o‘z sukunatining go‘zalligini angladi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Yolg‘izlik bilan sokinlik (xilvat) o‘rtasida ulkan farq bor. Yolg‘izlik — bu seni hech kim tushunmasligidan kelib chiqadigan azobdir. Sokinlik esa — o‘z ichki dunyong bilan to‘liq hamohanglikda yashash baxtidir.
+
+Buyuk kashfiyotlar, eng ta'sirli asarlar, eng chuqur she'rlar va falsafiy fikrlar hech qachon shovqin-suron ichida yaratilmagan. Ular sukunat quchog‘ida, inson o‘z vijdoni bilan yakkama-yakka qolganida dunyoga kelgan.
+
+Har kuni o‘zingizga kamida o‘n besh daqiqa ajrating. Telefonni o‘chiring, xonani qorong‘iroq qiling va shunchaki nafas oling. O‘tmishdagi pushaymonlar va kelajakdagi xavotirlar oqib o‘tsin, ularga tegmang. Shunchaki o‘z vujudingizni, qalbingizning urishini tinglang. O‘shanda siz o‘zingiz kutmagan darajada ulkan xotirjamlik va kuchni kashf qilasiz.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Sukut qilishni bilgan inson — har qanday gapiruvchidan ko‘ra ko‘proq narsani anglaydi.</li><li class="quote-item">O‘z qalbing bilan do‘st bo‘lmasang, butun dunyo senga hamroh bo‘lsa ham yolg‘izsan.</li><li class="quote-item">Daraxtning shoxlari shamolda shovqin soladi, ammo uning chuqur ildizlari mutlaq sukunatda o‘sadi.</li><li class="quote-item">Ko‘p gapirgan odam xato qilishga moyil bo‘ladi, sukut saqlagan odam esa sirni saqlashga qodir bo‘ladi.</li><li class="quote-item">Eng og‘ir yolg‘izlik — bu o‘z qadriyatlaringdan uzoqlashganingda boshlanadi.</li><li class="quote-item">Sukunat — bu qalbning o‘zini qayta tiklash ustaxonasidir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Oxirgi marta qachon hech qanday telefonsiz, hech qanday ovozsiz o‘zingiz bilan yolg‘iz qolib, qalbingiz nima xohlayotganini tingladingiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Yolg‘izlikdan qochmang, uni qimmatli sokinlikka aylantiring. Har kuni bir necha daqiqa sukut saqlang — shunda dunyoning shovqini sizning ichki tinchligingizni buzolmaydi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-6" class="section-block">
+            <div class="section-header">
+                <div class="section-num">06-BOB</div>
+                <h2 class="section-title">6-BOB: ORZULAR VA MAQSADLAR SARI INTILISH</h2>
+                <p class="section-subtitle">Ichki alanga, qo‘rquvni yengish va jasorat yo‘li</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Kema sohilda turganda eng xavfsiz holatda bo‘ladi, ammo kemalar buning uchun yasalmagan».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Har bir inson bu dunyoga qalbida qandaydir buyuk bir orzu urug‘i bilan keladi. Bolaligimizda biz osmonlarga uchmoqchi, dunyoni o‘zgartirmoqchi, eng yaxshi asarlar yaratmoqchi bo‘lamiz. Ammo yillar o‘tib, atrofimizdagilarning 'Buni uddalay olmaysan', 'Xayolparast bo‘lma', 'Hayotga real qara' degan gaplari bu orzular ustiga qalin tuproq tortadi.
+
+Biz o‘z orzularimizdan voz kechib, boshqalarning biz uchun chizib bergan qolipida yashashga rozi bo‘lamiz. Lekin o‘z orzusiga xiyonat qilgan inson — har doim ich-ichidan o‘zini baxtsiz his qiladi. Orzular sari intilish — bu qulaylik hududidan chiqish, noaniqlik bilan yuzlashish va o‘z qalbingga ishonish jasoratidir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Burgut tuxumi va tovuqlar katagi</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir kuni tog‘da qo‘y boqib yurgan cho‘pon baland qoyadagi burgut uyasidan tushib ketgan tuxumni topib oladi. U tuxumni uyiga olib kelib, jo‘ja ochayotgan tovuqning tagiga qo‘yadi. Vaqt o‘tib tuxum yorilib, undan mitti burgut bolasi chiqadi.
+
+U tovuqlar bilan birga ulg‘ayadi. Yer titkilab don teradi, tovuqdek qaqag‘laydi va faqat bir necha metr balandlikkacha qanot qoqadi. Bir kuni u moviy osmonda g‘urur bilan, qanotlarini keng yozib parvoz qilayotgan ulug‘vor qushni ko‘rib qoladi.
+— Bu qanday ajoyib qush? — deb so‘raydi u tovuqlardan hayrat bilan.
+— Bu burgut — qushlar podshosi! — deb javob beradi keksa tovuq. — Ammo sen u tomonga qarama ham. Sen shunchaki tovug‘san, sening joying mana shu yerda, katakda!
+
+Burgut bolasi bunga ishonadi va o‘zining haqiqiy tabiatini kashf etmay, tovuqdek yashab, tovuqdek o‘lib ketadi.
+Qanchadan-qancha insonlar o‘zlarini burgut qilib yaratilganini bilmay, tovuqlar gapiga ishonib o‘tmoqdalar!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Qo‘rquv — bu orzularning eng katta dushmani. Ammo qo‘rquv aslida mavjud emas, u faqat sizning tasavvuringizda yashaydi. Mag‘lub bo‘lishdan qo‘rqish — hech qachon harakat qilmaslikdan ham xavflidir. Chunki harakat qilgan inson yoki g‘alaba qozonadi, yoki bebaho tajriba oladi. Harakat qilmagan odam esa har ikkalasidan mahrum bo‘ladi.
+
+Maqsad — bu muddat qo‘yilgan orzudir. Agar orzuyingiz bor bo‘lsa, uni rejalarga bo‘ling. Katta tog‘ ham bir chelak tuproqdan boshlanadi. Har kuni o‘z maqsadingiz sari bittagina kichik qadam tashlang. Bir sahifa o‘qing, bitta qo‘ng‘iroq qiling, bitta so‘z yodlang.
+
+Atrofingizdagi tanqidchilarga quloq solmang. Esingizda bo‘lsin: hech bir buyuk ishni amalga oshirmagan odamlar boshqalarning qadamini tanqid qilishda eng faol bo‘lishadi. Sening parvozing ularning pastligini eslatib qo‘ygani uchun ular senga tosh otadilar. Parvozda davom et!
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Agar orzuying senga qo‘rqinchli tuyulmayotgan bo‘lsa, demak, u yetarlicha katta emas.</li><li class="quote-item">Tog‘ cho‘qqisiga chiqqan inson u yerga osmondan tushib qolmagan, u qadam-baqadam ko‘tarilgan.</li><li class="quote-item">O‘z maqsadi bo‘lmagan odam umr bo‘yi birovlarning maqsadiga xizmat qilib o‘tadi.</li><li class="quote-item">Shubhalar — orzularni mag‘lubiyatdan ko‘ra ko‘proq o‘ldiradi.</li><li class="quote-item">Hech qachon kech emas — yangi orzu qilish yoki yangi yo‘lni boshlash uchun.</li><li class="quote-item">Qanoting bor ekan, sudralib yashashga rozi bo‘lma.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Agar sizga mutlaqo yutqazmasligingiz kafolatlanganida, bugun qanday buyuk ishni boshlagan bo‘lardingiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">O‘z orzularingizni boshqalarning fikriga qurbon qilmang. Bugunoq o‘sha qadrdon orzuyingiz sari birinchi amaliy qadamni tashlang. Olam jasurlarga yo‘l ochadi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-7" class="section-block">
+            <div class="section-header">
+                <div class="section-num">07-BOB</div>
+                <h2 class="section-title">7-BOB: MUAFFAQIYATSIZLIKDAN SABOQ OLISH</h2>
+                <p class="section-subtitle">Yiqilish bu mag‘lubiyat emas, balki qayta kuchliroq turish darsidir</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Yiqilganingda senga boqib kulganlar, qayta qad ko‘targaningda senga sajda qiladilar».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz hammamiz muvaffaqiyat hikoyalarini eshitishni yaxshi ko‘ramiz. Odamlar sahnaga chiqib, qanday qilib yutuqlarga erishganini maqtanishadi. Ammo kamdan-kam odam o‘sha zafarlar ortida necha minglab ko‘z yoshlar, tunlari uxlanmagan bedorliklar, rad javoblari va yurakni ezuvchi mag‘lubiyatlar yotganini gapiradi.
+
+Muvaffaqiyat — bu to‘g‘ri chiziq emas. U egri-bugri, jar yoqasidan o‘tadigan xatarli so‘qmoqdir. Insonning kimligi uning g‘alaba qozonganida emas, balki qattiq yerga yiqilib, ust-boshi chang bo‘lganida o‘zini qanday tutishida bilinadi. Yiqilish — bu tabiiy holat, ammo yotib olish — bu tanlovdir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>O‘n ming marta adashgan kashfiyotchi</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Elektr lampochkasini ixtiro qilish jarayonida Tomas Edison o‘n mingdan ortiq muvaffaqiyatsiz tajribalarni o‘tkazgan edi. Bir kuni yosh bir jurnalist uning oldiga kelib kinoya bilan so‘radi:
+— Janob Edison, nega taslim bo‘lmaysiz? Axir siz o‘n ming marta xato qildingiz, o‘n ming marta yutqazdingiz-ku!
+
+Edison xotirjamlik bilan ko‘zoynagini to‘g‘rilab, shunday dedi:
+— Yigitgina, men o‘n ming marta yutqazmadim. Men shunchaki lampochka yonmaydigan o‘n mingta usulni muvaffaqiyatli kashf etdim. Har bir xato meni haqiqatga bitta qadam yaqinlashtirdi!
+
+Va ko‘p o‘tmay uning sabri butun insoniyat zulmatini yorituvchi nurni dunyoga keltirdi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Muvaffaqiyatsizlik — bu oxirgi nuqta emas, u jarayonning ajralmas qismidir. Go‘dak bola yurishni o‘rganayotganda o‘rtacha bir necha yuz marta yiqiladi. Ammo u hech qachon: 'Demak, yurish men uchun emas ekan, yotib emaklayveraman' demaydi. U har safar qayta turadi va yana qadam bosadi.
+
+Kattalar esa bitta yoki ikkita muvaffaqiyatsizlikdan keyin butunlay qo‘llarini tushiradilar. Chunki kattalarda mag‘rurlik va birovlarning gapidan qo‘rqish hissi paydo bo‘lgan.
+
+Xato qilishdan qo‘rqmang. Xatolar — bu hayotning eng qimmatbaho repetitorlaridir. Aqlli inson o‘z xatolaridan saboq oladi, dono inson esa o‘sha saboqlarni poydevor qilib yangi binoni qad rostlatadi. Agar sen hech qachon yiqilmagan bo‘lsang, demak, sen hali hech qachon o‘z chegaralaringdan chiqmagansan.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Muvaffaqiyat — bu g‘alabadan g‘alabaga emas, balki shashtingni yo‘qotmasdan muvaffaqiyatsizlikdan muvaffaqiyatsizlikka o‘ta bilishdir.</li><li class="quote-item">Yara izlari — bu sening zaifliging emas, sinovlardan tirik chiqqaningning nishonasidir.</li><li class="quote-item">Eng qorong‘u tushkunlik — eng ulkan yuksalishning boshlanishi bo‘lishi mumkin.</li><li class="quote-item">Xato qilmagan inson hech qachon yangi narsani o‘rganmagan insondir.</li><li class="quote-item">Taqdir sening yo‘lingga tosh tashlasa, undan devor emas, zina qur.</li><li class="quote-item">G‘oliblar — bu hech qachon taslim bo‘lmagan sobiq mag‘lublardir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«O‘tmishdagi qaysi og‘ir mag‘lubiyatingiz sizni bugungi kunda yanada kuchliroq va sabrliroq insonga aylantirdi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Bugun biror ishingiz o‘xshamagan bo‘lsa, tushkunlikka tushmang. Changlarni qoqing, chuqur nafas oling va o‘zingizga ayting: «Bu mag‘lubiyat emas, bu shunchaki tajriba. Men davom etaman!»</p>
+            </div>
+        </article>
+        
+        <article id="bob-8" class="section-block">
+            <div class="section-header">
+                <div class="section-num">08-BOB</div>
+                <h2 class="section-title">8-BOB: SABR, SHUKR VA MATONAT</h2>
+                <p class="section-subtitle">Qorong‘u tun ortidagi nurlar va minnatdor qalb qudrati</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Sabr — bu achchiq ildizdan eng shirin mevani kuta bilish san’atidir».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz hamma narsani tezda xohlaydigan zamonda yashayapmiz: tezkor internet, tezkor taom, tezkor boylik, tezkor natija. Bir necha soniya internet sekinlashsa jahlimiz chiqadi. Ammo tabiat qonunlari hech qachon tezlikka buysunmaydi. Eng go‘zal gul ochilishi uchun oylab kutish kerak, eng shirin meva pishishi uchun jazirama oftobga chidash lozim.
+
+Sabr — bu shunchaki tishni tishga qo‘yib, noiloj chidash degani emas. Sabr — bu qalbingda umidni saqlagan holda, niyat sari xotirjam va matonat bilan harakat qilishdir. Shukr esa — boriga qanoat qilib, ko‘prog‘iga intilish qobiliyatidir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Bambuk urug‘i va besh yillik kutish</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Xitoy bambuk daraxti haqida eshitganmisiz? Bog‘bon bambuk urug‘ini yerga qadagach, uni har kuni sug‘oradi, o‘g‘itlaydi va parvarish qiladi. Birinchi yil o‘tadi — yerdan hech narsa unib chiqmaydi. Ikkinchi yil o‘tadi — yana jimjitlik. Uchinchi, to‘rtinchi yillar o‘tadi — yuzada birorta maysa ham ko‘rinmaydi. Boshqa odamlar bu yerni allaqachon tashlab ketgan bo‘lardi.
+
+Ammo beshinchi yil kelganda, mo‘jiza yuz beradi! Yer yorilib, undan bambuk unib chiqadi va atigi olti hafta ichida uning bo‘yi yigirma besh metrgacha ko‘tariladi!
+
+Savol: bambuk yigirma besh metrga olti haftada o‘sdimi yoki besh yilda? 
+Albatta, besh yilda! Chunki o‘sha besh yil davomida u yer ostida yuzlab metr chuqurlikka mustahkam ildiz otayotgan edi. Agar o‘sha ildizlar bo‘lmaganida, uning ulkan poyasi ilk shamoldayoq qulab tushgan bo‘lardi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Hayotingizda ba'zan shunday davrlar bo‘ladiki, siz tinimsiz mehnat qilasiz, intilasiz, duo qilasiz, ammo ko‘rinadigan natija bo‘lmaydi. Go‘yo hamma narsa to‘xtab qolgandek, omad sizdan yuz o‘girgandek tuyuladi. 
+
+Bilingki, ayni damda siz bambuk daraxtisiz. Sizning ildizlaringiz chuqurlashmoqda. Xarakteringiz toblanmoqda, irodangiz charxlanmoqda. Katta cho‘qqilarni ko‘tarish uchun chuqur poydevor kerak. Sabrsiz odam bu bosqichda tashlab ketadi va hech qachon o‘zining 25 metrlik yuksalishini ko‘ra olmaydi.
+
+Shukronalik esa mavjud ne'matlarni ko‘paytiruvchi magnitdir. Har kuni ertalab uyg‘onganingizda nolish o‘rniga, bor narsalaringizni sanang: sog‘lom tanangiz, urayotgan yuragingiz, ko‘rayotgan ko‘zlaringiz, boshpana va tinchlik. Shukr qilgan qalb hech qachon kambag‘al bo‘lmaydi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Sabr — bu jim turish emas, balki qorong‘ulikda ham quyoshning chiqishiga zarracha shubha qilmaslikdir.</li><li class="quote-item">Birovning bog‘iga qarab hasad qilguncha, o‘z tuprog‘ingga shukr bilan suv quygil.</li><li class="quote-item">Eng shirin g‘alaba — eng og‘ir sabrdan keyin kelganidir.</li><li class="quote-item">Nolib yashagan odam boylik ichida ham g‘aribdir, shukr qilgan odam esa quruq non bilan ham shohdir.</li><li class="quote-item">Vaqt har bir tugunni yechishga qodir, faqat unga sabr ipini berishing kerak.</li><li class="quote-item">Matonat — bu hamma orqaga qaytganda, sen yana bitta qadam oldinga bosa olishingdir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Hozirgi hayotingizda qaysi ne'matlarga odatlanib qolganingizdan, ularni shukr qilishni unutib qo‘ymoqdasiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Nolishni bas qiling. Sabr bilan o‘z yo‘lingizda davom eting. Siz kutayotgan ezgu natijalar o‘z vaqtida, eng to‘g‘ri damda albatta unib chiqadi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-9" class="section-block">
+            <div class="section-header">
+                <div class="section-num">09-BOB</div>
+                <h2 class="section-title">9-BOB: DO‘STLIK, ISHONCH VA XIYONAT SABOQLARI</h2>
+                <p class="section-subtitle">Qalb eshigini kimga ochish kerak va xiyonatdan qanday tuzalish mumkin?</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Dushmaningning toshi tanangni jarohatlaydi, ammo do‘stingning birgina xiyonati ruhingni parchalaydi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Inson ijtimoiy mavjudotdir. Biz boshqalar bilan muloqot qilmasdan, sirlashmasdan, dardlashmasdan yashay olmaymiz. Har birimiz yonimizda bizni har qanday holatda ham qo‘llab-quvvatlaydigan, xursandchiligimizdan chin dildan quvonadigan sodiq do‘st bo‘lishini orzu qilamiz.
+
+Ammo hayot yo‘lida biz ba'zan xiyonatga duch kelamiz. Eng ishongan, qalbimiz to‘rini ochgan insonlarimiz eng kutilmagan paytda orqamizdan pichoq urishadi. Xiyonat — bu og‘ir jarohat. U odamni boshqalarga ishonmaydigan, qalbi muzlagan gumashtaga aylantirib qo‘yishi mumkin. Ammo barcha odamlarni bitta xiyonatkor sababli jazolash — bu o‘z qalbingni qamoqqa tashlash bilan barobardir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Sahrodagi ikki do‘st</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Ikki do‘st jazirama sahro bo‘ylab safarga chiqishibdi. Yo‘lning og‘irligidan ikkalasining asabi taranglashib, qattiq janjallashib qolishibdi. Janjal ustida biri ikkinchisining yuziga shapaloq tushiribdi.
+
+Tayoq yegan do‘st qattiq og‘ringan bo‘lsa-da, hech narsa demabdi. U shunchaki yerga o‘tirib, sahro qumiga barmog‘i bilan yozibdi:
+«Bugun mening eng yaxshi do‘stim yuzimga urdi».
+
+Ular yo‘lda davom etishibdi va bir chiroyli vohaga yetib kelishibdi. Suv ichish va cho‘milish uchun ko‘lga tushganlarida, boyagi tayoq yegan yigit botqoqlikka tushib, cho‘ka boshlabdi. Do‘sti esa o‘z jonini xatarga qo‘yib, uni qutqarib olibdi.
+
+Nafasi o‘ziga kelgan yigit o‘rnidan turib, katta tosh ustiga pichoq bilan shunday o‘yib yozibdi:
+«Bugun mening eng yaxshi do‘stim jonimni qutqardi».
+
+Buni ko‘rgan do‘sti hayron bo‘lib so‘rabdi:
+— Do‘stim, men seni xafa qilganimda qumga yozding, ammo qutqarganimda toshga o‘yding. Nega bunday qilding?
+Yigit jilmayib javob beribdi:
+— Birov bizga ozor berganda, uni qumga yozishimiz kerak, toki kechirim shamollari uni osongina o‘chirib yuborsin. Ammo kimgadir yaxshilik qilsa yoki mehr ko‘rsatsa, uni toshga o‘yishimiz kerak, toki hech qanday shamol uni o‘chirolmasin!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Sodiq do‘st — bu sening boyliging, mashinang yoki obro‘ying uchun emas, aynan sening qalbing uchun yoningda bo‘lgan insondir. To‘ylar va ziyofatlarda yoningda yuzlab 'do‘stlar' to‘planadi. Ammo boshingga kulfat tushganda, cho‘ntaklaring bo‘shaganda yoningda qolgan birgina inson — haqiqiy do‘stdir.
+
+Agar sizga xiyonat qilishgan bo‘lsa, buni shaxsiy fojia deb qabul qilmang. Xiyonat — bu xiyonat qilgan odamning qashshoqligidir, sizning emas. U o‘zining vijdoni, qadr-qimmati va eng asosiysi — sizdek samimiy do‘stni yo‘qotdi. Siz esa shunchaki bir soxta insondan qutuldingiz.
+
+Ko‘ngil eshiklarini butunlay yopib olmang. Dunyoda yomonlar ko‘pdek tuyulishi mumkin, ammo qalbida quyoshi bor samimiy insonlar hamisha topiladi. Faqat bu safar qalb eshigining kalitini osonlikcha har kimga topshirmang.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Haqiqiy do‘st — bu hamma xonadan chiqib ketganda, ichkariga kirib kelgan insondir.</li><li class="quote-item">Xiyonat ko‘rgan qalb jarohatlanadi, ammo bu jarohat uni ko‘r qilmasligi kerak.</li><li class="quote-item">Mingta tanishdan ko‘ra, sening sukunatingni tushunadigan bitta do‘st afzaldir.</li><li class="quote-item">Ishonch — xuddi ko‘zgu kabidir: bir marta sinsa, qanchalik yamama, baribir yoriqlar ko‘rinib turadi.</li><li class="quote-item">Seni yutuqlaring bilan tabriklagan emas, yiqilganingda dardingni bo‘lishgan do‘stni qadrlagin.</li><li class="quote-item">Kechir, lekin xiyonat darsini hech qachon unutma.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Atrofingizdagi insonlardan qaysilari sizning qiyin kuningizda ham hech ikkilanmasdan yoningizda turadi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Soxta munosabatlardan voz kechishdan qo‘rqmang. Sodiq insonlarni qadrlang, ularga o‘z minnatdorligingizni bildiring. Va eng muhimi — o‘zingiz ham birov uchun sodiq va ishonchli do‘st bo‘ling.</p>
+            </div>
+        </article>
+        
+        <article id="bob-10" class="section-block">
+            <div class="section-header">
+                <div class="section-num">10-BOB</div>
+                <h2 class="section-title">10-BOB: PUL, BOYLIQ VA HAQIQIY BAXT</h2>
+                <p class="section-subtitle">Mol-dunyo to‘ldira olmaydigan qalb bo‘shlig‘i va haqiqiy boylik</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Dunyoda shunday qashshoq odamlar borki, ularning pulidan boshqa hech vaqosi yo‘q».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Bugun dunyo pul atrofiga aylanmoqda. Odamlar pul topish uchun sog‘lig‘ini, oilasini, vijdonini va eng qimmatli vaqtini qurbon qilmoqdalar. Keyin esa o‘sha yo‘qotilgan sog‘liq va xotirjamlikni qaytarib olish uchun topgan barcha pullarini sarflaydilar. Bu qanday ayanchli aylana!
+
+Albatta, pul — bu muhim vosita. Pul senga qulaylik, erkinlik, sifatli ta'lim va tibbiyot beradi. Pul bo‘lishi yaxshi. Ammo pul maqsadga aylanib, qalbning o‘rnini egallagan kunda — inson ma'naviy qulga aylanadi. Pulga to‘shak sotib olish mumkin, ammo uyquni emas. Pulga kitob sotib olish mumkin, ammo aqlni emas. Pulga qimmatbaho dori sotib olish mumkin, ammo sog‘likni emas. Pulga soxta hurmat sotib olish mumkin, ammo sevgini hech qachon!
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Baliqchi va boy sayyoh</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Okean bo‘yidagi kichik bir qishloqda bir baliqchi qayig‘ini qirg‘oqqa bog‘lab, quyoshda orom olib yotgan edi. Qayiqda esa bir nechta yirik baliqlar bor edi. Shu payt u yerga kelgan hashamatli kiyimdagi boy sayyoh undan so‘radi:
+— Do‘stim, nega bunchalik erta qaytding? Yana dengizga chiqib, ko‘proq baliq tutsang bo‘lmaydimi?
+Baliqchi jilmayib javob berdi:
+— Bu baliqlar oilamning bugungi ehtiyojiga yetadi. Endi esa bolalarim bilan o‘ynayman, ayolim bilan choy ichaman, do‘stlarim bilan suhbatlashaman.
+
+Boy sayyoh kulib dedi:
+— Sen ahmoq ekansan! Agar kun bo‘yi baliq tutsang, ko‘proq pul topasan. Katta qayiq sotib olasan. Keyin floting bo‘ladi, konserva zavodi ochasan. Shaharga ko‘chib o‘tib, millionlab dollar ishlaysan!
+— Xo‘sh, keyin-chi? — deb so‘radi baliqchi xotirjam.
+— Keyin butunlay nafaqaga chiqasan, sokin dengiz bo‘yida yashaysan, quyoshda orom olasan, oilang bilan choy ichasan, do‘stlaring bilan xotirjam suhbatlashasan!
+Baliqchi unga qarab jilmaydi:
+— Xo‘sh, azizim, men ayni damda nima qilyapman deb o‘ylaysan?
+
+Sayyoh hayratdan qotib qoldi. U butun umr chopib erishmoqchi bo‘lgan baxtga bu oddiy baliqchi allaqachon erishib bo‘lgan edi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Haqiqiy boylik — bu sening qancha puling borligida emas, balki pulga sotib olib bo‘lmaydigan narsalaring qanchaligidadir. Qalb xotirjamligi, oilaviy totuvlik, samimiy kulgi, toza vijdon va shukronalik — mana haqiqiy xazina.
+
+Boy bo‘lish — ayb emas. Agar pul sening qo‘lingda bo‘lsa, sen undan odamlarga yordam berish, maktablar qurish, nochorlarni qo‘llash uchun foydalanasan va bu ulug‘ fazilatdir. Ammo agar pul sening yuragingga kirib olsa, u seni ochko‘zlik va qo‘rquv botqog‘iga tortadi.
+
+Qanoat — bu tuganmas boylikdir. Doimo birovlarning hashamatiga havas qilib, o‘zingdagi bor narsalarni ko‘rmaydigan odam — milliarder bo‘lsa ham dunyodagi eng g‘arib insondir.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Boylik — bu ko‘p narsaga ega bo‘lish emas, balki kam narsaga ehtiyoj sezishdir.</li><li class="quote-item">Cho‘ntagingdagi boylik bilan emas, qalbingdagi saxovat bilan o‘lchanasan.</li><li class="quote-item">Pul baxt keltirmaydi deganlar adashadi, pul faqat qulaylik keltiradi. Baxt esa qalbning o‘zida tug‘iladi.</li><li class="quote-item">Kafanning cho‘ntagi bo‘lmaydi — bu dunyodan hech bir boy bir tiyin ham olib ketolmagan.</li><li class="quote-item">Eng katta kambag‘allik — bu to‘ymaydigan ochko‘z nafsdir.</li><li class="quote-item">O‘z baxtini pul miqdori bilan o‘lchagan inson — doimo raqamlarning asiri bo‘lib qoladi.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Agar dunyodagi barcha pullar o‘z qadrini yo‘qotib, qog‘ozga aylansa, sizning qo‘lingizda qanday haqiqiy boyliklar qoladi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Mol-dunyo ortidan quvib, hayotingizning eng go‘zal lahzalarini boy bermang. Bugun bor narsangizning qadriga yeting va haqiqiy boylik — sog‘lik, oila va qalb xotirjamligi ekanini unutmang.</p>
+            </div>
+        </article>
+        
+        <article id="bob-11" class="section-block">
+            <div class="section-header">
+                <div class="section-num">11-BOB</div>
+                <h2 class="section-title">11-BOB: O‘ZINI ANGLASH VA O‘Z USTIDA ISHLASH</h2>
+                <p class="section-subtitle">Eng buyuk g‘alaba — o‘z nafsi va zaifliklari ustidan qozonilgan g‘alabadir</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Boshqalarni yenggan inson kuchlidir, ammo o‘zini yenga olgan inson chinakam qudratlidir».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz ko‘pincha dunyoni o‘zgartirish haqida gapiramiz. Jamiyatni, siyosatni, qo‘shnimizni, xotinimizni yoki farzandimizni to‘g‘rilashga urinib asabimizni to‘kamiz. Ammo o‘zimizga qarashni butunlay unutamiz. Dunyoni o‘zgartirmoqchi bo‘lgan inson eng avvalo o‘zidan boshlashi kerak.
+
+O‘zini anglash — bu o‘zining kuchli va zaif tomonlarini, qo‘rquvlari va xatolarini mardona tan olishdir. O‘zingni aldamaslik — bu donolikning eng oliy cho‘qqisidir. O‘z ustida ishlash esa har kuni kechagi o‘zingdan ozgina bo‘lsa-da yaxshiroq, sabrliroq, bilimdonroq va mehribonroq bo‘lishga intilish demakdir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Oynaga qarab o‘chirilgan dog‘</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir kishi ertalab ko‘zguga qarab, yuzida qora dog‘ borligini ko‘rib qolibdi. U darhol qo‘liga latta olib, ko‘zgudagi o‘sha joyni qattiq ishqalay boshlabdi. U ko‘zguni bir soat artibdi, ammo dog‘ yo‘qolmabdi. U jahl bilan lattani qattiqroq bosibdi, hatto ko‘zguni yorib yuborish darajasiga yetibdi.
+
+Shu payt xonaga uning donishmand onasi kirib kelibdi va o‘g‘lining bu bema'ni harakatini ko‘rib, kulimsirab debdi:
+— Bolajonim, sen nega ko‘zguni qirmoqdasan? Axir dog‘ ko‘zguda emas, sening o‘z yuzingda-ku! O‘z yuzingni yuvsang, ko‘zgu o‘z-o‘zidan top-toza bo‘ladi!
+
+Bu oddiy voqea hayotimizning butun falsafasini ochib beradi. Biz atrofimizdagi odamlarni, dunyoni ko‘zgu deb bilmaymiz va ularni 'artishga', o‘zgartirishga urinamiz. Holbuki, dog‘ bizning o‘z xulqimizda, o‘z fe'l-atvorimizdadir.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+O‘zingni rivojlantirish — bu boshqalar bilan poyga o‘ynash degani emas. Bu sening kechagi o‘zing bilan bugungi o‘zing o‘rtasidagi musobaqadir. Agar sen kechagidan bitta kitob ko‘proq o‘qigan bo‘lsang, bitta yomon odatingni tashlagan bo‘lsang — sen allaqachon g‘olibsan.
+
+O‘zingiz bilan yolg‘on gaplashmang. O‘z xatolaringiz uchun ota-onangizni, hukumatni, do‘stlaringizni yoki ob-havoni ayblashni to‘xtating. Qachonki siz o‘z hayotingiz uchun 100 foiz mas'uliyatni o‘z bo‘yningizga olsangiz, o‘sha kundan boshlab sizning haqiqiy yuksalishingiz boshlanadi.
+
+O‘qish, izlanish va qalbni tarbiyalash bir umrlik jarayondir. Inson to‘xtagan zahoti orqaga qarab keta boshlaydi. Suv oqib tursa toza bo‘ladi, to‘xtab qolsa — botqoqlikka aylanadi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">O‘zini yengish — bu har qanday jang maydonidagi zafardan ko‘ra sharafliroqdir.</li><li class="quote-item">Ko‘zguni ayblama, agar unda o‘z aksing xunuk ko‘rinayotgan bo‘lsa.</li><li class="quote-item">Boshqalarni bilish — aql nishonasi, o‘zini bilish esa — oliy donolikdir.</li><li class="quote-item">Kechagi o‘zingdan ustun bo‘lish — yagona haqiqiy olijanoblikdir.</li><li class="quote-item">O‘z zaifligini tan olgan inson — uni yengish uchun birinchi qadamni qo‘ygan insondir.</li><li class="quote-item">Har kuni 1 foiz yaxshiroq bo‘lsang, bir yilda 37 barobar kuchliroq bo‘lasan.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Sizning xarakteringizda qaysi bir yomon odat bor-ki, undan qutulsangiz hayotingiz darhol yaxshi tomonga o‘zgaradi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Boshqalarni o‘zgartirishga behuda kuch sarflamang. Diqqatingizni o‘z qalbingizga, o‘z ongingizga qarating. Siz o‘zgarsangiz — butun dunyo o‘zgaradi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-12" class="section-block">
+            <div class="section-header">
+                <div class="section-num">12-BOB</div>
+                <h2 class="section-title">12-BOB: KECHIRIMLILIK VA QALB XOTIRJAMLIGI</h2>
+                <p class="section-subtitle">Ginalar zanjirini uzish va o‘z qalbingni ozodlikka chiqarish</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Kechirish — bu xatoni oqlash emas, balki uning sening kelajagingni zahariga aylanishiga yo‘l qo‘ymaslikdir».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Har birimizning hayotimizda bizni qattiq ranjitgan, nohaq xafa qilgan insonlar bo‘lgan. Ba'zan bu og‘riq shu qadar chuqur bo‘ladiki, biz yillar davomida o‘sha odamga nisbatan qalbimizda nafrat, gina va qasos o‘tini yoqib yuramiz. Har safar uni eslaganimizda qonimiz qaynaydi, yuragimiz siqiladi.
+
+Lekin o‘ylab ko‘rganmisiz: bu nafrat kimga ko‘proq zarar yetkazmoqda? Siz xafa bo‘lgan odam balki xotirjam qahva ichib, siz haqingizda o‘ylamayotgandir ham! Siz esa uning xatosi uchun o‘z sog‘lig‘ingizni, o‘z asabingizni va o‘z qalb tinchligingizni qurbon qilmoqdasiz. Gina saqlash — bu zahar ichib olib, boshqa odamning o‘lishini kutishga o‘xshaydi!
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Bir qop chirigan kartoshka</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir kuni bir ustoz o‘z shogirdlariga shunday topshiriq berdi:
+— Har safar kimgadir nisbatan gina, xafagarchilik yoki nafrat his qilsangiz, bitta kartoshkaga o‘sha odamning ismini yozib, mana bu qopga solasiz. Va bu qopni hamma joyda — darsda, ko‘chada, uyda o‘zingiz bilan ko‘tarib yurasiz.
+
+Shogirdlar topshiriqni bajara boshladilar. Ko‘p o‘tmay qoplar og‘irlashib ketdi. Bir-ikki hafta o‘tgach esa kartoshkalar chiriy boshladi, ulardan badbo‘y hid taralib, qurtlar tushdi. Shogirdlar bu og‘ir va sasigan yukni ko‘tarib yurishdan charchab, ustozning oldiga dod deb keldilar:
+— Ustoz, biz endi bunga chiday olmaymiz! Qop juda og‘ir, undan chidab bo‘lmas hid kelyapti, har qadamda bizga xalaqit beryapti!
+
+Ustoz mayin jilmayib dedi:
+— Ko‘rdingizmi, bolalarim? Siz qorningizdagi, qalbingizdagi ginalarni ham xuddi shunday ko‘tarib yurasiz. Har bir kechirilmagan xafa bo‘lish — bu qalbingizdagi chirigan kartoshkadir. U ruhingizni sasitadi, qadamingizni og‘irlashtiradi. Agar chirigan narsalarni ko‘tarib yurishni istamasangiz — ularni tashlab yuboring, kechiring!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Kechirish — bu kuchsizlik belgisi emas, aksincha u faqat kuchli va mard insonlarning qo‘lidan keladigan jasoratdir. Zaif odamlar hech qachon kechira olmaydilar, ular faqat qasos olishni orzu qiladilar.
+
+Kechirganingizda siz o‘sha odamga yaxshilik qilmayapsiz — siz o‘zingizga eng katta sovg‘ani beryapsiz! Siz o‘z qalbingizni qamoqxona bo‘lishdan to‘xtatasiz. Siz o‘tmishning zanjirini uzib, bugungi kuningizga nafas olish imkonini berasiz.
+
+Ba'zan odamlar: 'Men kechiraman, lekin unutmayman' deyishadi. Haqiqiy kechirish — o‘sha voqeani eslaganingizda endi yuragingizda nafrat emas, balki shunchaki saboq hissi qolgan lahzadir. Odamlarni qo‘yib yuboring. Ularning javobini esa Yaratganga havola qiling.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Kechirish — bu o‘tmishni o‘zgartirmaydi, ammo kelajakning yo‘lini yorug‘ qiladi.</li><li class="quote-item">Qalbingda nafrat saqlash — ko‘ksingga cho‘g‘ bosib yurish kabidir: u birinchi navbatda o‘zingni kuydiradi.</li><li class="quote-item">Eng olijanob qasos — bu senga yomonlik qilgan kimsaga o‘xshamaslikdir.</li><li class="quote-item">Kechirim — bu gulning uni bosib ezgan tovonga o‘z xushbo‘y iforini hadya etishidir.</li><li class="quote-item">Ginalardan qutulmaguningcha, baxtning qanot qoqishiga joy topilmaydi.</li><li class="quote-item">Qalbingni tozalash — uyingni tozalashdan ko‘ra ming chandon muhimroqdir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Qalbingizda yillardan beri qaysi insonning chirigan ginasini ko‘tarib yuribsiz va uni bugun ozod qilishga tayyormisiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Bugun o‘zingizga sovg‘a qiling: sizni xafa qilgan barcha insonlarni qalban kechiring. «Men seni kechirdim va qo‘yib yubordim» deng. Shunda yelkalaringizdan qanday ulkan tog‘ qulaganini his qilasiz.</p>
+            </div>
+        </article>
+        
+        <article id="bob-13" class="section-block">
+            <div class="section-header">
+                <div class="section-num">13-BOB</div>
+                <h2 class="section-title">13-BOB: BUGUNGI KUNNING QADRI</h2>
+                <p class="section-subtitle">Ayni lahzada yashash va hozirgi damning mo‘jizasini his qilish</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Biz yo kechagi kunning motamida yashaymiz, yo ertangi kunning vahimasida. Shuning uchun bugungi kunni yashamay o‘tamiz».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Insoniyatning eng katta fojiasi — bu hozirgi lahzada bo‘la olmasligidadir. Ertalab choy ichayotganimizda, aqlimiz ishxonadagi muammolar bilan band bo‘ladi. Ishda o‘tirganimizda uyga qaytishni o‘ylaymiz. Dam olish kunida esa dushanba kungi tashvishlar bilan o‘zimizni egovlaymiz.
+
+Natijada hayot yonimizdan jimgina oqib o‘tib ketadi. Biz ayni lahzaning lazzatini tuymaymiz. Biz go‘yo 'haqiqiy hayot' hali oldinda, qachondir boshlanadigandek yashaymiz. Ammo haqiqat shuki, 'hozir'dan boshqa hech qanday hayot yo‘q! Kechagi kun — xotira, ertangi kun — orzu. Faqatgina ayni shu lahza — sening qo‘lingdagi yagona reallikdir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Shirin qulupnay va qoya chetidagi lahza</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir donishmand qadimiy rivoyatni aytib beradi:
+Bir kishi sahroda ketayotganida, orqasidan dahshatli och yo‘lbars quva boshlabdi. Odam qochib, tik qoyaning chetiga kelib qolibdi. Yo‘lbars unga yetib olishiga oz qolganda, u qoyadan pastga osilib turgan yovvoyi uzum poyasiga tirmashib pastga sakrabdi.
+
+U havoda osilib turarkan, pastga qarabdi. Pastda esa och timsohlar og‘zini ochib uning tushishini kutayotgan ekan! Yuqorida yo‘lbars, pastda timsohlar. Shu payt u uzum poyasiga ko‘zi tushibdi: ikkita sichqon — biri oq, biri qora — poyaning ildizini g‘ajib uzmoqda ekan (oq sichqon — kunduz, qora sichqon — tun).
+
+Vaziyat mutlaqo umidsiz edi. Ammo shu payt odamning ko‘zi qoya yorig‘ida o‘sib turgan bitta qip-qizil yovvoyi qulupnayga tushibdi. U bir qo‘li bilan poyani mahkam ushlab, ikkinchi qo‘lini uzatib qulupnayni uzib olibdi va og‘ziga solibdi.
+
+Qulupnay shu qadar shirin va lazzatli ediki! U o‘sha lahzada yuqoridagi yo‘lbarsni ham, pastdagi timsohni ham, poyani kemirayotgan sichqonlarni ham butunlay unutib, o‘sha bitta qulupnayning betakror shirinligidan cheksiz lazzat oldi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Bu hikoya — inson umrining aynan o‘zidir. Yuqorida bizni o‘tmish quvmoqda, pastda esa muqarrar o‘lim kutmoqda. Sichqonlar esa umrimiz kunlari va tunlaridir. Ammo ayni lahzada, sizning qo‘lingizda o‘sha shirin qulupnay bor!
+
+O‘sha qulupnay — bu bolangizning beg‘ubor kulgisidir. Bu ertalabki toza tong havosidir. Bu issiq qahvaning iforidir. Bu sevimli insoningizning qo‘lini ushlab turganingizdir. 
+
+Nega biz bo‘layotgan va bo‘ladigan xavotirlar sababli qo‘limizdagi qulupnayning lazzatini tuymaymiz? Har bir lahza — qaytarilmas san'at asaridir. Chuqur nafas oling. Ko‘zlaringizni oching. Olamning go‘zalligini, ayni damda tirik ekanligingizni his qiling.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Baxt — bu ayni damda borligingni his qilish san'atidir.</li><li class="quote-item">O‘tmishga ko‘p qaytgan odam depressiyaga tushadi, kelajakni ko‘p o‘ylagan odam xavotirda yashaydi. Faqat bugunda yashagan odam xotirjamdir.</li><li class="quote-item">Hayot — bu keyinga qoldirib bo‘lmaydigan yagona spektakldir.</li><li class="quote-item">Har bir nafas — bu yangi boshlanish, har bir chiqarilgan nafas — o‘tmish bilan xayrlashuvdir.</li><li class="quote-item">Hozirgi damni boy bergan inson butun umrini boy bergan insondir.</li><li class="quote-item">Dunyodagi eng katta boylik — bu 'hozir va shu yerda' bo‘la olishdir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Ayni daqiqada sizning hayotingizda qanday go‘zal 'qulupnay' bor-ki, siz uni xavotirlar sababli tatib ko‘rishni unutmoqdasiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">O‘tmish afsuslarini va kelajak qo‘rquvlarini bir chetga surib qo‘ying. Hoziroq atrofingizga boqing, chuqur nafas oling va shukrona bilan ayni damning mo‘jizasidan bahramand bo‘ling.</p>
+            </div>
+        </article>
+        
+        <article id="bob-14" class="section-block">
+            <div class="section-header">
+                <div class="section-num">14-BOB</div>
+                <h2 class="section-title">14-BOB: O‘Z QADR-QIMMATING VA ICHKI ISHONCH</h2>
+                <p class="section-subtitle">Birovning bahosiga qaram bo‘lmaslik va o‘zligingni kashf etish</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Agar sen o‘zingga baho qo‘ymasang, dunyo senga bir tiyinlik narx belgilaydi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz ko‘pincha o‘zimizni boshqalarning ko‘zi bilan ko‘rishga o‘rganib qolganmiz. Kimdir bizni maqtasa — qanot qoqamiz, kimdir tanqid qilsa yoki mensimasa — yer bilan bitta bo‘lamiz. Bizning kayfiyatimiz, o‘zimizga bo‘lgan ishonchimiz boshqalarning bitta og‘iz so‘ziga, ijtimoiy tarmoqdagi layklariga yoki kimningdir sovuq nigohiga bog‘liq bo‘lib qolgan.
+
+Bu o‘z joniga qilingan eng katta zulmdir. Birovning fikri — bu uning o‘z ichki dunyosining aksidir, sening haqiqiy bahong emas! Sening qadr-qimmating tashqi baholarga muhtoj emas. Sen bu dunyoga boshqalarning kutgan umidlarini oqlash uchun emas, o‘zingning ilohiy tabiatingni ochish uchun kelgansan.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>G‘ijimlangan yuz dollarlik kupyura</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir taniqli notiq o‘z seminarini qo‘lida yangi, yaltirab turgan 100 dollarlik kupyurani ko‘rsatish bilan boshladi. Zal to‘la odamlarga qarab:
+— Bu 100 dollarni kim olishni xohlaydi? — deb so‘radi.
+Zaldagi yuzlab odamlar birvarakayiga qo‘l ko‘tardilar.
+
+Notiq kulimsirab:
+— Men buni sizlardan biringizga beraman, ammo oldin buni qarang, — dedi-da, kupyurani qo‘lida qattiq g‘ijimladi, uni maydalab to‘pdek qilib qo‘ydi. Keyin yana so‘radi:
+— Kim buni hali ham xohlaydi?
+Yana barcha qo‘llar havoda edi.
+
+Shunda notiq pulni yerga tashladi, ustiga oyog‘i bilan bosib, chang va loyga bulg‘adi. Pul kirlanib, g‘ijimlanib yotardi.
+— Xo‘sh, endi-chi? Hali ham xohlovchilar bormi?
+Zalda yana barcha qo‘llar ko‘tarildi.
+
+Notiq zaldagilarga qarab chuqur ma'no bilan dedi:
+— Azizlarim, bugun siz eng katta darsni oldingiz. Men bu pulni nima qilmayin, uning qiymati bir tsentga ham kamaymadi. U hali ham o‘sha 100 dollar! Hayot ham sizni xuddi shunday g‘ijimlashi, yerga urishi, loyga botirishi mumkin. Odamlar sizni kamsitishi, mensimasligi mumkin. Ammo unutmang: nima bo‘lishidan qat'iy nazar, siz hech qachon o‘z asl qadringizni yo‘qotmaysiz!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+O‘ziga ishonch — bu 'Menga hamma qoyil qoladi' degan xomxayol emas. O‘ziga ishonch — bu 'Ular menga qoyil qolmagan taqdirda ham, men o‘z yo‘limda davom etaman' degan sokin qat'iyatdir.
+
+Boshqalarni rozi qilishga urinish — bu muvaffaqiyatsizlikning eng kafolatlangan retseptidir. Sen qanchalik yaxshi, saxiy, halol bo‘lma, baribir seni yoqtirmaydigan, orqangdan gapiradigan insonlar topiladi. Payg‘ambarlarni ham, eng buyuk daholarni ham hamma birdek sevmagan. Shunday ekan, nega sen hamma uchun yaxshi bo‘lishga urinishing kerak?
+
+O‘zingni boricha qabul qil. Kamchiliklaring ustida ishla, ammo o‘zingni nafrat bilan jazolama. O‘ziga mehr bera olmagan inson boshqalarga ham samimiy mehr ulasha olmaydi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Sening qadring — birovning fikriga emas, sening o‘z vijdoniyn bilan bo‘lgan munosabatingga bog‘liq.</li><li class="quote-item">O‘zini sevmagan inson — boshqalarning mehriga qaram bo‘lib yashaydi.</li><li class="quote-item">Sher quyonlarning fikri bilan qiziqmaydi — o‘z yo‘lingda sherdak qat'iyatli bo‘l.</li><li class="quote-item">Qo‘rqma, birov seni tushunmasa — noyob durdonalar ham oddiy toshlar orasida yashiringan bo‘ladi.</li><li class="quote-item">Birovning soyasida yashagan inson hech qachon o‘z bo‘y-bastini ko‘ra olmaydi.</li><li class="quote-item">O‘zingga bo‘lgan hurmat — bu boshqalarning senga bo‘lgan munosabatining poydevoridir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Siz qachon va nima sababdan boshqalarning fikrini o‘z qalbingizning ovozidan balandroq qo‘ya boshladingiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">O‘z qadringizni biling. Birovning bahosiga qarab o‘zingizni kamsitmang. Siz takrorlanmas, o‘ziga xos va buyuk maqsad bilan yaratilgan insonsiz.</p>
+            </div>
+        </article>
+        
+        <article id="bob-15" class="section-block">
+            <div class="section-header">
+                <div class="section-num">15-BOB</div>
+                <h2 class="section-title">15-BOB: QIYINCHILIKLAR VA QALB SINOVLARI</h2>
+                <p class="section-subtitle">Olmos bosim ostida yaraladi va sinovlar bizni toblaydi</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Shamollar shamni o‘chiradi, ammo katta olovni yanada kuchaytiradi. Sinovlar ham shunday».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Hayot hech qachon faqat tekis va gulzor yo‘llardan iborat bo‘lmaydi. Erta yoki kech har bir insonning boshiga qorong‘u bulutlar keladi: kasallik, ayriliq, moddiy tanglik, qiyinchiliklar. Bunday damlarda inson o‘ziga savol beradi: «Nega aynan men? Nega bu musibat mening boshimga tushdi?»
+
+Ammo agar chuqurroq nazar tashlasangiz, hayotdagi eng buyuk o‘zgarishlar aynan qiyinchiliklar olovida pishganini ko‘rasiz. Osoyishta dengiz hech qachon mohir dengizchini tarbiyalay olmaydi. Eng qimmatbaho olmos — bu yer ostidagi dahshatli bosim va yuqori haroratga chidab bergan oddiy ko‘mirdir. Sinovlar seni sindirish uchun emas, ichingdagi kuchni uyg‘otish uchun keladi.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Kapalak va yordamga shoshgan inson</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir kishi bog‘da pilla ichida qimirlab, undan chiqishga urinayotgan kapalakni ko‘rib qoldi. Pillada kichkina teshik paydo bo‘lgan, kapalak esa soatlab o‘sha teshikdan chiqishga tirishardi. Go‘yo u bor kuchini sarflab bo‘lgan, ammo boshqa oldinga siljiy olmayotgandek tuyuldi.
+
+Haligi kishi kapalakka rahm qildi. U cho‘ntagidan kichik qaychini olib, pillaning chetini ehtiyotkorlik bilan kesib, teshikni kengaytirdi. Kapalak osongina tashqariga chiqdi. Ammo uning tanasi shishgan, qanotlari esa kichkina, nimjon va bujmaygan edi.
+
+Kishi kapalak hozir qanotlarini yozib, uchib ketishini kutdi. Ammo bu ro‘y bermadi. Kapalak umrining qolgan qismini o‘sha nimjon qanotlari bilan yerda sudralib o‘tkazdi va hech qachon ucha olmadi.
+
+U mehribon inson bir narsani tushunmagan edi: pilla teshigining torligi va undan chiqishdagi og‘ir kurash — tabiatning kapalakka bergan eng buyuk in'omi edi! Aynan o‘sha mashaqqatli siqilish jarayonida suyuqlik tanadan qanotlarga haydaladi va qanotlar mustahkam bo‘lib, parvozga tayyorlanadi. Mashaqqatsiz erkinlik uni umrbod mayib qilib qo‘ygan edi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Sizning bugun boshdan kechirayotgan qiyinchiliklaringiz — bu sizning qanotlaringizni mustahkamlayotgan pilla siqilishidir. Agar hayot sizga hamma narsani tayyor qilib bersa, siz hech qachon kuchli bo‘lolmaysiz, hech qachon o‘z salohiyatingizni to‘liq ocholmaysiz.
+
+Dard — bu uyg‘onish qo‘ng‘irog‘idir. Inson rohat-farog‘atda yashaganida ko‘pincha ma'naviy uyquga ketadi. Qiyinchilik esa ko‘zlarni ochadi, keraksiz kishilarni elaydi, haqiqiy qadriyatlarni eslatadi.
+
+Sinov kelganda dod-faryod solmang. Yaratganga qarab: 'Nega bu dardni berding?' demang, balki 'Bu dard orqali menga nima demoqchisan, men qanday saboq olishim kerak?' deb so‘rang. Har bir qiyinchilikning ichida unga teng keladigan, hatto undan ham ulkanroq mukofot urug‘i yashiringan bo‘ladi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Olmos qanchalik ko‘p yo‘nilsa, shunchalik charaqlaydi. Inson ham shunday.</li><li class="quote-item">Kuchli shamol kuchsiz daraxtlarni yiqitadi, ammo ildizi baquvvatlarini yanada mustahkamlaydi.</li><li class="quote-item">Tunning eng qorong‘u payti — tong otishiga bir qadam qolgan lahzadir.</li><li class="quote-item">Sinovlar — bu taqdirning seni buyuk vazifaga tayyorlash imtihonidir.</li><li class="quote-item">Qiyinchiliklar oldida bosh egma, boshingni baland ko‘tar — zero sen o‘ylaganingdan ko‘ra kuchliroqsan.</li><li class="quote-item">Darding seni yo yondirib kul qiladi, yoki toblab po‘latga aylantiradi. Tanlov o‘zingda.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Hayotingizdagi eng og‘ir qaysi sinov sizga eng bebaho saboqni berdi va sizni kuchli qildi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Hozirgi mashaqqatlaringizdan qo‘rqmang. Ular sizni sindirayotgani yo‘q, ular sizdan durdona yasamoqda. Matonatli bo‘ling — bu kunlar ham o‘tadi va siz albatta parvoz qilasiz.</p>
+            </div>
+        </article>
+        
+        <article id="bob-16" class="section-block">
+            <div class="section-header">
+                <div class="section-num">16-BOB</div>
+                <h2 class="section-title">16-BOB: ICHKI OVOZ VA QALB KO‘ZI</h2>
+                <p class="section-subtitle">Aql tahlil qilganda, qalb allaqachon haqiqatni biladi</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Ko‘zlar faqat tashqi shaklni ko‘radi, ammo eng muhim haqiqatni faqat qalb ilg‘ay oladi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Biz hisob-kitoblar, mantiq va quruq raqamlar asrida yashayapmiz. Har bir qadamimizni tahlil qilamiz, foyda va zararini taroziga qo‘yamiz. Ammo ko‘pincha barcha hisoblar to‘g‘ri chiqqan taqdirda ham, ichimizda qandaydir bezovtalik, norozilik hissi qolaveradi. Nega shunday?
+
+Chunki bizning ichimizda aqldan ham ko‘ra chuqurroq, qadimiyroq bir mayoq bor — bu bizning vijdoniymiz, ichki ovozimiz, ya'ni sezgimiz (intuitsiya)dir. Aql tashqi dunyoning shartlariga qarab xulosa chiqaradi, ammo qalb koinotning ko‘rinmas iplari bilan bog‘langan. Qalb aldamaydi. Agar sen uning sokin shivirini tinglashni o‘rgansang, u seni hech qachon adashtirmaydi.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Ko‘zi ojiz rassom va qalb ranglari</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir mashhur ko‘rgazmada ajoyib bir manzara rasmi namoyish etildi. Unda tonggi quyoshning tog‘lar ortidan chiqishi, shabnam tushgan gullar va daryoning tiniq jilosi shu qadar jonli va ta'sirli tasvirlangan ediki, tomoshabinlar hayratdan ko‘z uzolmas edilar.
+
+Ko‘rgazma oxirida sahnaga asar muallifi — rassom chiqib keldi. Odamlar hayratdan qotib qoldilar: rassom mutlaqo ko‘r edi, u qo‘lidagi hassasi bilan sahnaga asta qadam bosardi!
+
+Bir san'atshunos shoshib uning yoniga keldi va so‘radi:
+— Muhtaram usta, bu aql bovar qilmas mo‘jiza! Siz ko‘zlaringiz ko‘rmay turib, qanday qilib tongning bunday nozik ranglarini, quyoshning bu qadar iliq nurlarini chiza oldingiz?
+Ko‘zi ojiz rassom mayin tabassum qilib javob berdi:
+— Aziz do‘stim, agar siz faqat ko‘zlaringiz bilan qarasangiz — faqat yorug‘lik va soyani ko‘rasiz. Men esa tongni qalbim bilan ko‘raman. Men quyoshning mehrini terimda his qilaman, gullarning shivirlashini qulog‘im bilan eshitaman, qalbim esa o‘sha hislarni bo‘yoqlarga aylantiradi. Ko‘zlar chalg‘itishi mumkin, ammo qalb hech qachon aldamaydi.
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Ichki ovoz — bu Yaratganning sening ruhingga yo‘llagan sokin xatidir. U hech qachon baqirmaydi, u zo‘rlamaydi. U shunchaki pichirlaydi. Shovqinli davrada, doimiy yugur-yugurda bu ovozni eshitib bo‘lmaydi. Shuning uchun ham donishmandlar doimo xilvatni, sukunatni qadrlashgan.
+
+Biror qaror qabul qilayotganingizda, aqlingiz mingta dalil keltirishi mumkin: 'Bu juda foydali, bu yerda katta pul bor, bu yerda obro‘ bor'. Ammo ichingizda kichik bir tugun paydo bo‘lib, ko‘nglingiz g‘ash bo‘layotgan bo‘lsa — to‘xtang! O‘sha tugun — qalbning 'Bu sening yo‘ling emas' degan ogohlantirishidir.
+
+Aql bilan qalb hamohang bo‘lganidagina inson haqiqiy uyg‘unlikka erishadi. Aqlni xizmatkor qil, ammo qalbingni shoh et. Qalbing buyurgan ezgu yo‘ldan yurishga qo‘rqma.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Qalbingning ovoziga quloq sol — u sen qayerga borishing kerakligini aqlingdan oldinroq biladi.</li><li class="quote-item">Ko‘z ojizligi fojia emas, qalb ko‘r bo‘lib qolishi haqiqiy fojiadir.</li><li class="quote-item">Aql bahslashadi, tushuntiradi, shubhalanadi. Qalb esa shunchaki biladi.</li><li class="quote-item">O‘z vijdoni bilan doimiy muloqotda bo‘lgan inson hech qachon to‘g‘ri yo‘ldan adashmaydi.</li><li class="quote-item">Dunyodagi eng xavfli aldov — bu o‘z qalbingni aldashga urinishdir.</li><li class="quote-item">Sezgi — bu inson ruhiyatining eng oliy aqlidir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Oxirgi marta qachon aqlingiz 'ha' deb turganida, qalbingiz 'yo‘q' dedi va yakunda qaysi biri haq bo‘lib chiqdi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Dunyoviy shovqinlarni bir zumga o‘chiring. Qalbingizga quloq soling. U sizga nima demoqda? Qalb ko‘rsatgan samimiy va halol yo‘ldan hech ikkilanmay yuring.</p>
+            </div>
+        </article>
+        
+        <article id="bob-17" class="section-block">
+            <div class="section-header">
+                <div class="section-num">17-BOB</div>
+                <h2 class="section-title">17-BOB: SEVGI, MEHR-MUHABBAT VA MINNATDORLIK</h2>
+                <p class="section-subtitle">Koinotni ushlab turgan qudrat va qalbni tiriltiruvchi nur</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Muhabbat bo‘lmagan joyda hayot to‘xtaydi. Qayerda mehr bo‘lsa, o‘sha yerda mo‘jizalar tug‘iladi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Muhabbat so‘zi bugungi kunda juda ko‘p ishlatiladi, ammo uning asl mohiyati juda kam tushuniladi. Ko‘pchilik sevgini shunchaki ehtiros, kinolardagi romantika yoki o‘ziga egalik qilish hissi deb biladi. Holbuki, haqiqiy muhabbat — bu egalik qilish emas, balki ozod qilishdir. Bu faqat olish emas, balki beminnat bera olish quvvatidir.
+
+Muhabbat — bu koinotning asosiy poydevori. Qalbida sevgisi bo‘lmagan odam qanchalik badavlat yoki bilimli bo‘lmasin, uning ichki dunyosi qaqragan sahroga o‘xshaydi. Muhabbat — o‘sha sahroga tushgan shifobaxsh yomg‘irdir. U har qanday toshko‘ngilni yumshatishga, har qanday yarani davolashga qodir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Qulflangan qalb va kutilmagan mehr</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir shahar kasalxonasida xarakteri juda og‘ir, doimo norozi va xodimlarga baqiradigan keksa bir bemor yotardi. Hech qaysi hamshira uning xonasiga kirishni xohlamasdi, chunki u har doim jerkir, idishlarni otar va haqorat qilardi.
+
+Bir kuni u yerga yangi yosh hamshira ishga keldi. U keksa cholning ahvolini ko‘rib, unga zarracha achchiqlanmadi. U har tong cholning xonasiga kirganda jilmayib salom berar, uning sovuq qo‘llarini mehr bilan ushlab isitar, dorilarini ichirar va jimgina uning shikoyatlarini tinglardi. Chol baqirsa ham, qiz faqat mayin ohangda: «Hammasi yaxshi bo‘ladi, otaxon, men yoningizdaman», derdi.
+
+Bir necha haftadan so‘ng cholning ko‘zlaridagi muz eriydi. Bir kuni kechqurun u qizning qo‘lidan tutib, yig‘lab yubordi:
+— Qizim, meni kechir. Men qirq yil oldin oilamdan, farzandlarimdan ayrilgan edim. O‘sha kundan beri dunyoga faqat nafrat bilan qaradim. Men barcha odamlarni yovuz deb o‘ylardim. Sen esa sening birgina mehrli nigohing bilan mening qirq yillik muzlagan qalbimni eritding. Men endi o‘lishdan qo‘rqmayman, chunki dunyoda hali ham farishtalar borligini ko‘rdim...
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Muhabbat — bu eng buyuk davolovchi kuchdir. Odamlar ko‘pincha yomonlik, qo‘pollik qilganlarida aslida yovuz bo‘lganlari uchun emas, balki qalbida mehr yetishmaganidan, mehrga zor bo‘lganlaridan shunday qiladilar. Yomonlikka yomonlik bilan javob qaytarish — olovga benzin quyish demakdir. Olovni faqat suv — muhabbat suvi o‘chira oladi.
+
+Sevishni eng avvalo o‘zingdan, oilangdan va atrofingdagi kichik narsalardan boshla. Ko‘chada ko‘ringan qushga don sepish, daraxtni sug‘orish, begona odamga samimiy kulib boqish — bularning barchasi buyuk muhabbatning zarralaridir.
+
+Minnatdorlik esa sevgining egizagidir. Har kuni bor narsalaringiz uchun minnatdor bo‘ling. Noligan odamdan bor ne'mat ham tortib olinadi, minnatdor bo‘lgan odamga esa yanada ziyodasi hadya etiladi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Muhabbat — bu boshqa birovning baxtini o‘zingnikidan ustun qo‘ya olish san'atidir.</li><li class="quote-item">Mehr ko‘rsatish uchun sabab qidırma — mehrning o‘zi eng buyuk sababdir.</li><li class="quote-item">Qalbida muhabbati bor inson hech qachon qarimaydi, uning nuri doimo yosh bo‘lib qoladi.</li><li class="quote-item">Minnatdorlik — qalbning eng oliy duosidir.</li><li class="quote-item">Dunyoni qurol bilan emas, faqat cheksiz muhabbat va rahm-shafqat bilan zabt etish mumkin.</li><li class="quote-item">Sevilishni istasang — avvalo o‘zing sevishni o‘rgan.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Bugun qalbingizdagi mehrni kimga yetarli darajada ko‘rsata olmadingiz va buni qachon to‘g‘rilamoqchisiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Mehringizni qizg‘anmang. Insonlarga yaxshi so‘zlar ayting, yaqinlaringizni bag‘ringizga bosing. Muhabbat tarqatgan inson hech qachon o‘z hayotida yolg‘iz qolmaydi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-18" class="section-block">
+            <div class="section-header">
+                <div class="section-num">18-BOB</div>
+                <h2 class="section-title">18-BOB: MAS’ULIYAT VA HAYOT TANLOVLARI</h2>
+                <p class="section-subtitle">Taqdiringni o‘z qo‘ling bilan yarat va oqibatlardan qo‘rqma</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Sen qayerda tug‘ilganingni tanlay olmaysan, ammo qanday yashashing va qanday o‘lishing — mutlaqo sening tanlovingdir».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Ko‘pchilik insonlar o‘z hayotidagi barcha baxtsizliklar uchun kimnidir ayblashga o‘rganib qolgan: 'Ota-onam boy bo‘lmagan', 'Zamona yomon', 'Omadim kelmadi', 'Boshliq nohaq'. Boshqalarni ayblash — bu juda qulay pozitsiya. Chunki ayb boshqada bo‘lsa, sen hech narsa qilishing shart emas, bemalol divanda yotib noliysan.
+
+Ammo haqiqat shuki: sening bugungi hayoting — bu besh yil oldin qilgan tanlovlaringning mevasidir! Sening ertangi hayoting esa — aynan bugun, shu daqiqada qilayotgan tanlovlaring orqali shakllanadi. Qachonki sen qurbonlik rolidan chiqib, o‘z hayotingning to‘liq xo‘jayini bo‘lish mas'uliyatini bo‘yningga olsang, mo‘jizalar boshlanadi.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Ikki egizak va bitta ota</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir oilada ikki egizak o‘g‘il ulg‘aydi. Ularning otasi ashaddiy aroqxo‘r, janjalkash va qamoqda o‘tirib chiqqan qallob inson edi. U oilasini doimo kaltaklar, bolalariga bir burda non topib bermasdi.
+
+Yillar o‘tdi. Egizaklar ulg‘aydilar. Bir sotsiolog olim ularning hayotini o‘rganish uchun keldi.
+Birinchi o‘g‘il xuddi otasidek aroqxo‘r, ishsiz, ko‘chada janjal qilib yuruvchi jinoyatchiga aylangan edi. Undan:
+— Nega bunday hayotni tanlading? — deb so‘rashganda, u g‘azab bilan dedi:
+— Axir mening otam kim bo‘lganini bilasizmi? U meni har kuni urardi, aroq ichardi. Mening boshqa odam bo‘lishimga imkon bormidi?!
+
+Ikkinchi o‘g‘il esa shahardagi eng hurmatli tadbirkor, mehrli ota, xayriya fondi rahbari va namunali fuqaro edi. Undan:
+— Qanday qilib bunday yuksak darajaga erishdingiz? — deb so‘raganlarida, u chuqur xo‘rsinib dedi:
+— Axir mening otam kim bo‘lganini bilasizmi? Men uning xor bo‘lganini, qanday azob chekkanini o‘z ko‘zim bilan ko‘rdim. Men bolalarim hech qachon bunday hayotni ko‘rmasligi uchun o‘z taqdirimni o‘z qo‘limga oldim!
+
+Bitta ota, bitta muhit, bitta qon. Ammo ikkita butunlay boshqacha tanlov!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Hayot — bu 10 foiz senga nima bo‘layotgani va 90 foiz sen bunga qanday munosabat bildirayotganingdir. Hodisalar ustidan bizning to‘liq nazoratimiz bo‘lmasligi mumkin: yomg‘ir yog‘ishi mumkin, inqiroz bo‘lishi mumkin, kimdir sizga qo‘pol gapirishi mumkin. Ammo o‘sha vaziyatda o‘zingizni qanday tutishingiz, qanday javob qaytarishingiz — 100 foiz o‘z qo‘lingizdadir!
+
+Mas'uliyat — bu yuk emas, bu erkinlik kalitidir. Agar muammo boshqalarda bo‘lsa, sen ularning o‘zgarishini kutishga mahkumsan. Agar muammo o‘zingda bo‘lsa — sen uni hoziroq o‘zgartirish qudratiga egasan!
+
+Har kuni biz yuzlab tanlovlar qilamiz: nima yeyishimiz, kim bilan gaplashishimiz, vaqtimizni nimaga sarflashimiz, jahl qilish yoki kulib qo‘yish. Kichik tanlovlarning yig‘indisi oxir-oqibat buyuk taqdirni yaratadi.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Sening taqdiring — bu sening doimiy qarorlaring natijasidir.</li><li class="quote-item">O‘z hayoti uchun javobgarlikni bo‘yniga olmagan odam birovlarning qo‘g‘irchog‘iga aylanadi.</li><li class="quote-item">Shikoyat qilish — bu o‘z ojizligini tan olishning eng xunuk shaklidir.</li><li class="quote-item">Qiyin tanlovlar — oson hayotni yaratadi. Oson tanlovlar esa — qiyin hayotga olib keladi.</li><li class="quote-item">O‘tmishingni o‘zgartira olmaysan, ammo hozirgi qaroring bilan kelajagingni qayta yozishing mumkin.</li><li class="quote-item">Sen o‘z kemangning kapitanisan, to‘lqinlarni ayblashni to‘xtat.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Hayotingizdagi qaysi sohada hali ham boshqalarni ayblab, mas'uliyatni o‘z bo‘yningizga olishdan qochyapsiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Barcha bahonalarni yoqing. Bugundan boshlab o‘z taqdiringizning yagona egasi bo‘ling. Qaror qabul qiling, harakatga tushing va o‘z orzularingizni o‘z qo‘lingiz bilan quring.</p>
+            </div>
+        </article>
+        
+        <article id="bob-19" class="section-block">
+            <div class="section-header">
+                <div class="section-num">19-BOB</div>
+                <h2 class="section-title">19-BOB: ICHKI XOTIRJAMLIK VA SOKINLIK SAN’ATI</h2>
+                <p class="section-subtitle">Shovqinli dunyoda qalb xotirjamligini saqlash sirlari</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Bo‘ron dengiz yuzasini larzaga keltirishi mumkin, ammo uning tubsiz qa'rida hamisha mutlaq sukunat hukm suradi».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Zamonaviy dunyo — bu shovqinlar, signallar, bildirishnomalar va xavotirlar fabrikasidir. Har daqiqada bizga minglab axborotlar oqimi yopiriladi: urushlar, epidemiyalar, falokatlar, birovlarning muvaffaqiyati yoki janjallari. Odamlarning ruhiyati taranglashgan, asablar qaqshagan, uyqular qochgan.
+
+Bunday sharoitda eng buyuk san'at — bu ichki xotirjamlikni saqlab qolishdir. Xotirjamlik — bu hech qanday muammo yo‘q joyda yashash degani emas. Xotirjamlik — bu atrofingda bo‘ron bo‘layotganida ham, o‘z qalbingda sokin va yorug‘ bo‘la olish quvvatidir.
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Tinchlik rasmini chizgan rassom</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Bir podshoh o‘z yurtidagi eng buyuk rassomlar o‘rtasida 'Haqiqiy tinchlik va osoyishtalik' mavzusida tanlov e'lon qildi. Yuzlab asarlar orasidan podshoh ikkita rasmni finalga ajratib oldi.
+
+Birinchi rasmda: beg‘ubor sokin ko‘l, uning atrofida yam-yashil daraxtlar, moviy osmon va oqqushlar suzib yurardi. Bu rasmga qaragan har qanday odam huzur topar va tinchlikni his qilardi. Ko‘pchilik g‘olib aynan shu asar bo‘lishiga ishonardi.
+
+Ikkinchi rasmda esa: qora bulutlar qoplagan, chaqmoqlar chaqnayotgan qorong‘u osmon, qoyalardan shiddat bilan pastga otilayotgan g‘azabnok sharshara tasvirlangan edi. Rasm vahimali va shovqinli edi. Ammo agar diqqat bilan qaralsa, sharsharaning shundoqqina ostidagi qoya yorig‘ida mitti bir qushcha o‘z uyasini qurgan, yomg‘ir va shovqin ostida o‘z jo‘jalarini bag‘riga bosib, ko‘zlarini yumib orom olayotgan edi.
+
+Podshoh ikkinchi rasmni bosh sovrin bilan taqdirladi va xalqqa shunday dedi:
+— Tinchlik — bu hech qanday shovqin, xavf yoki qiyinchilik bo‘lmagan joy emas. Haqiqiy tinchlik — bu atrofingda bo‘ron bo‘lib turganida ham, qalbingda xotirjam va panohda bo‘la olishingdadir!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Sening ichki xotirjamliging — bu sening eng qimmatbaho mulkingdir. Unga hech kimning ruxsatsiz bostirib kirishiga yo‘l qo‘yma. Har bir eshitgan gapga munosabat bildirish shart emas. Har bir chaqirilgan janjalga borish shart emas.
+
+Keraksiz axborotlardan parhez qiling. Doimiy salbiy yangiliklarni o‘qish, ijtimoiy tarmoqlardagi zaharli izohlarni kuzatish ruhiyatingizni zaharlaydi. O‘z qalbingiz saroyiga faqat nur, hikmat va ezgulik olib kiruvchi narsalarni kiritishga ruxsat bering.
+
+Nafas oling. Tabiat qo‘yniga chiqing. Daraxtlarga, yulduzlarga qarang. Olam qanchalik buyuk va qudratli tartibda yaratilganini eslang. Sizning kichik tashvishlaringiz bu cheksiz koinot oldida bir zarradir. Hamma narsani nazorat qilishga urinmang — oqimga ishoning va Yaratganga tavakkal qiling.
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Xotirjamlik — bu hayotdagi eng oliy kuchdir. G‘azab — bu o‘z zaifligingni oshkor qilishdir.</li><li class="quote-item">Qalbing tinch bo‘lsa, kulbada ham shohdek yashaysan. Qalbing notinch bo‘lsa, qasrda ham zindondasan.</li><li class="quote-item">Birovning xatosi uchun o‘zingni asabiylashtirma — bu boshqaning aybi uchun o‘zingni jazolashdir.</li><li class="quote-item">Sokin suvda butun osmon aks etadi. Sokin qalbda esa ilohiy hikmat namoyon bo‘ladi.</li><li class="quote-item">Hamma narsani yurakka yaqin olsang, yuraging uzoqqa chidab berolmaydi.</li><li class="quote-item">Tavakkal qilgan qalb hech qachon xavotir to‘lqinlarida g‘arq bo‘lmaydi.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Ayni damda sizning qalb xotirjamligingizni eng ko‘p o‘g‘irlayotgan narsa nima va nima uchun siz unga bu qadar katta kuch berib qo‘ymoqdasiz?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">O‘z tinchligingizni himoya qiling. Salbiy insonlardan, bo‘sh bahslardan uzoqlashing. Qalbingizga sukunat va minnatdorlik olib kiring — shunda hech bir bo‘ron sizni yiqitolmaydi.</p>
+            </div>
+        </article>
+        
+        <article id="bob-20" class="section-block">
+            <div class="section-header">
+                <div class="section-num">20-BOB</div>
+                <h2 class="section-title">20-BOB: UMID VA YANGI TONG</h2>
+                <p class="section-subtitle">Har doim yangidan boshlash mumkin va hech qachon kech emas</p>
+                <div class="cover-divider"></div>
+            </div>
+
+            <!-- Epigraph -->
+            <div class="epigraph-box">
+                «Quyosh har kuni botadi, ammo har tong qaytadan tug‘iladi. Sen ham har kuni yangidan boshlashga qodirsan».
+            </div>
+
+            <!-- Intro -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 25px;">
+                
+Mana, kitobimizning yakuniy cho‘qqisiga yetib keldik. Ehtimol, shu paytgacha hayotingizda juda ko‘p xatolar qilgandirsiz. Ehtimol, orzularingiz chil-parchin bo‘lgandir, qimmatli yillaringizni behuda sarflagandek his qilayotgandirsiz, yuragingiz yuzlab chandiqlarga to‘ladir.
+
+Biroq bugun, shu daqiqada men sizga eng muhim haqiqatni aytmoqchiman: SIZ HALI TIRIKSIZ! Demak, hikoyangiz hali tugamagan! Qayerda nafas bor bo‘lsa, o‘sha yerda umid bor. Kechagi kuningiz qanchalik qorong‘u va xato bo‘lmasin, yangi tong oppoq, top-toza sahifa bilan boshlanadi. Hech qachon kech emas — yangi kasb o‘rganish, kechirim so‘rash, qaytadan sevish, tavba qilish va o‘z orzularing sari parvoz qilish uchun!
+
+            </div>
+
+            <!-- Story -->
+            <div class="story-box">
+                <div class="story-header">
+                    <span>📖</span>
+                    <span>Kuldan qayta tirilgan afsonaviy qush</span>
+                </div>
+                <div style="font-size: 1.05rem; line-height: 1.85; white-space: pre-line;">
+                    Qadimiy sharq rivoyatlarida Humo (yoki Feniks) qushi haqida so‘z boradi. Bu qush qariganda va kuchdan qolganda, o‘ziga xushbo‘y shoxlardan uya qurib, quyosh nurlarida o‘zini olovga topshirarkan. U butunlay yonib, kulga aylanadi.
+
+Ammo eng buyuk mo‘jiza shundan keyin sodir bo‘ladi: o‘sha sovuq kul orasidan mitti, ammo yangi, yosh va yanada kuchliroq bo‘lgan Humo qushi qayta tug‘iladi! U qanotlarini yozib, osmon sari yanada balandroq parvoz qiladi.
+
+Inson ruhiyati ham aynan shunday qudratga ega. Biz ham hayot olovida yonishimiz, orzularimiz kulga aylanishi mumkin. Ammo inson irodasi va umidi har qanday kuldan qayta qad rostlashga, har qanday mag‘lubiyatdan keyin yanada yuksakroq parvoz qilishga qodirdir!
+                </div>
+            </div>
+
+            <!-- Deep Thoughts -->
+            <div style="font-size: 1.1rem; line-height: 1.9; margin: 30px 0;">
+                
+Umid — bu ko‘rinmas narsani ko‘ra olish, aqlga sig‘maydigan narsaga ishonish va imkonsiz narsaga erishish qudratidir. Umidsizlik esa — qalbning o‘limidir. Inson suvsiz bir necha kun, ovqatsiz bir necha hafta yashashi mumkin, ammo umidsiz bir soniya ham yashay olmaydi.
+
+O‘tmishingiz sizning kelajagingiz qanday bo‘lishini belgilamaydi. Siz bugun kim bo‘lishni tanlasangiz — o‘sha insonga aylanasiz. Har bir yangi tong — bu Parvardigorning: «Men senga yana bitta imkoniyat berdim, buni behuda o‘tkazma!» degan xushxabaridir.
+
+Qalbingizdagi shamni hech kimning o‘chirishiga yo‘l qo‘ymang. Dunyo sizga qanchalik sovuq boqmasin, sizning ichingizda butun olamni isitishga yetadigan quyosh bor. Qadamingizni dadil bosing. Orzularingiz sizni kutmoqda!
+
+            </div>
+
+            <!-- Chapter Quotes -->
+            <h3 style="font-family: var(--font-heading); color: var(--gold-primary); margin: 30px 0 15px; font-size: 1.25rem;">
+                ✨ Bobning Oltin Iqtiboslari:
+            </h3>
+            <ul class="quotes-list">
+                <li class="quote-item">Quyosh chiqayotgan paytda kechagi tunning zulmatini hech kim eslamaydi.</li><li class="quote-item">Umid — bu qorong‘ulikda ham qalbni yorituvchi so‘nmas yulduzdir.</li><li class="quote-item">Hayot senga yuzta yig‘lash uchun sabab ko‘rsatsa, sen unga mingta jilmayish uchun sabab ko‘rsat.</li><li class="quote-item">Har bir buyuk yo‘l kichik bir qadamdan, har bir buyuk g‘alaba esa kichik bir umiddan boshlanadi.</li><li class="quote-item">Sen yiqilding — ammo bu sening tugashing emas, bu sening yangi kuch bilan qaytishingdir.</li><li class="quote-item">Ertangi kun — bugun ekkan umid urug‘laringning mevasidir.</li>
+            </ul>
+
+            <!-- Deep Question -->
+            <div class="question-box">
+                <div class="question-title">O‘zingizga Bering: Qalb Savoli</div>
+                <div class="question-text">«Agar bugundan boshlab o‘tmishingizdagi barcha xatolardan butunlay ozod bo‘lib, hayotingizni toza oq qog‘ozdan boshlash imkoni berilsa — ilk qadamingiz nima bo‘ladi?»</div>
+            </div>
+
+            <!-- Practical Conclusion -->
+            <div class="conclusion-box">
+                <div class="conclusion-title">
+                    <span>💡</span>
+                    <span>Hayotiy Xulosa:</span>
+                </div>
+                <p style="font-size: 1.05rem; color: var(--text-main);">Boshni baland ko‘taring! Qalbingizni umid va mehr bilan to‘ldiring. Yangi tong otdi, yangi imkoniyatlar eshigi ochildi. Oldinga qadam tashlang — mo‘jizalar sizni kutmoqda!</p>
+            </div>
+        </article>
+        
+
+        <!-- Top 100 Quotes -->
+        <section id="iqtiboslar-100" class="section-block">
+            <div class="section-header">
+                <div class="section-num">Oltin Xazina</div>
+                <h2 class="section-title">Eng Ta'sirli 100 Ta Original Iqtibos</h2>
+                <p class="section-subtitle">Har bir jumla — bir umrlik hikmat mevasi</p>
+                <div class="cover-divider"></div>
+            </div>
+            <div class="quotes-grid">
+                
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                1. Baxt — topiladigan manzil emas, u o‘zing yaratadigan ruhiy sokinlikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                2. Inson bu dunyodan qancha olgani bilan emas, ortida qanday ezgu iz qoldirgani bilan tirikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                3. Qalbi uyg‘oq inson uchun har bir tosh — hikmat, har bir tong — yangi hayot imkoniyatidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                4. Eng boy inson — ko‘p narsaga ega bo‘lgan emas, balki boshqalarga beradigan mehri ko‘p bo‘lgan insondir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                5. Hayotni qidirib sarson bo‘lma — uning asl ma'nosi aynan sen nafas olayotgan shu damda yashiringan.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                6. Vaqt hech qachon kechirim so‘ramaydi, u shunchaki imkoniyatlaringni olib o‘tib ketadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                7. Bugun qilmagan ezgu amaling — ertaga pushaymon bo‘lib eshigingni taqillatadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                8. Soatning millari shunchaki raqamlarni emas, sening qaytib kelmas umringni sanamoqda.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                9. Vaqtni o‘ldirish — o‘z orzularingning qotiliga aylanish demakdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                10. Eng katta boylik — senga berilgan vaqtni kimlar va nimalar bilan o‘tkazayotganingdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                11. Ota-onangning ko‘zlaridagi mehr nuri — bu dunyodagi hech bir boylik teng kelolmaydigan ilohiy xazinadir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                12. Uyingda ota-onangning nafasi bor ekan, boshingga tushgan har qanday sinov yengil tuyuladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                13. Ota — yelkalari tog‘dek suyanchiq, ona — dardi yo‘q dunyodagi yagona beminnat dardkashdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                14. Ota-onaga qilingan birgina samimiy tabassum — minglab dabdabali sovg‘alardan ko‘ra qimmatroqdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                15. Bir kuni ularning ovozini bitta eshitish uchun butun dunyoni berishga tayyor bo‘lasan, ammo vaqt qaytmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                16. Birovning qalbini sindirish oson, ammo o‘sha siniqlardan qayta mehr koshonasini qurib bo‘lmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                17. Mehringni qizg‘anma — quyosh ham nurini hech kimdan sotib olishni talab qilmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                18. Yiqilganga oyoq qo‘yish hayvoniy fe'ldir, yiqilganga qo‘l cho‘zish esa insoniylik mezonidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                19. Haqiqiy olijanoblik — hech kim ko‘rmaydigan joyda ham adolat va rahm-shafqat bilan ish tutishdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                20. Dunyoni isitish uchun katta olov shart emas, bitta samimiy va iliq so‘z kifoya qiladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                21. Sukunat — qalbning o‘z vijdoni bilan qiladigan eng rostgo‘y va muqaddas suhbatidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                22. O‘z yolg‘izligidan qo‘rqmagan insonni hech bir odamning ketishi sindira olmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                23. Ko‘p so‘zlagan aqlini sarflaydi, o‘rnida jim turgan esa donoligini oshiradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                24. Ba'zan eng katta javob — shunchaki chuqur sukut saqlash va jilmayib qo‘yishdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                25. Qalbingdagi shovqinni o‘chirmaguningcha, haqiqatning nozik shivirini eshita olmaysan.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                26. Orzularingdan voz kechish — tiriklayin o‘z ruhini dafn etish bilan barobardir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                27. Cho‘qqiga chiqish qiyin bo‘lgani uchun emas, jur'at yetmagani uchun yo‘llar to‘xtab qoladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                28. Dunyo 'sen qila olmaysan' deganida, ichingdagi jasorat 'qarab tur, men uddalayman' deb javob bersin.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                29. Kema to‘lqinlardan qo‘rqsa, hech qachon yangi qit'alarni kashf eta olmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                30. Qanoting borligini unutma — boshqalarning emaklashiga qarab o‘zingni erga mixlama.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                31. Yiqilish — bu mag‘lubiyat emas, balki kuchliroq bo‘lib oyoqqa turish uchun berilgan to‘xtalishdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                32. Har bir jarohat — sening qanchalik bardoshli ekaningni ko‘rsatuvchi faxriy nishondir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                33. Hech qachon xato qilmagan inson — hech qachon yangilik yaratishga jur'at etmagan insondir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                34. Mag‘lubiyat senga saboq bermagan bo‘lsagina u haqiqiy mag‘lubiyatga aylanadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                35. Po‘lat olovda toblangani kabi, inson irodasi ham sinovlar girdobida pishadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                36. Sabr — bu qorong‘u tun bag‘rida ham tongning shafag‘iga zarracha shubha qilmaslikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                37. Shukr qilgan qalbning quvonchi tugamaydi, noligan qalbning tashvishi hech qachon arzimaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                38. Taqdir senga qiyinchilik berganda, u seni ezmoqchi emas, balki qanotingni toblamoqchi bo‘ladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                39. Birovning bog‘iga havas bilan qarama, o‘z kaftingdagi urug‘ga sabr bilan suv quygil.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                40. Sabr bilan kutilgan natija — eng shirin sharbatdan ham yoqimliroqdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                41. Sening yutug‘ingdan ko‘zlarida chin samimiyat porlagan do‘st — bebaho gavhardir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                42. Ishonch — qog‘oz kabi: bir marta g‘ijimlansa, hech qachon avvalgidek silliq bo‘lmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                43. Xiyonat qilgan odam seni emas, o‘zining vijdoni va insoniy sha'nini boy beradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                44. Mingta soxta olqishdan ko‘ra, yiqilganingda qo‘lingdan tutgan bitta qo‘l afzaldir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                45. Do‘st sening sukunatingdagi dardingni uzoqdan turib ham his qila oladigan insondir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                46. Pul bilan to‘shak sotib olarsan, ammo xotirjam uyquni faqat toza vijdon beradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                47. Qanoat — bu cho‘ntakdagi tanga emas, qalbning to‘qlik hissi bilan yashashidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                48. Dunyoning eng katta boyligi — pulga sotib olib bo‘lmaydigan narsalaringning ko‘pligidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                49. Oltin qafas qanchalik yarqiramasin, u baribir qush uchun zindonligicha qoladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                50. Mol-dunyo ortidan quvib, o‘z umrini boy bergan odam — eng bebaxt savdogardir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                51. O‘zing bilan yarashmaguningcha, butun dunyo senga dushmandek ko‘rinaveradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                52. O‘z qalbini tushungan inson boshqalarni hukm qilishdan butunlay to‘xtaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                53. Eng buyuk g‘alaba — har kuni o‘z nafsing va yomon fe'ling ustidan qozongan g‘alabangdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                54. Birovga yoqish uchun o‘zligingni o‘zgartirma — soxta qadr hech qachon baxt keltirmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                55. Ichki dunyosi boy inson tashqi qashshoqlikdan hech qachon cho‘chimaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                56. Kechirish — bu o‘tmishni unutish emas, o‘tmishning qalbingni zaharlashiga yo‘l qo‘ymaslikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                57. Gina saqlagan odam o‘z qalbini qorong‘u zindonga aylantiradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                58. Kechirimli bo‘lish — bu zaiflik emas, balki qalbning cheksiz saxovatidan dalolatdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                59. Qasos o‘tini yoqqan odam birinchi navbatda o‘z uyini kuydirib yuboradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                60. Ozod bo‘lishni istasang — seni ranjitganlarni qalban kechir va qo‘yib yubor.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                61. Kecha — o‘tib ketgan ertak, ertaga — mavhum orzu. Hayot — ayni shu nafasda yashirin.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                62. Hozirgi damni his qilmagan odam — butun umrini kutish zalida o‘tkazgan yo‘lovchidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                63. Ayni lahzaga mehr bilan boq — u hech qachon takrorlanmaydigan mo‘jizadir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                64. Baxt qachondir keladi deb kutma — u ayni damda sening ko‘zlaring oldida turibdi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                65. Har bir tong — koinotning senga atalgan eng yangi va toza sahifasidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                66. Birovning fikri sening haqiqatingga aylanib qolishiga hech qachon yo‘l qo‘yma.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                67. O‘zingni hurmat qilmaguningcha, boshqalardan ehtirom kutish bema'nilikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                68. Olmos loyga tushsa ham baribir olmosligicha qoladi — birovning so‘zi sening qadringni kamaytirolmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                69. O‘z qadrini bilgan inson pastkashliklar va mayda g‘iybatlar oldida sukut bilan o‘tib ketadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                70. Sen bu dunyoga birovning nusxasi bo‘lish uchun emas, o‘z aslingni namoyon etish uchun kelgansan.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                71. Sinovlar seni sindirish uchun emas, balki ichingdagi kuchni uyg‘otish uchun keladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                72. Osoyishta suv hech qachon mohir qayiqchini tarbiyalay olmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                73. Bo‘rondan keyin hamisha ko‘m-ko‘k osmon va porloq quyosh chiqadi — sabringni yo‘qotma.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                74. Qiyin damlarda ko‘rsatilgan birgina jasorat butun umring yo‘nalishini o‘zgartirishi mumkin.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                75. Tog‘ning eng baland qoyasi eng qattiq shamollarga dosh bergan qoyadir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                76. Ko‘zlar faqat ko‘rinadigan narsani ko‘radi, qalb esa ko‘rinmas haqiqatni his qiladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                77. Qalbingning shiviri — koinotning senga yo‘llagan eng to‘g‘ri maslahatidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                78. Aql shubhalar bilan to‘lib turganda, qalb allaqachon to‘g‘ri yo‘lni biladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                79. O‘z vijdoni bilan kelishgan inson hech qachon adashishdan qo‘rqmaydi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                80. Qalb ko‘zi ochiq bo‘lsa — zulmatda ham eng to‘g‘ri manzil yaqqol ko‘rinadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                81. Muhabbat — bu berganing sari ko‘payadigan, tarqatganing sari to‘lib boradigan yagona qudratdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                82. Qalbi minnatdorlikka to‘la inson uchun har bir kun bayramga aylanadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                83. Mehr bergan qo‘l hech qachon qashshoqlashmaydi, aksincha u ilohiy ne'matga to‘ladi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                84. Sevgisiz yashalgan umr — quyoshsiz o‘tgan sovuq va qorong‘u qish faslidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                85. Dunyodagi eng katta mo‘jiza — boshqa bir insonning qalbida mehr chirog‘ini yoqa olishdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                86. Sening taqdiring — bugungi kunda qilayotgan mayda tanlovlaringning yakuniy sarhisobidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                87. Boshqalarni ayblashni to‘xtatgan kuning — sening haqiqiy ulg‘ayishing boshlanadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                88. Hayot senga qanday qartalar tushganida emas, ularni qanday o‘ynaganingdadir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                89. Jasur tanlovlar oson kelajakni, qo‘rqoq qochishlar esa og‘ir pushaymonni tug‘diradi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                90. O‘z hayotingning muallifi bo‘l, boshqalarga sening ssenariyingni yozishga yo‘l qo‘yma.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                91. Qalbingdagi tinchlik — tashqi olamdagi har qanday dabdabadan ustundir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                92. Atrofingda nima bo‘layotganidan qat'i nazar, ichingdagi ma'badni toza va sokin saqla.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                93. Har bir eshitgan gapga javob berish shart emas — ba'zan eng kuchli so‘z bu parvosizlikdir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                94. Xotirjamlik — bu koinotning adolatiga bo‘lgan cheksiz ishonch mevasidir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                95. O‘z qalbida sukunat topgan odam butun dunyoning shovqinidan ustun turadi.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                96. Modomiki nafas olar ekansan, hech qachon 'endi kech' degan so‘zni tilga olma.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                97. Qorong‘ulik qanchalik quyuqlashsa, tongning otishi shunchalik yaqindir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                98. Yiqilganingni ko‘rib quvonganlarga qaytadan qad rostlab kulib boqishdan go‘zalroq qasos yo‘q.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                99. Yangi tong — sening hayotingda yangi mo‘jizalar boshlanishi uchun berilgan ilohiy tuhfadir.
+            </div>
+        </div>
+        
+        <div class="quote-card-100">
+            <div style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: var(--text-main);">
+                100. Qalbingdagi umid olovini hech kimga o‘chirishiga ruxsat berma — u seni eng yuksak cho‘qqilarga olib chiqadi!
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- 10 Life Conclusions -->
+        <section id="xulosalar" class="section-block">
+            <div class="section-header">
+                <div class="section-num">Hayotiy O‘gitlar</div>
+                <h2 class="section-title">O‘quvchi Uchun 10 Ta Oltin Xulosa</h2>
+                <p class="section-subtitle">Har bir kuningizda eslab yurishingiz kerak bo‘lgan qoidalar</p>
+                <div class="cover-divider"></div>
+            </div>
+            <div style="margin-top: 25px;">
+                
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                1. Hayot tashqaridan emas, ichkaridan boshlanadi
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Agar sening ichki dunyongda tinchlik bo‘lmasa, tashqi olamdagi hech bir hashamat senga xotirjamlik bera olmaydi. Baxt — topiladigan narsa emas, u ichingda uyg‘otiladigan holatdir.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                2. Vaqt — hayotingning yagona haqiqiy valyutasi
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Pulni qayta topish mumkin, yo‘qotilgan sog‘liqni tiklash mumkin, lekin o‘tgan bir soniyani butun dunyoning boyligiga ham sotib olib bo‘lmaydi. Har bir kuningni oxirgi kuningdek mazmunli yasha.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                3. Ota-ona — qaytarilmas ne’mat
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Ota-onangning borligi — sening bosh ustingdagi beminnat osmoningdir. Ular ketganidan keyin qilinadigan mingta pushaymondan ko‘ra, bugun aytilgan bitta 'Sizni yaxshi ko‘raman' degan so‘z ulug‘roqdir.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                4. Kechirish — bu boshqalarga emas, o‘zingga qilingan eng buyuk ehson
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Gina saqlash — boshqaga zahar ichirib, uning o‘lishini kutish bilan barobar. Kechir va qalbingni yengil qilib oldinga qadam tashla.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                5. Yiqilish — mag‘lubiyat emas, yuksalish sabog‘i
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Hayot seni yiqitganda, u seni sindirmoqchi emas, balki poydevoringni mustahkamlamoqchi bo‘ladi. Har bir xato — donolikka olib boruvchi ko‘prikdir.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                6. Seni tushunadigan bitta qalb — butun dunyodan qimmat
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Minglab soxta olqishlar orasida yo‘qolgandan ko‘ra, sening sukunatingni ham tushunadigan bitta sadoqatli do‘stga ega bo‘lish haqiqiy boylikdir.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                7. O‘zingni boshqalar bilan taqqoslashni to‘xtat
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Oy va Quyosh ikkalasi ham charaqlaydi, lekin har biri o‘z vaqtida. Sening o‘z yo‘ling, o‘z kurashing va o‘z fasling bor.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                8. Mehr bergan qalb hech qachon qashshoqlashmaydi
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Dunyodan faqat olganlaring bilan emas, dunyoga bergan nurlaring, qoldirgan yaxshiliklaring bilan eslanasan. Mehringni hech kimdan qizg‘anma.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                9. Sabr — jim turish emas, umid bilan harakat qilishdir
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">Tungi qorong‘ulik eng quyuqlashgan lahza — tong otishiga eng yaqin lahzadir. Sabr qilgan inson oxir-oqibat o‘z saodatini albatta topadi.</p>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.04); border-left: 3px solid var(--gold-primary); padding: 18px 24px; margin-bottom: 16px; border-radius: 0 4px 4px 0;">
+            <h4 style="font-family: var(--font-heading); color: var(--gold-light); font-size: 1.15rem; margin-bottom: 6px;">
+                10. Bugungi kun — senga berilgan eng qimmatbaho sovg‘a
+            </h4>
+            <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;">O‘tmish endi yo‘q, kelajak esa hali kelmadi. Senda faqat ayni dam — shu nafas bor. Uni qadrlagin, chuqur his qilgin va shukrona bilan yasha.</p>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- Final Letter -->
+        <section id="yakuniy-xat" class="section-block" style="border: 2px solid var(--gold-primary);">
+            <div class="section-header">
+                <div class="ornament">❖</div>
+                <h2 class="section-title" style="color: var(--gold-primary);">Yakuniy Maktub</h2>
+                <div class="cover-divider"></div>
+            </div>
+            <div style="white-space: pre-line; font-size: 1.15rem; line-height: 2; font-style: italic;">
+                «BU KITOBNI YOPGANINGDAN KEYIN...»
+
+Aziz musofir, qadrdon do‘stim!
+
+Mana, kitobning so‘nggi sahifasiga ham yetib keldik. Bir necha daqiqadan so‘ng bu kitobni yopasan va yana o‘sha eski, gavjum, shovqinli dunyoingga qaytasan. Ekranning nuri so‘nadi, atrofingdagi odamlarning g‘ala-g‘ovuri qulog‘ingga chalinadi, kundalik tashvishlar yana eshigingni taqillatadi.
+
+Lekin men sendan bitta narsani iltimos qilaman: 
+Bu kitobni yopganingdan keyin, eski odaming bo‘lib qolma!
+
+Ortga qaytganingda:
+1. Agar uyingda ota-onang bo‘lsa, borib ularni jimgina quchoqla. Hech narsa demasang ham mayli, shunchaki ularning borligiga shukr qil va peshonasidan o‘p.
+2. Agar ko‘nglingda kimdandir qolgan xafagarchilik, gina-kudurat bo‘lsa — uni shu yerda, shu lahzada ozod qil. O‘zingni o‘sha og‘ir zanjirlardan xalos et.
+3. Ko‘zguga qara va o‘zingga samimiy jilmay. Shu paytgacha qanchadan-qancha qiyinchiliklarni mardonavor yengib kelganing uchun o‘zingga "Rahmat" ayt.
+4. Hech bo‘lmaganda bugun hech kimni hukm qilma, hech kimga hasad qilma. Bironta insonga beminnat yaxshilik qil — jilmayib salom ber, yo‘l ber, ko‘nglini ko‘tar.
+5. Va eng muhimi — o‘z orzularingdan hech qachon voz kechma. Dunyo senga "Uddalay olmaysan" desa ham, ichingdagi ilohiy olovga ishon.
+
+Bu kitob jismonan yopilishi mumkin, lekin uning so‘zlari sening qalbingda yashashda davom etsin. Sen bu dunyoga shunchaki kelib-ketuvchi yo‘lovchi emassan, sen bu dunyoni o‘z nuring bilan yoritishga qodir mo‘jizasan.
+
+Qalbing doimo uyg‘oq, yo‘ling doimo ochiq bo‘lsin!
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="ornament">❖ ❖ ❖</div>
+        <p>«QALBGA YETIB BORADIGAN SO‘ZLAR»</p>
+        <p style="margin-top: 8px;">Dizayn va mualliflik huquqi: <span class="gold">Boburjon & AI Antigravity Hamkorligi</span> • 2026</p>
+        <p style="margin-top: 15px; font-size: 0.85rem; color: var(--gold-dark);">«Bu shunchaki o‘qiladigan kitob emas. Bu — inson o‘z qalbini tinglashni boshlaydigan kitob».</p>
+    </footer>
+
+</body>
+</html>

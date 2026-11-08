@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: boburchat-bot
+    runtime: docker
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        value: "1260991773"
+      - key: CHANNEL_ID
+        value: "-1004342721043"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PORT
+        value: "8080"

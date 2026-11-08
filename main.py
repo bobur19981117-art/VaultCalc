@@ -1,25 +1,35 @@
 import os
-import sys
 import json
 import time
 import asyncio
 import uvicorn
+import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 
 # ==========================================================
-# SOZLAMALAR VA ENVIRONMENT VARIABLES
+# LOGGING SOZLAMASI (maxfiy ma'lumot logga chiqmasin)
 # ==========================================================
-API_ID = int(os.getenv("TELEGRAM_API_ID", "31163417"))
-API_HASH = os.getenv("TELEGRAM_API_HASH", "ef7338d736ea3037bac99ffa66e6c577")
-SESSION_STRING = os.getenv("TELEGRAM_STRING_SESSION", "").strip()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+# ==========================================================
+# SOZLAMALAR — faqat environment variable'dan o'qiladi
+# ==========================================================
+API_ID = int(os.environ.get("TELEGRAM_API_ID", "31163417"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH", "ef7338d736ea3037bac99ffa66e6c577")
+SESSION_STRING = os.environ.get("TELEGRAM_STRING_SESSION", "").strip()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR, "allowed_contacts.json")
 
-# Telethon Mijozini yaratish (StringSession yoki fayl orqali)
+# Telethon mijozini yaratish
 if SESSION_STRING:
     client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 else:
@@ -35,7 +45,7 @@ DEFAULT_CONFIG = {
     "custom_persona": "",
     "album_settings": {
         "enabled": True,
-        "channel_id": int(os.getenv("ALBUM_CHANNEL_ID", "-1004342721043")),
+        "channel_id": int(os.environ.get("ALBUM_CHANNEL_ID", "-1004342721043")),
         "allowed_users": [
             {"id": 8577897810, "name": "Bobur Men", "username": "Bobur19981117"},
             {"id": 7531752464, "name": "❤️❤️❤️", "username": ""},
@@ -50,7 +60,7 @@ DEFAULT_CONFIG = {
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
-        env_contacts = os.getenv("ALLOWED_CONTACTS_JSON")
+        env_contacts = os.environ.get("ALLOWED_CONTACTS_JSON")
         if env_contacts:
             try:
                 cfg = json.loads(env_contacts)
@@ -67,7 +77,7 @@ def load_config():
                 cfg["album_settings"] = DEFAULT_CONFIG["album_settings"]
             return cfg
     except Exception as e:
-        print(f"Config o'qish xatosi: {e}")
+        logger.error(f"Config o'qish xatosi: {e}")
         return DEFAULT_CONFIG
 
 def save_config(cfg):
@@ -75,10 +85,50 @@ def save_config(cfg):
         with open(CONFIG_FILE, "w", encoding="utf-8") as f:
             json.dump(cfg, f, indent=2, ensure_ascii=False)
     except Exception as e:
-        print(f"Config saqlash xatosi: {e}")
+        logger.error(f"Config saqlash xatosi: {e}")
 
 # ==========================================================
-# MEDIA VA BIR MARTALIK (VIEW ONCE) TEKSHIRUVI
+# ICHKI KEEP-ALIVE (har 10 daqiqada o'ziga ping)
+# ==========================================================
+async def keep_alive_loop():
+    """Fon vazifasi: har 10 daqiqada /health ga so'rov yuboradi."""
+    render_url = os.environ.get("RENDER_EXTERNAL_URL", "").strip()
+    if not render_url:
+        logger.info("RENDER_EXTERNAL_URL yo'q — ichki keep-alive o'chirildi.")
+        return
+
+    ping_url = render_url.rstrip("/") + "/health"
+    logger.info(f"Keep-alive yoqildi: har 10 daqiqada {ping_url} ga ping.")
+
+    # Import shu yerda, tashqi kutubxona talab qilinmaydi
+    import urllib.request
+
+    while True:
+        await asyncio.sleep(10 * 60)  # 10 daqiqa
+        try:
+            req = urllib.request.Request(ping_url, headers={"User-Agent": "KeepAlive/1.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                logger.info(f"Keep-alive ping OK: {resp.status}")
+        except Exception as e:
+            logger.warning(f"Keep-alive ping xatosi (servis yiqilmaydi): {e}")
+
+# ==========================================================
+# TELETHON: QAYTA ULANISH BILAN ISHGA TUSHIRISH
+# ==========================================================
+async def start_telethon():
+    """Telethon ni ishga tushiradi. Xato bo'lsa log yozadi."""
+    try:
+        logger.info("🚀 Telethon Userbot ulanmoqda...")
+        await client.start()
+        me = await client.get_me()
+        # Xavfsizlik: SESSION_STRING ni logga chiqarmaymiz
+        logger.info(f"✅ Telethon muvaffaqiyatli ulandi: {me.first_name} (id={me.id})")
+    except Exception as e:
+        logger.error(f"❌ Telethon ulanishda xato: {e}")
+        raise
+
+# ==========================================================
+# MEDIA TEKSHIRUVI
 # ==========================================================
 def check_media_type(message):
     is_photo = bool(message.photo)
@@ -111,7 +161,7 @@ def check_media_type(message):
     return is_photo, is_video, is_video_note, is_view_once, ttl_seconds
 
 # ==========================================================
-# ALBOMGA UZATISH (AVTOMATIK KANALGA YUKLASH)
+# ALBOMGA UZATISH
 # ==========================================================
 async def forward_to_album(event, sender, channel_id):
     is_photo, is_video, is_video_note, is_view_once, ttl_seconds = check_media_type(event.message)
@@ -155,7 +205,7 @@ async def forward_to_album(event, sender, channel_id):
                         await client.send_file(target, downloaded, video_note=False, caption=caption)
                     else:
                         await client.send_file(target, downloaded, caption=caption)
-                    print(f"🔥 [МОЙ АЛЬБОМ] {sender_name} dan kelgan BIR MARTALIK {media_name} saqlandi!")
+                    logger.info(f"🔥 [МОЙ АЛЬБОМ] BIR MARTALIK {media_name} saqlandi! ({sender_name})")
                 finally:
                     if os.path.exists(downloaded):
                         try:
@@ -164,12 +214,11 @@ async def forward_to_album(event, sender, channel_id):
                             pass
                 return
 
-        # Oddiy media: avval forward qilib ko'ramiz
         try:
             await client.forward_messages(target, event.message)
-            print(f"✅ [МОЙ АЛЬБОМ] {sender_name} dan kelgan {media_name}{tag} uzatildi.")
+            logger.info(f"✅ [МОЙ АЛЬБОМ] {sender_name} dan {media_name}{tag} uzatildi.")
         except Exception as forward_err:
-            print(f"⚠️ Forward taqiqlangan ({forward_err}), yuklab olib yuborilmoqda...")
+            logger.warning(f"⚠️ Forward taqiqlangan ({forward_err}), yuklab yuborilmoqda...")
             temp_file = os.path.join(temp_dir, f"media_{int(time.time())}_{event.id}")
             downloaded = await client.download_media(event.message, file=temp_file)
             if downloaded and os.path.exists(downloaded):
@@ -180,7 +229,7 @@ async def forward_to_album(event, sender, channel_id):
                         await client.send_file(target, downloaded, video_note=False)
                     else:
                         await client.send_file(target, downloaded)
-                    print(f"✅ [МОЙ АЛЬБОМ] {sender_name} dan kelgan {media_name} kanalga yuklandi.")
+                    logger.info(f"✅ [МОЙ АЛЬБОМ] {sender_name} dan {media_name} yuklandi.")
                 finally:
                     if os.path.exists(downloaded):
                         try:
@@ -191,7 +240,7 @@ async def forward_to_album(event, sender, channel_id):
                 raise forward_err
 
     except Exception as e:
-        print(f"❌ [МОЙ АЛЬБОМ] Xatolik: {e}")
+        logger.error(f"❌ [МОЙ АЛЬБОМ] Xatolik: {e}")
 
 # ==========================================================
 # TELETHON HANDLERLARI
@@ -211,7 +260,10 @@ async def incoming_messages_handler(event):
         album_allowed = album_cfg.get("allowed_users", [])
         is_album_allowed = any(u.get("id") == sender.id for u in album_allowed)
         if not is_album_allowed and sender.username:
-            is_album_allowed = any(u.get("username", "").lower() == sender.username.lower() for u in album_allowed)
+            is_album_allowed = any(
+                u.get("username", "").lower() == sender.username.lower()
+                for u in album_allowed
+            )
 
         if is_album_allowed:
             is_photo, is_video, is_video_note, _, _ = check_media_type(event.message)
@@ -282,7 +334,7 @@ async def outgoing_handler(event):
             if subarg:
                 try:
                     target_user = await client.get_entity(int(subarg) if subarg.isdigit() else subarg)
-                except Exception as e:
+                except Exception:
                     await respond(f"❌ Foydalanuvchi topilmadi: `{subarg}`", auto_delete=True, delay=4)
                     return
             else:
@@ -300,7 +352,10 @@ async def outgoing_handler(event):
 
             album_allowed.append({"id": target_user.id, "name": name, "username": target_user.username or ""})
             save_config(cfg)
-            await respond(f"✅ **Ruxsat berildi!**\n👤 {name} dan video, rasm va krujoklar **МОЙ АЛЬБОМ**ga uzatiladi.", auto_delete=True, delay=4)
+            await respond(
+                f"✅ **Ruxsat berildi!**\n👤 {name} dan video, rasm va krujoklar **МОЙ АЛЬБОМ**ga uzatiladi.",
+                auto_delete=True, delay=4
+            )
 
         elif action in ["stop", "toxtat", "to'xtat", "ochir", "o'chir"]:
             target_user = None
@@ -315,7 +370,10 @@ async def outgoing_handler(event):
             new_allowed = [u for u in album_allowed if u.get("id") != target_user.id]
             album_cfg["allowed_users"] = new_allowed
             save_config(cfg)
-            await respond(f"🛑 **Agent to'xtatildi!**\n👤 {name} dan media uzatish to'xtatildi.", auto_delete=True, delay=4)
+            await respond(
+                f"🛑 **Agent to'xtatildi!**\n👤 {name} dan media uzatish to'xtatildi.",
+                auto_delete=True, delay=4
+            )
 
         elif action in ["jadval", "royxat", "ro'yxat", "list"]:
             status_str = "🟢 Yoniq" if album_cfg.get("enabled", True) else "🔴 O'chiq"
@@ -342,35 +400,38 @@ async def outgoing_handler(event):
             await respond(menu_msg, auto_delete=True, delay=10)
 
 # ==========================================================
-# FASTAPI WEB-SERVER (24/7 KEEP-ALIVE VA HEALTHCHECK UCHUN)
+# FASTAPI — LIFESPAN (STARTUP / SHUTDOWN)
 # ==========================================================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Telethon mijozini ishga tushirish
-    print("🚀 Telethon Userbot ulanmoqda...")
-    await client.start()
-    me = await client.get_me()
-    print(f"✅ Telethon muvaffaqiyatli ulandi: {me.first_name} (@{me.username or 'username_yoq'})")
+    # Telethon ni ishga tushirish
+    await start_telethon()
+    # Ichki keep-alive fon vazifasini boshlash
+    keepalive_task = asyncio.create_task(keep_alive_loop())
     yield
-    print("🛑 Telethon uzilmoqda...")
+    # Shutdown
+    keepalive_task.cancel()
+    logger.info("🛑 Telethon uzilmoqda...")
     await client.disconnect()
 
-app = FastAPI(title="Userbot Cloud Media Forwarder", lifespan=lifespan)
+app = FastAPI(title="Userbot Album Agent", lifespan=lifespan)
 
+# ==========================================================
+# WEB YO'LLARI
+# ==========================================================
 @app.get("/")
-@app.get("/health")
-async def health_check():
-    cfg = load_config()
-    allowed_count = len(cfg.get("album_settings", {}).get("allowed_users", []))
-    is_connected = client.is_connected()
-    return {
-        "status": "online" if is_connected else "connecting",
-        "service": "МОЙ АЛЬБОМ Avtomatik Forwarder (24/7 Cloud)",
-        "allowed_contacts_count": allowed_count,
-        "channel_id": cfg.get("album_settings", {}).get("channel_id", -1004342721043),
-        "timestamp": time.time()
-    }
+async def root():
+    """Asosiy sahifa — faqat holat."""
+    return {"status": "online"}
 
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health(request: Request):
+    """Healthcheck — GET va HEAD uchun. UptimeRobot va keep-alive uchun."""
+    return JSONResponse(content={"status": "ok"})
+
+# ==========================================================
+# ISHGA TUSHIRISH
+# ==========================================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")

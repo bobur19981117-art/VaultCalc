@@ -13,12 +13,14 @@ import android.webkit.ConsoleMessage
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.webkit.WebViewAssetLoader
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,15 +31,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Setup fullscreen web view as root content
         webView = WebView(this)
         setContentView(webView)
 
         setupWebViewSettings()
         setupClients()
 
-        // Load the bundled web app
-        webView.loadUrl("file:///android_asset/www/index.html")
+        // Load the bundled web app through secure virtual origin
+        webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
 
         setupBackPressHandler()
     }
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         settings.databaseEnabled = true
         settings.allowFileAccess = true
         settings.allowContentAccess = true
+        settings.allowFileAccessFromFileURLs = true
+        settings.allowUniversalAccessFromFileURLs = true
         settings.mediaPlaybackRequiresUserGesture = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -65,10 +68,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClients() {
+        val assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
+
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                val url = request?.url ?: return null
+                return assetLoader.shouldInterceptRequest(url)
+            }
+
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url = request?.url?.toString() ?: return false
-                if (url.startsWith("file:///android_asset/") || url.startsWith("https://appassets.androidplatform.net/")) {
+                if (url.startsWith("https://appassets.androidplatform.net/")) {
                     return false
                 }
                 // Open external links in device browser
@@ -81,6 +96,20 @@ class MainActivity : AppCompatActivity() {
                 }
                 return false
             }
+
+            override fun onReceivedError(
+                view: WebView?,
+                errorCode: Int,
+                description: String?,
+                failingUrl: String?
+            ) {
+                super.onReceivedError(view, errorCode, description, failingUrl)
+                Log.e("OzbekOvozWeb", "WebView error ($errorCode): $description at $failingUrl")
+                // Fallback to local file:// URL if asset loader ever fails
+                if (failingUrl?.startsWith("https://appassets.androidplatform.net/") == true) {
+                    view?.loadUrl("file:///android_asset/www/index.html")
+                }
+            }
         }
 
         webView.webChromeClient = object : WebChromeClient() {
@@ -90,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                 if (consoleMessage != null) {
-                    Log.d("OzbekOvozWeb", "[${consoleMessage.messageLevel()}] ${consoleMessage.message()} -- line ${consoleMessage.lineNumber()}")
+                    Log.d("OzbekOvozWeb", "[${consoleMessage.messageLevel()}] ${consoleMessage.message()} (line ${consoleMessage.lineNumber()})")
                 }
                 return super.onConsoleMessage(consoleMessage)
             }

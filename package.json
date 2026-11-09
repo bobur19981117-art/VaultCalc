@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build": "vite build && node -e \"const fs = require('fs'); let html = fs.readFileSync('dist/index.html', 'utf8'); html = html.replace(/<script type=\\\"module\\\" crossorigin src=\\\"([^\\\"]+)\\\"><\\/script>/g, '<script defer src=\\\"$1\\\"></script>').replace(/<link rel=\\\"stylesheet\\\" crossorigin href=\\\"([^\\\"]+)\\\">/g, '<link rel=\\\"stylesheet\\\" href=\\\"$1\\\">'); fs.writeFileSync('dist/index.html', html);\" && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"

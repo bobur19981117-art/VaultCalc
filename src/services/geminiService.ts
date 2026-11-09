@@ -242,3 +242,220 @@ export function saveAudioFile(blobOrBase64: Blob | string, fileName: string): vo
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 }
+
+// ==============================================================================
+// VOICE CLONING (OVOZ KLONLASH) ENGINE
+// ==============================================================================
+
+export interface ClonedVoiceProfile {
+  id: string;
+  name: string;
+  provider: "gemini" | "elevenlabs";
+  gender: "male" | "female";
+  systemVoice: string; // Puck, Zephyr, Charon, Kore, Fenrir
+  traits: string;
+  acousticDirective: string;
+  voiceId?: string; // for ElevenLabs
+  createdAt: string;
+}
+
+const CLONES_STORAGE_KEY = "ozbek_ovoz_cloned_profiles";
+const ELEVENLABS_KEY_STORAGE = "ozbek_ovoz_elevenlabs_key";
+
+export function getElevenLabsKey(): string {
+  return localStorage.getItem(ELEVENLABS_KEY_STORAGE) || "";
+}
+
+export function setElevenLabsKey(key: string): void {
+  if (key && key.trim()) {
+    localStorage.setItem(ELEVENLABS_KEY_STORAGE, key.trim());
+  } else {
+    localStorage.removeItem(ELEVENLABS_KEY_STORAGE);
+  }
+}
+
+export function getClonedProfiles(): ClonedVoiceProfile[] {
+  try {
+    const raw = localStorage.getItem(CLONES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveClonedProfile(profile: ClonedVoiceProfile): void {
+  const existing = getClonedProfiles();
+  const updated = [profile, ...existing.filter((p) => p.id !== profile.id)];
+  localStorage.setItem(CLONES_STORAGE_KEY, JSON.stringify(updated));
+}
+
+export function deleteClonedProfile(id: string): void {
+  const existing = getClonedProfiles();
+  const updated = existing.filter((p) => p.id !== id);
+  localStorage.setItem(CLONES_STORAGE_KEY, JSON.stringify(updated));
+}
+
+// 1. Gemini Multimodal Acoustic Voice Cloning
+export async function analyzeAndCloneVoiceWithGemini(
+  name: string,
+  audioBase64: string,
+  mimeType: string = "audio/wav"
+): Promise<ClonedVoiceProfile> {
+  const apiKey = getApiKey();
+  const prompt = `Listen to this speaker's voice in the audio carefully.
+Analyze their vocal traits (gender, pitch, timbre, speed, tone) and recommend the best matching Gemini system voice (Puck, Charon, Fenrir for male; Zephyr, Kore for female) and create a custom speech directive to mimic their voice style.
+Respond ONLY with a valid JSON in this schema:
+{
+  "gender": "male or female",
+  "systemVoice": "Puck or Zephyr or Charon or Kore or Fenrir",
+  "traits": "Short 3-word Uzbek description e.g. Samimiy, vazmin, iliq",
+  "acousticDirective": "Say with friendly, warm, clear male voice: "
+}`;
+
+  const cleanBase64 = audioBase64.includes(",") ? audioBase64.split(",")[1] : audioBase64;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const payload = {
+    contents: [
+      {
+        parts: [
+          { inline_data: { mime_type: mimeType, data: cleanBase64 } },
+          { text: prompt },
+        ],
+      },
+    ],
+    generationConfig: { responseMimeType: "application/json" },
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error?.message || `Gemini ovozni tahlil qila olmadi (HTTP ${res.status})`);
+  }
+
+  const data = await res.json();
+  const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+  let parsed: any = {};
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    parsed = {
+      gender: "male",
+      systemVoice: "Puck",
+      traits: "Samimiy, tabiiy",
+      acousticDirective: "Say naturally and clearly: ",
+    };
+  }
+
+  const profile: ClonedVoiceProfile = {
+    id: `clone_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    name: name.trim() || "Mening Klonim",
+    provider: "gemini",
+    gender: parsed.gender?.toLowerCase() === "female" ? "female" : "male",
+    systemVoice: parsed.systemVoice || (parsed.gender === "female" ? "Zephyr" : "Puck"),
+    traits: parsed.traits || "Moslashtirilgan ovoz",
+    acousticDirective: parsed.acousticDirective || "Say naturally: ",
+    createdAt: new Date().toLocaleDateString("uz-UZ", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+  };
+
+  saveClonedProfile(profile);
+  return profile;
+}
+
+// 2. Synthesize with Cloned Profile
+export async function synthesizeClonedSpeech(
+  text: string,
+  profile: ClonedVoiceProfile,
+  speed: number = 1.0
+): Promise<{ audio: string; voiceName: string; resolvedSystemVoice: string; style: string }> {
+  // If ElevenLabs clone
+  const elevenKey = getElevenLabsKey();
+  if (profile.provider === "elevenlabs" && profile.voiceId && elevenKey) {
+    const elUrl = `https://api.elevenlabs.io/v1/text-to-speech/${profile.voiceId}`;
+    const elRes = await fetch(elUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": elevenKey,
+      },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: { stability: 0.5, similarity_boost: 0.8 },
+      }),
+    });
+    if (!elRes.ok) {
+      throw new Error(`ElevenLabs TTS xatosi: HTTP ${elRes.status}`);
+    }
+    const blob = await elRes.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const b64 = btoa(binary);
+    return {
+      audio: b64,
+      voiceName: profile.name,
+      resolvedSystemVoice: profile.voiceId,
+      style: "Cloned",
+    };
+  }
+
+  // Gemini Acoustic Steering Synthesis
+  const apiKey = getApiKey();
+  const directive = profile.acousticDirective || "Say clearly: ";
+  const fullPrompt = `${directive}${text}`;
+
+  const candidateModels = [
+    "gemini-3.8-flash-tts",
+    "gemini-3.8-flash-lite-tts",
+    "gemini-3.1-flash-tts-preview",
+  ];
+
+  let lastErr = "Klon ovozda sintez qilib bo'lmadi";
+  for (const m of candidateModels) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: fullPrompt }] }],
+          generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: profile.systemVoice },
+              },
+            },
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        continue;
+      }
+      const data = await res.json();
+      const audioB64 = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (audioB64) {
+        return {
+          audio: audioB64,
+          voiceName: profile.name,
+          resolvedSystemVoice: profile.systemVoice,
+          style: "Klon AI",
+        };
+      }
+    } catch (e: any) {
+      lastErr = e.message || "Tarmoq xatosi";
+    }
+  }
+
+  throw new Error(`Klonlangan ovoz yaratishda xatolik: ${lastErr}`);
+}

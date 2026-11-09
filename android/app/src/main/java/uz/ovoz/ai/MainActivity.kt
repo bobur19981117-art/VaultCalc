@@ -1,6 +1,7 @@
 package uz.ovoz.ai
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.ConsoleMessage
 import android.webkit.PermissionRequest
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -19,6 +21,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.webkit.WebViewAssetLoader
 
@@ -26,6 +29,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
     private var doubleBackToExitPressedOnce = false
+    private var fileUploadCallback: ValueCallback<Array<Uri>>? = null
+
+    private val fileChooserLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            val uris = WebChromeClient.FileChooserParams.parseResult(result.resultCode, data)
+            fileUploadCallback?.onReceiveValue(uris)
+        } else {
+            fileUploadCallback?.onReceiveValue(null)
+        }
+        fileUploadCallback = null
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +53,13 @@ class MainActivity : AppCompatActivity() {
 
         setupWebViewSettings()
         setupClients()
+
+        // Request Microphone runtime permission for voice cloning audio recorder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 101)
+            }
+        }
 
         // Load the bundled web app through secure virtual origin
         webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
@@ -115,6 +139,26 @@ class MainActivity : AppCompatActivity() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onPermissionRequest(request: PermissionRequest?) {
                 request?.grant(request.resources)
+            }
+
+            override fun onShowFileChooser(
+                webView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: FileChooserParams?
+            ): Boolean {
+                fileUploadCallback?.onReceiveValue(null)
+                fileUploadCallback = filePathCallback
+                val intent = fileChooserParams?.createIntent() ?: Intent(Intent.ACTION_GET_CONTENT).apply {
+                    type = "audio/*"
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                }
+                try {
+                    fileChooserLauncher.launch(intent)
+                } catch (e: Exception) {
+                    fileUploadCallback = null
+                    return false
+                }
+                return true
             }
 
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {

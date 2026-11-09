@@ -17,6 +17,14 @@ import {
   AlertCircle,
   Key,
   Settings,
+  Mic,
+  MicOff,
+  Dna,
+  Upload,
+  User,
+  PlusCircle,
+  Radio,
+  CheckCircle2,
 } from "lucide-react";
 import {
   synthesizeSpeech,
@@ -26,6 +34,14 @@ import {
   setApiKey,
   resetApiKey,
   isUsingCustomKey,
+  ClonedVoiceProfile,
+  getClonedProfiles,
+  saveClonedProfile,
+  deleteClonedProfile,
+  analyzeAndCloneVoiceWithGemini,
+  synthesizeClonedSpeech,
+  getElevenLabsKey,
+  setElevenLabsKey,
 } from "./services/geminiService";
 
 interface HistoryTrack {
@@ -134,6 +150,22 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [inputApiKey, setInputApiKey] = useState("");
   const [hasCustomKey, setHasCustomKey] = useState(isUsingCustomKey());
+  const [inputElevenKey, setInputElevenKey] = useState(getElevenLabsKey());
+
+  // Voice Cloning State
+  const [activeTab, setActiveTab] = useState<"catalog" | "clone">("catalog");
+  const [clonedProfiles, setClonedProfiles] = useState<ClonedVoiceProfile[]>([]);
+  const [selectedClone, setSelectedClone] = useState<ClonedVoiceProfile | null>(null);
+  const [cloneName, setCloneName] = useState("");
+  const [sampleAudioBase64, setSampleAudioBase64] = useState<string | null>(null);
+  const [sampleAudioUrl, setSampleAudioUrl] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordSeconds, setRecordSeconds] = useState(0);
+  const [isCloning, setIsCloning] = useState(false);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordTimerRef = useRef<any>(null);
 
   // Audio References
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -143,7 +175,7 @@ export default function App() {
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
-  // Load History from LocalStorage
+  // Load History & Cloned Profiles from LocalStorage
   useEffect(() => {
     const saved = localStorage.getItem("ozbekovoz_history");
     if (saved) {
@@ -152,6 +184,11 @@ export default function App() {
       } catch (e) {
         console.error("Failed to parse history", e);
       }
+    }
+    const savedClones = getClonedProfiles();
+    setClonedProfiles(savedClones);
+    if (savedClones.length > 0) {
+      setSelectedClone(savedClones[0]);
     }
   }, []);
 
@@ -417,7 +454,120 @@ export default function App() {
     }
   };
 
-  // Handle Speech Synthesis
+  // Recording handlers for Voice Cloning
+  const startRecording = async () => {
+    try {
+      audioChunksRef.current = [];
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+        const url = URL.createObjectURL(audioBlob);
+        setSampleAudioUrl(url);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setSampleAudioBase64(reader.result as string);
+          setSuccessMessage("Ovoz namunasi muvaffaqiyatli yozib olindi!");
+        };
+        reader.readAsDataURL(audioBlob);
+
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordSeconds(0);
+      setErrorMessage(null);
+
+      recordTimerRef.current = setInterval(() => {
+        setRecordSeconds((prev) => {
+          if (prev >= 30) {
+            stopRecording();
+            return 30;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } catch (err: any) {
+      setErrorMessage("Mikrofondan foydalanishga ruxsat berilmadi: " + (err.message || err));
+      setIsRecording(false);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      if (recordTimerRef.current) {
+        clearInterval(recordTimerRef.current);
+      }
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 25 * 1024 * 1024) {
+      setErrorMessage("Fayl hajmi juda katta (maksimal 25MB).");
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setSampleAudioUrl(url);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSampleAudioBase64(reader.result as string);
+      setSuccessMessage(`"${file.name}" audio namunasi muvaffaqiyatli yuklandi!`);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCreateClone = async () => {
+    if (!sampleAudioBase64) {
+      setErrorMessage("Iltimos, avval mikrofondan ovoz yozing yoki audio fayl yuklang.");
+      return;
+    }
+    const nameToUse = cloneName.trim() || `Klon Ovoz #${clonedProfiles.length + 1}`;
+    setIsCloning(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const newProfile = await analyzeAndCloneVoiceWithGemini(nameToUse, sampleAudioBase64);
+      const updated = getClonedProfiles();
+      setClonedProfiles(updated);
+      setSelectedClone(newProfile);
+      setCloneName("");
+      setSuccessMessage(`Tabriklaymiz! "${newProfile.name}" ovozi muvaffaqiyatli klonlandi! (${newProfile.traits})`);
+    } catch (err: any) {
+      setErrorMessage(err.message || "Ovozni klonlashda xatolik yuz berdi.");
+    } finally {
+      setIsCloning(false);
+    }
+  };
+
+  const handleDeleteClone = (id: string, name: string) => {
+    deleteClonedProfile(id);
+    const updated = getClonedProfiles();
+    setClonedProfiles(updated);
+    if (selectedClone?.id === id) {
+      setSelectedClone(updated.length > 0 ? updated[0] : null);
+    }
+    setSuccessMessage(`"${name}" klon profili o'chirildi.`);
+  };
+
+  // Handle Speech Synthesis (Standard or Cloned)
   const handleSynthesize = async () => {
     if (!text.trim()) {
       setErrorMessage("Sintez qilish uchun matn kiritilmagan.");
@@ -429,22 +579,44 @@ export default function App() {
       return;
     }
 
+    if (activeTab === "clone" && !selectedClone) {
+      setErrorMessage("Iltimos, avval ro'yxatdan klonlangan ovozni tanlang yoki yangi ovoz klonlang.");
+      return;
+    }
+
     setIsSynthesizing(true);
     setErrorMessage(null);
     setSuccessMessage(null);
     setIsPlaying(false);
 
     try {
-      const data = await synthesizeSpeech(text, activeVoice.id, activeStyle.id);
+      let data: any;
+      let activeVoiceName = activeVoice.name;
+      let activeStyleLabel = activeStyle.label;
+
+      if (activeTab === "clone" && selectedClone) {
+        data = await synthesizeClonedSpeech(text, selectedClone, speed);
+        activeVoiceName = `🧬 ${selectedClone.name} (Klon)`;
+        activeStyleLabel = selectedClone.traits || "Klon AI";
+        loadAudioFromBase64(
+          data.audio,
+          text,
+          { name: selectedClone.name, id: selectedClone.id, systemVoice: selectedClone.systemVoice },
+          { label: activeStyleLabel }
+        );
+      } else {
+        data = await synthesizeSpeech(text, activeVoice.id, activeStyle.id);
+        loadAudioFromBase64(data.audio, text, activeVoice, activeStyle);
+      }
+
       const base64Audio = data.audio;
-      loadAudioFromBase64(base64Audio, text, activeVoice, activeStyle);
 
       // Save to History
       const track: HistoryTrack = {
         id: Math.random().toString(36).substring(2, 9),
         text,
-        voiceName: activeVoice.name,
-        style: activeStyle.label,
+        voiceName: activeVoiceName,
+        style: activeStyleLabel,
         speed,
         timestamp: new Date().toLocaleTimeString("uz-UZ", {
           hour: "2-digit",
@@ -456,7 +628,11 @@ export default function App() {
 
       const updatedHistory = [track, ...history.slice(0, 5)];
       saveHistory(updatedHistory);
-      setSuccessMessage("Matn muvaffaqiyatli ovozga sintez qilindi!");
+      setSuccessMessage(
+        activeTab === "clone"
+          ? `Nutq muvaffaqiyatli "${selectedClone?.name}" klonlangan ovozida yaratildi!`
+          : "Matn muvaffaqiyatli ovozga sintez qilindi!"
+      );
     } catch (err: any) {
       setErrorMessage(err.message || "Sintez jarayonida xatolik yuz berdi.");
     } finally {
@@ -646,6 +822,23 @@ export default function App() {
               </span>
             </div>
 
+            <div className="mb-4 pt-3 border-t border-slate-100">
+              <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span>ElevenLabs API Kaliti (Ixtiyoriy)</span>
+                <span className="text-[10px] text-teal-600 font-semibold bg-teal-50 px-2 py-0.5 rounded">Pro Cloning</span>
+              </label>
+              <input
+                type="password"
+                placeholder="xi-..."
+                value={inputElevenKey}
+                onChange={(e) => setInputElevenKey(e.target.value)}
+                className="w-full text-xs font-mono p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-teal-500 text-slate-800"
+              />
+              <span className="text-[10px] text-slate-400 mt-1 block">
+                Agar kiritilmasa, bepul Gemini Akustik Ovoz Klonlash dvigateli ishlaydi.
+              </span>
+            </div>
+
             <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
               <button
                 onClick={() => {
@@ -671,8 +864,11 @@ export default function App() {
                     if (inputApiKey.trim()) {
                       setApiKey(inputApiKey.trim());
                       setHasCustomKey(true);
-                      setSuccessMessage("Yangi API kalit saqlandi!");
                     }
+                    if (inputElevenKey !== undefined) {
+                      setElevenLabsKey(inputElevenKey.trim());
+                    }
+                    setSuccessMessage("Sozlamalar muvaffaqiyatli saqlandi!");
                     setShowSettings(false);
                   }}
                   className="text-xs bg-teal-500 hover:bg-teal-600 text-slate-950 py-2 px-4 rounded-xl font-bold transition-colors cursor-pointer shadow-sm"
@@ -707,6 +903,32 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Navigation Tabs: Katalog Ovozlar vs Ovoz Klonlash Studiyasi */}
+        <div className="flex items-center gap-3 mb-6 bg-slate-100 p-1.5 rounded-2xl w-full max-w-md border border-slate-200">
+          <button
+            onClick={() => setActiveTab("catalog")}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === "catalog"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Volume2 className="h-4 w-4 text-teal-600" />
+            <span>Katalog Ovozlar (5 ta)</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("clone")}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === "clone"
+                ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-sm shadow-teal-500/20"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Dna className="h-4 w-4" />
+            <span>Ovoz Klonlash Studiyasi</span>
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* LEFT COLUMN: EDITOR & SETTINGS (width: 7 cols) */}
@@ -775,63 +997,223 @@ export default function App() {
 
             {/* Sozlamalar Card */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6" id="settings_card">
-              <div className="flex items-center gap-2 mb-6">
-                <Sliders className="h-5 w-5 text-teal-600" />
-                <h3 className="font-bold text-slate-800 text-base">Ovoz sozlamalari va Uslublar</h3>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  {activeTab === "catalog" ? (
+                    <Sliders className="h-5 w-5 text-teal-600" />
+                  ) : (
+                    <Dna className="h-5 w-5 text-teal-600" />
+                  )}
+                  <h3 className="font-bold text-slate-800 text-base">
+                    {activeTab === "catalog"
+                      ? "Ovoz sozlamalari va Uslublar"
+                      : "Ovoz Klonlash & Analiz Studiyasi"}
+                  </h3>
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                  {activeTab === "catalog" ? "5 ta Rasmiy Ovoz" : `${clonedProfiles.length} ta Klon`}
+                </span>
               </div>
 
-              {/* Voice Selectors */}
-              <div className="mb-6">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-3">
-                  Suxandonni tanlang:
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {VOICE_CHARACTERS.map((char) => (
-                    <button
-                      key={char.id}
-                      onClick={() => setActiveVoice(char)}
-                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        activeVoice.id === char.id
-                          ? "border-teal-500 bg-teal-50/50 ring-2 ring-teal-500/10"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-800 text-xs">{char.name}</span>
-                        {activeVoice.id === char.id && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
-                        )}
+              {activeTab === "catalog" ? (
+                <>
+                  {/* Voice Selectors */}
+                  <div className="mb-6">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-3">
+                      Suxandonni tanlang:
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {VOICE_CHARACTERS.map((char) => (
+                        <button
+                          key={char.id}
+                          onClick={() => setActiveVoice(char)}
+                          className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            activeVoice.id === char.id
+                              ? "border-teal-500 bg-teal-50/50 ring-2 ring-teal-500/10"
+                              : "border-slate-200 hover:border-slate-300 bg-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-slate-800 text-xs">{char.name}</span>
+                            {activeVoice.id === char.id && (
+                              <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-400 mt-1">{char.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Emotion / Style Selectors */}
+                  <div className="mb-6">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-3">
+                      Nutq hissiyoti va ohangi:
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {STYLES.map((style) => (
+                        <button
+                          key={style.id}
+                          onClick={() => setActiveStyle(style)}
+                          className={`px-3.5 py-2.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                            activeStyle.id === style.id
+                              ? "bg-slate-900 border-slate-900 text-white shadow-sm"
+                              : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
+                          }`}
+                        >
+                          {style.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* VOICE CLONING TAB CONTENT */
+                <div className="space-y-6">
+                  {/* Cloned Voices List */}
+                  <div>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2.5">
+                      Klonlangan Ovozlarim:
+                    </label>
+                    {clonedProfiles.length === 0 ? (
+                      <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
+                        Hozircha klonlangan ovozlar yo'q. Pastdagi studiya orqali mikrofondan ovoz yozib klonlang!
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-1">{char.desc}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {clonedProfiles.map((p) => {
+                          const isSelected = selectedClone?.id === p.id;
+                          return (
+                            <div
+                              key={p.id}
+                              onClick={() => setSelectedClone(p)}
+                              className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
+                                isSelected
+                                  ? "border-teal-500 bg-teal-50/50 ring-2 ring-teal-500/10"
+                                  : "border-slate-200 hover:border-slate-300 bg-white"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-slate-800 text-xs flex items-center gap-1.5 truncate">
+                                  <Dna className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+                                  {p.name}
+                                </span>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteClone(p.id, p.name);
+                                  }}
+                                  className="text-slate-300 hover:text-rose-500 p-1 transition-colors cursor-pointer"
+                                  title="O'chirish"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
+                              </div>
+                              <p className="text-[10px] text-slate-400 mt-1 line-clamp-1">
+                                {p.traits || `${p.gender === 'male' ? 'Erkak' : 'Ayol'} ovozi`}
+                              </p>
+                              <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100/80 text-[9px] text-slate-400">
+                                <span>Baza: {p.suggestedVoice}</span>
+                                <span>{p.createdAt ? new Date(p.createdAt).toLocaleDateString() : ''}</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
 
-              {/* Emotion / Style Selectors */}
-              <div className="mb-6">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-3">
-                  Nutq hissiyoti va ohangi:
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {STYLES.map((style) => (
-                    <button
-                      key={style.id}
-                      onClick={() => setActiveStyle(style)}
-                      className={`px-3.5 py-2.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                        activeStyle.id === style.id
-                          ? "bg-slate-900 border-slate-900 text-white shadow-sm"
-                          : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
-                      }`}
-                    >
-                      {style.label}
-                    </button>
-                  ))}
+                  {/* Record or Upload New Sample */}
+                  <div className="bg-slate-50/70 border border-slate-200 rounded-xl p-4">
+                    <span className="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+                      <PlusCircle className="h-4 w-4 text-teal-600" />
+                      Yangi Ovoz Namunasi (Mikrofon yoki Fayl):
+                    </span>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      {/* Live Record Button */}
+                      <button
+                        onClick={isRecording ? stopRecording : startRecording}
+                        className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                          isRecording
+                            ? "bg-rose-500 hover:bg-rose-600 text-white animate-pulse"
+                            : "bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 shadow-sm"
+                        }`}
+                      >
+                        {isRecording ? (
+                          <>
+                            <MicOff className="h-4 w-4" />
+                            <span>Yozishni to'xtatish (00:{recordSeconds < 10 ? '0' : ''}{recordSeconds})</span>
+                          </>
+                        ) : (
+                          <>
+                            <Mic className="h-4 w-4 text-rose-500" />
+                            <span>Mikrofondan Ovoz Yozish</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* File Upload Button */}
+                      <label className="flex-1 py-3 px-4 rounded-xl text-xs font-bold bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 shadow-sm flex items-center justify-center gap-2 cursor-pointer transition-all">
+                        <Upload className="h-4 w-4 text-teal-600" />
+                        <span>Audio Fayl Yuklash</span>
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+
+                    {/* Audio Preview if sample recorded/uploaded */}
+                    {sampleAudioUrl && (
+                      <div className="mt-3 pt-3 border-t border-slate-200/80">
+                        <div className="flex items-center justify-between mb-1.5 text-[11px] font-semibold text-slate-600">
+                          <span>Yozilgan / Yuklangan Namuna:</span>
+                          <span className="text-emerald-600 font-bold">✓ Audio tayyor</span>
+                        </div>
+                        <audio controls src={sampleAudioUrl} className="w-full h-8 rounded-lg" />
+                      </div>
+                    )}
+
+                    {/* Name input and Clone button */}
+                    <div className="mt-4 pt-3 border-t border-slate-200/80 flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        placeholder="Ovoz nomi (masalan: Mening Ovozim, Alisher...)"
+                        value={cloneName}
+                        onChange={(e) => setCloneName(e.target.value)}
+                        className="flex-1 text-xs px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-slate-700"
+                      />
+                      <button
+                        onClick={handleCreateClone}
+                        disabled={isCloning || !sampleAudioBase64}
+                        className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 ${
+                          isCloning || !sampleAudioBase64
+                            ? "bg-slate-100 text-slate-400 border border-slate-200"
+                            : "bg-teal-500 hover:bg-teal-600 text-slate-950 shadow-sm"
+                        }`}
+                      >
+                        {isCloning ? (
+                          <>
+                            <RefreshCw className="h-3.5 w-3.5 animate-spin text-teal-600" />
+                            <span>AI Tahlil qilinmoqda...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Dna className="h-3.5 w-3.5" />
+                            <span>Ovozni Klonlash (AI Analiz)</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Tempo Speed Slider */}
-              <div className="mb-8">
+              <div className="mt-6 mb-8">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
                     Nutq tezligi (Tempo):
@@ -873,8 +1255,18 @@ export default function App() {
                   </>
                 ) : (
                   <>
-                    <Volume2 className="h-4 w-4" />
-                    <span>Matnni Ovozga Sintez Qilish</span>
+                    {activeTab === "clone" ? (
+                      <Dna className="h-4 w-4" />
+                    ) : (
+                      <Volume2 className="h-4 w-4" />
+                    )}
+                    <span>
+                      {activeTab === "clone"
+                        ? selectedClone
+                          ? `"${selectedClone.name}" Klon Ovozida Sintez Qilish`
+                          : "Klon Ovoz Tanlang yoki Yarating"
+                        : `${activeVoice.name.replace(/\s*\(.*\)/, "")} Ovozida Sintez Qilish`}
+                    </span>
                   </>
                 )}
               </button>
@@ -917,10 +1309,14 @@ export default function App() {
                     <div className="flex items-start justify-between gap-4 mb-6">
                       <div>
                         <h4 className="font-extrabold text-teal-400 text-sm tracking-wide">
-                          {activeVoice.name.replace(/\s*\(.*\)/, "")} ovozi
+                          {activeTab === "clone" && selectedClone
+                            ? `🧬 ${selectedClone.name} (Klon)`
+                            : `${activeVoice.name.replace(/\s*\(.*\)/, "")} ovozi`}
                         </h4>
                         <p className="text-xs text-slate-400 mt-0.5 font-medium">
-                          Ohang: {activeStyle.label} • Tezlik: {speed.toFixed(1)}x
+                          {activeTab === "clone" && selectedClone
+                            ? `Xususiyat: ${selectedClone.traits || "Klon AI"} • Tezlik: ${speed.toFixed(1)}x`
+                            : `Ohang: ${activeStyle.label} • Tezlik: ${speed.toFixed(1)}x`}
                         </p>
                       </div>
                       <div className="h-12 w-12 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center shrink-0">

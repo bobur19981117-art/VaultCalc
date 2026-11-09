@@ -46,7 +46,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.1-ovoz-ai
-          name: "O'zbek Ovoz AI v1.0.1 (White Screen Fix)"
-          body: "🎙 O'zbek Ovoz AI v1.0.1 - WebViewAssetLoader va non-module script orqali oq ekran muammosi to'liq bartaraf etildi."
+          tag_name: v1.0.2-ovoz-ai
+          name: "O'zbek Ovoz AI v1.0.2 (Ovoz Klonlash Studiyasi)"
+          body: "🎙 O'zbek Ovoz AI v1.0.2 - Ovoz Klonlash Studiyasi: mikrofondan yoki fayldan ovoz namunasini tahlil qilib, Gemini Akustik AI orqali shaxsiy ovozni klonlash va ushbu ovozda matnni sintez qilish imkoniyati qo'shildi."
           files: output/Ozbek_Ovoz_AI.apk

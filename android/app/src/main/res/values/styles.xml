@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.OzbekOvozAI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/teal_primary</item>
+        <item name="colorPrimaryVariant">@color/teal_dark</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+</resources>

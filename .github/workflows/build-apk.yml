@@ -1,0 +1,52 @@
+name: Build Ozbek Ovoz AI APK
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Grant Execute Permission to gradlew
+        run: chmod +x android/gradlew
+
+      - name: Build Release APK
+        run: |
+          cd android
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Prepare Output APK
+        run: |
+          mkdir -p output
+          cp android/app/build/outputs/apk/release/app-release.apk output/Ozbek_Ovoz_AI.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ozbek_Ovoz_AI
+          path: output/Ozbek_Ovoz_AI.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0-ovoz-ai
+          name: "O'zbek Ovoz AI v1.0.0 (Release APK)"
+          body: "🎙 O'zbek Ovoz AI v1.0.0 - Eng ilg'or o'zbek tili ovoz sintezlovchi platformasi Android APK."
+          files: output/Ozbek_Ovoz_AI.apk

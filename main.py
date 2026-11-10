@@ -42,6 +42,14 @@ from media_downloader import (
     PENDING_DOWNLOADS, clean_temp_files
 )
 
+# Album Catalog & Categorization Module
+from album_catalog import (
+    init_catalog_db, save_media_to_catalog, get_catalog_stats,
+    format_channel_caption, format_catalog_message,
+    get_album_categories_markup, format_category_view,
+    get_media_item_by_id
+)
+
 # Optional Gemini AI
 try:
     import google.generativeai as genai
@@ -89,9 +97,9 @@ if GEMINI_AVAILABLE and GEMINI_API_KEY:
 # Keyboard
 MAIN_KEYBOARD = {
     "keyboard": [
-        [{"text": "📥 Media Yuklovchi"}, {"text": "📖 Qalbga yetib boradigan so‘zlar"}],
-        [{"text": "🎲 Qalb iqtibosi"}, {"text": "📊 Tizim holati"}],
-        [{"text": "ℹ️ Yordam"}]
+        [{"text": "📥 Media Yuklovchi"}, {"text": "📁 Albom Bo‘limlari"}],
+        [{"text": "📖 Qalbga yetib boradigan so‘zlar"}, {"text": "🎲 Qalb iqtibosi"}],
+        [{"text": "📊 Tizim holati"}, {"text": "ℹ️ Yordam"}]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -242,34 +250,42 @@ def send_document(chat_id, file_path, caption=None):
         logger.error(f"Error sending document: {e}")
         return False
 
-def post_video_to_channel_by_id(file_id, caption):
+def post_video_to_channel_by_id(file_id, caption, reply_markup=None):
     try:
-        res = requests.post(f"{BASE_URL}/sendVideo", data={
+        data = {
             "chat_id": CHANNEL_ID,
             "video": file_id,
             "caption": caption,
             "parse_mode": "HTML",
             "supports_streaming": True
-        }, timeout=30)
-        return res.ok
+        }
+        if reply_markup:
+            data["reply_markup"] = json.dumps(reply_markup)
+        res = requests.post(f"{BASE_URL}/sendVideo", data=data, timeout=30)
+        if res.ok:
+            return res.json().get("result", {}).get("message_id")
     except Exception as e:
         logger.error(f"Channel video post error: {e}")
-        return False
+    return None
 
-def post_audio_to_channel_by_id(file_id, caption, title="", performer=""):
+def post_audio_to_channel_by_id(file_id, caption, title="", performer="", reply_markup=None):
     try:
-        res = requests.post(f"{BASE_URL}/sendAudio", data={
+        data = {
             "chat_id": CHANNEL_ID,
             "audio": file_id,
             "caption": caption,
             "title": title,
             "performer": performer,
             "parse_mode": "HTML"
-        }, timeout=30)
-        return res.ok
+        }
+        if reply_markup:
+            data["reply_markup"] = json.dumps(reply_markup)
+        res = requests.post(f"{BASE_URL}/sendAudio", data=data, timeout=30)
+        if res.ok:
+            return res.json().get("result", {}).get("message_id")
     except Exception as e:
         logger.error(f"Channel audio post error: {e}")
-        return False
+    return None
 
 # --- Media Download Worker ---
 
@@ -302,10 +318,10 @@ def process_media_url_request(chat_id, user_id, user_name, media_url, platform, 
     mode = "audio" if wants_audio else "video"
     threading.Thread(
         target=execute_media_download_task,
-        args=(chat_id, user_name, media_url, mode, platform, msg_id)
+        args=(chat_id, user_id, user_name, media_url, mode, platform, msg_id)
     ).start()
 
-def execute_media_download_task(chat_id, user_name, media_url, mode, platform, msg_id, status_msg_id=None):
+def execute_media_download_task(chat_id, user_id, user_name, media_url, mode, platform, msg_id, status_msg_id=None):
     mode_uz = "Musiqa (MP3)" if mode == "audio" else "Video (MP4)"
     status_text = f"⏳ *{platform.capitalize()} {mode_uz} yuklab olinmoqda...*\nIltimos, kuting..."
 
@@ -410,26 +426,53 @@ def execute_media_download_task(chat_id, user_name, media_url, mode, platform, m
             if doc_res:
                 sent_to_user_ok = True
 
-        # Post to "МОЙ АЛЬБОМ" Channel (-1004342721043)
+        # Post to "МОЙ АЛЬБОМ" Channel (-1004342721043) with Categorization & Hashtags
         if uploaded_file_id:
-            channel_caption = (
-                f"📥 <b>{html_escape(title)}</b>\n\n"
-                f"👤 <b>Yuboruvchi:</b> {html_escape(user_name)}\n"
-                f"💾 <b>Hajmi:</b> {size_mb:.1f} MB\n"
-                f"🔗 <a href='{media_url}'>{platform.capitalize()}</a>\n"
-                f"🤖 @boburchat_bot orqali yuklandi (24/7 Cloud)"
+            channel_caption, channel_tags = format_channel_caption(
+                platform=platform,
+                media_type=actual_mode,
+                title=title,
+                user_name=user_name,
+                size_mb=size_mb,
+                media_url=media_url
             )
+            ch_keyboard = {
+                "inline_keyboard": [
+                    [
+                        {"text": f"🔗 {platform.capitalize()} Asliga O‘tish", "url": media_url},
+                        {"text": "🤖 Botga O‘tish", "url": "https://t.me/boburchat_bot"}
+                    ]
+                ]
+            }
+            ch_msg_id = None
             if actual_mode == "video":
-                post_video_to_channel_by_id(uploaded_file_id, channel_caption)
+                ch_msg_id = post_video_to_channel_by_id(uploaded_file_id, channel_caption, reply_markup=ch_keyboard)
             elif actual_mode == "photo":
-                requests.post(f"{BASE_URL}/sendPhoto", data={
+                res_ph = requests.post(f"{BASE_URL}/sendPhoto", data={
                     "chat_id": CHANNEL_ID,
                     "photo": uploaded_file_id,
                     "caption": channel_caption,
-                    "parse_mode": "HTML"
+                    "parse_mode": "HTML",
+                    "reply_markup": json.dumps(ch_keyboard)
                 }, timeout=30)
+                if res_ph.ok:
+                    ch_msg_id = res_ph.json().get("result", {}).get("message_id")
             else:
-                post_audio_to_channel_by_id(uploaded_file_id, channel_caption, title=title, performer=performer)
+                ch_msg_id = post_audio_to_channel_by_id(uploaded_file_id, channel_caption, title=title, performer=performer, reply_markup=ch_keyboard)
+
+            # Save to SQLite Catalog database
+            save_media_to_catalog(
+                platform=platform,
+                media_type=actual_mode,
+                title=title,
+                media_url=media_url,
+                file_id=uploaded_file_id,
+                size_mb=size_mb,
+                duration=duration,
+                channel_msg_id=ch_msg_id,
+                user_id=user_id,
+                user_name=user_name
+            )
 
         if sent_to_user_ok and status_msg_id:
             delete_message(chat_id, status_msg_id)
@@ -472,7 +515,7 @@ def handle_callback_query(callback_query):
 
             threading.Thread(
                 target=execute_media_download_task,
-                args=(chat_id, user_name, media_url, mode, platform, orig_msg_id, message_id)
+                args=(chat_id, user_id, user_name, media_url, mode, platform, orig_msg_id, message_id)
             ).start()
             return
 
@@ -559,6 +602,105 @@ def handle_callback_query(callback_query):
             requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id, "text": "✅ 'МОЙ АЛЬБОМ' kanaliga joylandi!", "show_alert": True})
         return
 
+    # Album Catalog & Categorization Callbacks
+    if query_data == "cat_back_main":
+        requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id})
+        stats = get_catalog_stats()
+        total = sum(stats.values())
+        albom_text = (
+            f"📁 <b>«МОЙ АЛЬБОМ» — TARTIBLANGAN BO‘LIMLAR</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"Kanalga yuklangan barcha fayllar toifalar bo‘yicha tartiblangan.\n\n"
+            f"Qaysi bo‘limdagi fayllarni ochmoqchisiz?\n"
+            f"Istalgan bo‘lim ustiga bosing:\n\n"
+            f"📊 <b>Bazada saqlangan jami fayllar:</b> {total} ta"
+        )
+        edit_message(chat_id, message_id, albom_text, reply_markup=get_album_categories_markup())
+        return
+
+    if query_data == "cat_refresh_pinned":
+        cat_text = format_catalog_message()
+        res = requests.post(f"{BASE_URL}/sendMessage", data={
+            "chat_id": CHANNEL_ID,
+            "text": cat_text,
+            "parse_mode": "HTML"
+        }, timeout=20)
+        if res.ok:
+            pin_id = res.json().get("result", {}).get("message_id")
+            requests.post(f"{BASE_URL}/pinChatMessage", data={
+                "chat_id": CHANNEL_ID,
+                "message_id": pin_id,
+                "disable_notification": True
+            }, timeout=15)
+            requests.post(f"{BASE_URL}/answerCallbackQuery", data={
+                "callback_query_id": cb_id,
+                "text": "✅ Kanal mundarijasi yangilandi va qadaldi!",
+                "show_alert": True
+            })
+        else:
+            requests.post(f"{BASE_URL}/answerCallbackQuery", data={
+                "callback_query_id": cb_id,
+                "text": "Mundarijani yangilashda xatolik!",
+                "show_alert": True
+            })
+        return
+
+    if query_data.startswith("cat_view:"):
+        parts = query_data.split(":")
+        p_platform = parts[1]
+        p_type = parts[2]
+        p_page = int(parts[3])
+        v_text, v_markup = format_category_view(p_platform, p_type, page=p_page, channel_id=CHANNEL_ID)
+        edit_message(chat_id, message_id, v_text, reply_markup=v_markup)
+        requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id})
+        return
+
+    if query_data.startswith("cat_resend:"):
+        item_id = int(query_data.split(":")[1])
+        item = get_media_item_by_id(item_id)
+        if not item or not item.get("file_id"):
+            requests.post(f"{BASE_URL}/answerCallbackQuery", data={
+                "callback_query_id": cb_id,
+                "text": "⚠️ Fayl bazada topilmadi!",
+                "show_alert": True
+            })
+            return
+
+        requests.post(f"{BASE_URL}/answerCallbackQuery", data={
+            "callback_query_id": cb_id,
+            "text": "📥 Fayl yuborilmoqda..."
+        })
+        resend_caption = (
+            f"🎬 <b>{html_escape(item['title'])}</b>\n\n"
+            f"💾 <b>Hajmi:</b> {item['size_mb']:.1f} MB\n"
+            f"📁 <b>Bo‘lim:</b> #{item['platform'].capitalize()}\n"
+            f"🤖 @boburchat_bot"
+        )
+        if item["media_type"] == "video":
+            requests.post(f"{BASE_URL}/sendVideo", data={
+                "chat_id": chat_id,
+                "video": item["file_id"],
+                "caption": resend_caption,
+                "parse_mode": "HTML",
+                "supports_streaming": True
+            }, timeout=30)
+        elif item["media_type"] == "audio":
+            requests.post(f"{BASE_URL}/sendAudio", data={
+                "chat_id": chat_id,
+                "audio": item["file_id"],
+                "caption": resend_caption,
+                "title": item["title"],
+                "parse_mode": "HTML"
+            }, timeout=30)
+        elif item["media_type"] == "photo":
+            requests.post(f"{BASE_URL}/sendPhoto", data={
+                "chat_id": chat_id,
+                "photo": item["file_id"],
+                "caption": resend_caption,
+                "parse_mode": "HTML"
+            }, timeout=30)
+        return
+
     requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id})
 
 # --- Message Handler ---
@@ -616,8 +758,22 @@ def handle_message(message):
             "✨ *Imkoniyatlar:*\n"
             "• 🎬 Videoni eng sifatli MP4 formatida yuklab berish\n"
             "• 🎵 Faqat musiqasini (MP3) ajratib olish\n"
-            "• 📂 Barcha yuklangan fayllar avtomatik *'МОЙ АЛЬБОМ'* kanaliga saqlanadi!"
+            "• 📂 Barcha yuklangan fayllar avtomatik *'МОЙ АЛЬБОМ'* kanaliga toifalab saqlanadi!"
         ), msg_id)
+        return
+
+    if text in ["📁 Albom Bo‘limlari", "📁 Albom Bo'limlari", "/album", "/albom", "/catalog", "/mundarija"]:
+        stats = get_catalog_stats()
+        total = sum(stats.values())
+        albom_text = (
+            f"📁 <b>«МОЙ АЛЬБОМ» — TARTIBLANGAN BO‘LIMLAR</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"Kanalga yuklangan barcha fayllar toifalar bo‘yicha tartiblangan.\n\n"
+            f"Qaysi bo‘limdagi fayllarni ochmoqchisiz?\n"
+            f"Istalgan bo‘lim ustiga bosing:\n\n"
+            f"📊 <b>Bazada saqlangan jami fayllar:</b> {total} ta"
+        )
+        send_message(chat_id, albom_text, msg_id, reply_markup=get_album_categories_markup())
         return
 
     if text in ["/kitob", "📖 Qalbga yetib boradigan so‘zlar"]:
@@ -726,9 +882,10 @@ def telegram_polling_loop():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    init_catalog_db()
     t = threading.Thread(target=telegram_polling_loop, daemon=True)
     t.start()
-    logger.info("Bot polling thread started in background.")
+    logger.info("Bot polling thread started in background (Catalog DB initialized).")
     yield
 
 app = FastAPI(title="@boburchat_bot Cloud Service", lifespan=lifespan)

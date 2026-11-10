@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>«МОЙ АЛЬБОМ» — Shaxsiy Media Ilova</title>
+  
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857'
+            },
+            tg: {
+              bg: 'var(--tg-theme-bg-color, #0f172a)',
+              secondary: 'var(--tg-theme-secondary-bg-color, #1e293b)',
+              text: 'var(--tg-theme-text-color, #f8fafc)',
+              hint: 'var(--tg-theme-hint-color, #94a3b8)',
+              link: 'var(--tg-theme-link-color, #38bdf8)',
+              button: 'var(--tg-theme-button-color, #2563eb)',
+              buttonText: 'var(--tg-theme-button-text-color, #ffffff)'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: var(--tg-theme-bg-color, #0b0f19);
+      color: var(--tg-theme-text-color, #f1f5f9);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .ig-gradient {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+    .yt-gradient {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    }
+    .quote-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-12 transition-colors duration-200">
+
+  <!-- Top App Bar -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i data-lucide="folder-heart" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+            МОЙ АЛЬБОМ
+            <span class="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">24/7 Cloud</span>
+          </h1>
+          <p class="text-[11px] text-slate-400">Tartiblangan Shaxsiy Media Hub</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button id="refresh-btn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all active:scale-95" title="Yangilash">
+          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
+        <a href="https://t.me/+bZUlidVcv8UxMDJi" target="_blank" class="p-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/20 transition-all active:scale-95" title="Kanalga o'tish">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Live Search Input -->
+    <div class="mt-3 relative">
+      <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+      <input 
+        id="search-input" 
+        type="text" 
+        placeholder="Nomi yoki sarlavhasi bo‘yicha qidirish..." 
+        class="w-full bg-slate-800/90 text-sm text-slate-200 placeholder-slate-400 rounded-xl pl-9 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 border border-slate-700/60 transition-all"
+      >
+      <button id="clear-search" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-200">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="mt-3 flex items-center space-x-2 overflow-x-auto hide-scrollbar py-0.5" id="category-tabs">
+      <button data-cat="all" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all active:scale-95 bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center gap-1.5">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Barchasi
+      </button>
+      <button data-cat="instagram" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all active:scale-95 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full ig-gradient"></span> Instagram
+      </button>
+      <button data-cat="youtube" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all active:scale-95 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-red-500"></span> YouTube
+      </button>
+      <button data-cat="audio" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all active:scale-95 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5">
+        <i data-lucide="music-2" class="w-3.5 h-3.5 text-amber-400"></i> Musiqa / MP3
+      </button>
+      <button data-cat="quotes" class="cat-tab px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all active:scale-95 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5">
+        <i data-lucide="book-open" class="w-3.5 h-3.5 text-yellow-400"></i> Hikmatlar
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Grid -->
+  <div class="px-4 pt-3 pb-1" id="stats-container">
+    <div class="grid grid-cols-4 gap-2">
+      <div class="bg-slate-800/60 border border-slate-700/40 rounded-xl p-2 text-center">
+        <div class="text-[10px] text-slate-400 font-medium">Instagram</div>
+        <div id="stat-ig" class="text-sm font-bold text-pink-400 mt-0.5">0</div>
+      </div>
+      <div class="bg-slate-800/60 border border-slate-700/40 rounded-xl p-2 text-center">
+        <div class="text-[10px] text-slate-400 font-medium">YouTube</div>
+        <div id="stat-yt" class="text-sm font-bold text-red-400 mt-0.5">0</div>
+      </div>
+      <div class="bg-slate-800/60 border border-slate-700/40 rounded-xl p-2 text-center">
+        <div class="text-[10px] text-slate-400 font-medium">Audio MP3</div>
+        <div id="stat-aud" class="text-sm font-bold text-amber-400 mt-0.5">0</div>
+      </div>
+      <div class="bg-slate-800/60 border border-slate-700/40 rounded-xl p-2 text-center">
+        <div class="text-[10px] text-slate-400 font-medium">Hikmatlar</div>
+        <div class="text-sm font-bold text-yellow-400 mt-0.5">100</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 px-4 py-3">
+    <!-- Loading Spinner -->
+    <div id="loading" class="flex flex-col items-center justify-center py-16 space-y-3">
+      <div class="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-xs text-slate-400">Katalog yuklanmoqda...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden flex flex-col items-center justify-center py-12 px-4 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
+        <i data-lucide="inbox" class="w-8 h-8"></i>
+      </div>
+      <h3 class="text-sm font-semibold text-slate-200">Ushbu bo‘limda media topilmadi</h3>
+      <p class="text-xs text-slate-400 mt-1 max-w-xs">
+        Instagram yoki YouTube havolasini <b>@boburchat_bot</b> ga yuboring — bot uni avtomatik yuklab, mana shu bo‘limga joylaydi!
+      </p>
+    </div>
+
+    <!-- Media Cards List -->
+    <div id="media-list" class="space-y-3"></div>
+
+    <!-- Quotes List (Shown when Hikmatlar tab is selected) -->
+    <div id="quotes-list" class="hidden space-y-3"></div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-slate-900/95 text-white text-xs font-medium border border-slate-700 shadow-xl opacity-0 pointer-events-none transition-all duration-200 flex items-center gap-2">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-text">Muvaffaqiyatli bajarildi!</span>
+  </div>
+
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      try {
+        tg.setHeaderColor('#0f172a');
+        tg.setBackgroundColor('#0b0f19');
+      } catch(e) {}
+    }
+
+    let allMediaItems = [];
+    let allQuotes = [];
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    const CHANNEL_INTERNAL_ID = '4342721043'; // -1004342721043 without -100
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = text;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    async function loadCatalog() {
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('media-list').classList.add('hidden');
+      document.getElementById('quotes-list').classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/catalog');
+        const data = await res.json();
+        
+        allMediaItems = data.items || [];
+        allQuotes = data.quotes || [];
+
+        // Update stats
+        const stats = data.stats || {};
+        const igCount = (stats['instagram_video'] || 0) + (stats['instagram_audio'] || 0) + (stats['instagram_photo'] || 0);
+        const ytCount = (stats['youtube_video'] || 0) + (stats['youtube_audio'] || 0);
+        const audCount = (stats['instagram_audio'] || 0) + (stats['youtube_audio'] || 0);
+
+        document.getElementById('stat-ig').innerText = igCount;
+        document.getElementById('stat-yt').innerText = ytCount;
+        document.getElementById('stat-aud').innerText = audCount;
+
+        renderContent();
+      } catch (err) {
+        console.error('Error loading catalog:', err);
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('empty-state').classList.remove('hidden');
+      }
+    }
+
+    function renderContent() {
+      document.getElementById('loading').classList.add('hidden');
+      
+      if (currentCategory === 'quotes') {
+        document.getElementById('media-list').classList.add('hidden');
+        renderQuotes();
+        return;
+      }
+
+      document.getElementById('quotes-list').classList.add('hidden');
+      document.getElementById('media-list').classList.remove('hidden');
+
+      // Filter items
+      let filtered = allMediaItems.filter(item => {
+        // Category filter
+        if (currentCategory === 'instagram' && item.platform !== 'instagram') return false;
+        if (currentCategory === 'youtube' && item.platform !== 'youtube') return false;
+        if (currentCategory === 'audio' && item.media_type !== 'audio') return false;
+
+        // Search filter
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = (item.title || '').toLowerCase().includes(q);
+          const matchPlatform = (item.platform || '').toLowerCase().includes(q);
+          if (!matchTitle && !matchPlatform) return false;
+        }
+        return true;
+      });
+
+      const mediaList = document.getElementById('media-list');
+      mediaList.innerHTML = '';
+
+      if (filtered.length === 0) {
+        document.getElementById('empty-state').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('empty-state').classList.add('hidden');
+
+      filtered.forEach((it, idx) => {
+        const isInstagram = it.platform === 'instagram';
+        const isAudio = it.media_type === 'audio';
+        const isPhoto = it.media_type === 'photo';
+
+        let badgeHtml = '';
+        if (isInstagram) {
+          badgeHtml = `
+            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full text-white ig-gradient shadow-sm">
+              <i data-lucide="${isAudio ? 'music-2' : isPhoto ? 'image' : 'video'}" class="w-3 h-3"></i>
+              Instagram ${isAudio ? 'Audio' : isPhoto ? 'Rasm' : 'Reels'}
+            </span>
+          `;
+        } else if (it.platform === 'youtube') {
+          badgeHtml = `
+            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full text-white bg-red-600 shadow-sm">
+              <i data-lucide="${isAudio ? 'music' : 'play-circle'}" class="w-3 h-3"></i>
+              YouTube ${isAudio ? 'Musiqa' : 'Video'}
+            </span>
+          `;
+        } else {
+          badgeHtml = `
+            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full text-white bg-slate-700">
+              <i data-lucide="file" class="w-3 h-3"></i> Media
+            </span>
+          `;
+        }
+
+        const channelLink = it.channel_msg_id ? `https://t.me/c/${CHANNEL_INTERNAL_ID}/${it.channel_msg_id}` : null;
+        const dateStr = (it.created_at || '').substring(0, 10);
+
+        const card = document.createElement('div');
+        card.className = 'quote-card rounded-2xl p-3.5 transition-all hover:border-slate-600/60 shadow-lg shadow-black/20';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1.5">
+                ${badgeHtml}
+                <span class="text-[11px] text-slate-400 font-mono">${it.size_mb ? it.size_mb.toFixed(1) + ' MB' : ''}</span>
+              </div>
+              <h3 class="text-sm font-semibold text-slate-100 line-clamp-2 leading-snug">
+                ${escapeHtml(it.title || 'Nomsiz Media')}
+              </h3>
+            </div>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center shrink-0 text-slate-300">
+              <i data-lucide="${isAudio ? 'music-2' : isPhoto ? 'image' : 'clapperboard'}" class="w-4 h-4"></i>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-[11px] text-slate-500 flex items-center gap-1">
+              <i data-lucide="calendar" class="w-3 h-3"></i> ${dateStr || 'Bugun'}
+            </span>
+            <div class="flex items-center space-x-1.5">
+              ${channelLink ? `
+                <a href="${channelLink}" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/20 font-medium text-[11px] flex items-center gap-1 transition-all active:scale-95">
+                  <i data-lucide="eye" class="w-3 h-3"></i> Kanalda
+                </a>
+              ` : ''}
+              ${it.media_url ? `
+                <a href="${it.media_url}" target="_blank" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] flex items-center gap-1 transition-all active:scale-95">
+                  <i data-lucide="link" class="w-3 h-3"></i> Asli
+                </a>
+              ` : ''}
+              <button onclick="requestSendInBot(${it.id})" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-[11px] flex items-center gap-1 shadow-sm transition-all active:scale-95">
+                <i data-lucide="download" class="w-3 h-3"></i> Botda
+              </button>
+            </div>
+          </div>
+        `;
+        mediaList.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function renderQuotes() {
+      const quotesList = document.getElementById('quotes-list');
+      quotesList.classList.remove('hidden');
+      quotesList.innerHTML = '';
+
+      let filtered = allQuotes;
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = allQuotes.filter(item => item.quote.toLowerCase().includes(q) || item.topic.toLowerCase().includes(q));
+      }
+
+      if (filtered.length === 0) {
+        document.getElementById('empty-state').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('empty-state').classList.add('hidden');
+
+      filtered.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'quote-card rounded-2xl p-4 transition-all hover:border-amber-500/30 shadow-lg';
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              #${escapeHtml(q.topic || 'Hikmat')}
+            </span>
+            <span class="text-[11px] text-slate-500 font-mono">#${q.id || (idx+1)}</span>
+          </div>
+          <p class="text-sm font-serif italic text-slate-200 leading-relaxed">
+            «${escapeHtml(q.quote)}»
+          </p>
+          <div class="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-[10px] text-slate-400">📖 Qalbga yetib boradigan so‘zlar</span>
+            <button onclick="copyQuote('${escapeQuote(q.quote)}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] flex items-center gap-1 active:scale-95">
+              <i data-lucide="copy" class="w-3 h-3"></i> Nusxa
+            </button>
+          </div>
+        `;
+        quotesList.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    async function requestSendInBot(itemId) {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+      showToast('Fayl botingizga yuborilmoqda...');
+
+      try {
+        const userChatId = tg?.initDataUnsafe?.user?.id || 1260991773;
+        const res = await fetch('/api/action/resend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item_id: itemId, chat_id: userChatId })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast('Fayl botingizga yuborildi! ✅');
+        } else {
+          showToast('Yuborishda xatolik: ' + (data.error || ''));
+        }
+      } catch (e) {
+        showToast('Aloqa xatosi: ' + e.message);
+      }
+    }
+
+    function copyQuote(text) {
+      navigator.clipboard.writeText(text);
+      showToast('Iqtibosdan nusxa olindi! ✨');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text || '';
+      return div.innerHTML;
+    }
+
+    function escapeQuote(text) {
+      return (text || '').replace(/'/g, "\\'").replace(/\n/g, " ");
+    }
+
+    // Event Listeners for Category Tabs
+    document.querySelectorAll('.cat-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        
+        document.querySelectorAll('.cat-tab').forEach(b => {
+          b.className = 'cat-tab px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all active:scale-95 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-1.5';
+        });
+
+        btn.className = 'cat-tab px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all active:scale-95 bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center gap-1.5';
+        
+        currentCategory = btn.getAttribute('data-cat');
+        renderContent();
+      });
+    });
+
+    // Search Input Listener
+    const searchInput = document.getElementById('search-input');
+    const clearSearch = document.getElementById('clear-search');
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      if (searchQuery) {
+        clearSearch.classList.remove('hidden');
+      } else {
+        clearSearch.classList.add('hidden');
+      }
+      renderContent();
+    });
+
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      clearSearch.classList.add('hidden');
+      renderContent();
+    });
+
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      loadCatalog();
+    });
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      loadCatalog();
+    });
+  </script>
+</body>
+</html>

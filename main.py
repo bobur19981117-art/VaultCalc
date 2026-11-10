@@ -26,7 +26,7 @@ from html import escape as html_escape
 from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 
 # Book module
 from book_bot_module import (
@@ -97,9 +97,13 @@ if GEMINI_AVAILABLE and GEMINI_API_KEY:
 # Keyboard
 MAIN_KEYBOARD = {
     "keyboard": [
-        [{"text": "📥 Media Yuklovchi"}, {"text": "📁 Albom Bo‘limlari"}],
-        [{"text": "📖 Qalbga yetib boradigan so‘zlar"}, {"text": "🎲 Qalb iqtibosi"}],
-        [{"text": "📊 Tizim holati"}, {"text": "ℹ️ Yordam"}]
+        [
+            {"text": "📱 Albom Ilovasi", "web_app": {"url": "https://boburchat-bot.onrender.com/app"}},
+            {"text": "📥 Media Yuklovchi"}
+        ],
+        [{"text": "📁 Albom Bo‘limlari"}, {"text": "📖 Qalbga yetib boradigan so‘zlar"}],
+        [{"text": "🎲 Qalb iqtibosi"}, {"text": "📊 Tizim holati"}],
+        [{"text": "ℹ️ Yordam"}]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -911,6 +915,80 @@ def health(request: Request):
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "bot_online": bool(BOT_TOKEN)
     })
+
+# --- Telegram Mini App & Catalog API Routes ---
+
+WEBAPP_HTML_PATH = os.path.join(os.path.dirname(__file__), "album_webapp.html")
+
+@app.get("/app", response_class=HTMLResponse)
+@app.get("/album", response_class=HTMLResponse)
+def serve_webapp():
+    if os.path.exists(WEBAPP_HTML_PATH):
+        with open(WEBAPP_HTML_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return HTMLResponse("<h1>Albom Ilovasi yuklanmadi</h1>", status_code=404)
+
+@app.get("/api/catalog")
+def api_catalog(platform: str = None, media_type: str = None, search: str = None, limit: int = 80, offset: int = 0):
+    stats = get_catalog_stats()
+    items = get_media_items(platform=platform, media_type=media_type, search=search, limit=limit, offset=offset)
+    return JSONResponse(content={
+        "status": "ok",
+        "stats": stats,
+        "items": items,
+        "quotes": TOP_100_QUOTES
+    })
+
+@app.post("/api/action/resend")
+async def api_action_resend(request: Request):
+    try:
+        body = await request.json()
+        item_id = body.get("item_id")
+        chat_id = body.get("chat_id") or ADMIN_CHAT_ID
+
+        item = get_media_item_by_id(item_id)
+        if not item or not item.get("file_id"):
+            return JSONResponse(content={"ok": False, "error": "Fayl topilmadi"}, status_code=404)
+
+        caption = (
+            f"🎬 <b>{html_escape(item['title'])}</b>\n\n"
+            f"💾 <b>Hajmi:</b> {item['size_mb']:.1f} MB\n"
+            f"📁 <b>Bo‘lim:</b> #{item['platform'].capitalize()}\n"
+            f"🤖 @boburchat_bot (Albom Ilovasi)"
+        )
+
+        sent_ok = False
+        if item["media_type"] == "video":
+            res = requests.post(f"{BASE_URL}/sendVideo", data={
+                "chat_id": chat_id,
+                "video": item["file_id"],
+                "caption": caption,
+                "parse_mode": "HTML",
+                "supports_streaming": True
+            }, timeout=30)
+            sent_ok = res.ok
+        elif item["media_type"] == "audio":
+            res = requests.post(f"{BASE_URL}/sendAudio", data={
+                "chat_id": chat_id,
+                "audio": item["file_id"],
+                "caption": caption,
+                "title": item["title"],
+                "parse_mode": "HTML"
+            }, timeout=30)
+            sent_ok = res.ok
+        elif item["media_type"] == "photo":
+            res = requests.post(f"{BASE_URL}/sendPhoto", data={
+                "chat_id": chat_id,
+                "photo": item["file_id"],
+                "caption": caption,
+                "parse_mode": "HTML"
+            }, timeout=30)
+            sent_ok = res.ok
+
+        return JSONResponse(content={"ok": sent_ok})
+    except Exception as e:
+        logger.error(f"Error in api_action_resend: {e}")
+        return JSONResponse(content={"ok": False, "error": str(e)}, status_code=500)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))

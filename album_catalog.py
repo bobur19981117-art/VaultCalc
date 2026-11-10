@@ -93,19 +93,22 @@ def get_catalog_stats():
         logger.error(f"Error getting catalog stats: {e}")
         return {}
 
-def get_media_items(platform=None, media_type=None, limit=6, offset=0):
+def get_media_items(platform=None, media_type=None, search=None, limit=50, offset=0):
     try:
         conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         query = "SELECT * FROM media_catalog WHERE 1=1"
         params = []
-        if platform:
+        if platform and platform.lower() != "all":
             query += " AND platform = ?"
             params.append(platform.lower())
-        if media_type:
+        if media_type and media_type.lower() != "all":
             query += " AND media_type = ?"
             params.append(media_type.lower())
+        if search:
+            query += " AND (title LIKE ? OR media_url LIKE ?)"
+            params.extend([f"%{search}%", f"%{search}%"])
         query += " ORDER BY id DESC LIMIT ? OFFSET ?"
         params.extend([limit, offset])
         cur.execute(query, params)
@@ -212,6 +215,9 @@ def get_album_categories_markup():
 
     return {
         "inline_keyboard": [
+            [
+                {"text": "📱 Albom Ilovasini Ochish (Mini App)", "web_app": {"url": "https://boburchat-bot.onrender.com/app"}}
+            ],
             [
                 {"text": f"📸 Instagram Video ({ig_vid})", "callback_data": "cat_view:instagram:video:0"},
                 {"text": f"🎵 Instagram Audio ({ig_aud})", "callback_data": "cat_view:instagram:audio:0"}

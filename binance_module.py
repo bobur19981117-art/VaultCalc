@@ -24,59 +24,85 @@ HEADERS = {
     "X-MBX-APIKEY": API_KEY
 }
 
-def get_server_time():
+LAST_ERROR = None
+
+def get_server_time(base=None):
     """Binance server vaqtini sinxronlash."""
+    b = base or BASE_URL
     try:
-        url = f"{BASE_URL}/api/v3/time"
+        url = f"{b}/api/v3/time"
         req = urllib.request.Request(url, headers=HEADERS)
         with urllib.request.urlopen(req, timeout=5) as res:
             return json.loads(res.read())["serverTime"]
     except Exception:
         return int(time.time() * 1000)
 
-def sign_query(params: dict) -> str:
+def sign_query(params: dict, base=None) -> str:
     """HMAC-SHA256 imzosi."""
-    params["timestamp"] = get_server_time()
+    params["timestamp"] = get_server_time(base)
     params["recvWindow"] = 60000
     query_str = urllib.parse.urlencode(params)
     signature = hmac.new(SECRET_KEY.encode("utf-8"), query_str.encode("utf-8"), hashlib.sha256).hexdigest()
     return f"{query_str}&signature={signature}"
 
 def binance_api_call(endpoint: str, params: dict = None, method: str = "GET", signed: bool = False):
-    """Binance API so'rovlarini xavfsiz yuborish."""
-    if params is None:
-        params = {}
+    """Binance API so'rovlarini xavfsiz yuborish (avto-fallback bilan)."""
+    global LAST_ERROR, BASE_URL
+    LAST_ERROR = None
     
-    if signed:
-        query_str = sign_query(params)
-    else:
-        query_str = urllib.parse.urlencode(params) if params else ""
-    
-    url = f"{BASE_URL}{endpoint}"
-    if method in ("GET", "DELETE") and query_str:
-        url = f"{url}?{query_str}"
-        data = None
-    elif method in ("POST", "PUT"):
-        data = query_str.encode("utf-8") if query_str else b""
-    else:
-        data = None
+    # Try candidate base URLs (direct + proxy)
+    candidate_bases = [BASE_URL]
+    alt = "https://api.binance.com" if "workers.dev" in BASE_URL else "https://binance-proxy.boburjonnushonov.workers.dev"
+    if alt not in candidate_bases:
+        candidate_bases.append(alt)
 
-    req = urllib.request.Request(url, data=data, headers=HEADERS, method=method)
-    try:
-        with urllib.request.urlopen(req, timeout=10) as res:
-            return json.loads(res.read())
-    except urllib.error.HTTPError as e:
-        logger.error(f"Binance HTTP {e.code}: {e.read().decode('utf-8')}")
-        return None
-    except Exception as e:
-        logger.error(f"Binance Error: {e}")
-        return None
+    for base in candidate_bases:
+        p = dict(params or {})
+        if signed:
+            query_str = sign_query(p, base)
+        else:
+            query_str = urllib.parse.urlencode(p) if p else ""
+        
+        url = f"{base}{endpoint}"
+        if method in ("GET", "DELETE") and query_str:
+            url = f"{url}?{query_str}"
+            data = None
+        elif method in ("POST", "PUT"):
+            data = query_str.encode("utf-8") if query_str else b""
+        else:
+            data = None
+
+        headers = dict(HEADERS)
+        if method in ("POST", "PUT") and data:
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
+
+        req = urllib.request.Request(url, data=data, headers=headers, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=10) as res:
+                res_data = json.loads(res.read())
+                BASE_URL = base
+                return res_data
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8")
+            LAST_ERROR = f"HTTP {e.code}: {err_body}"
+            logger.error(f"Binance [{base}] HTTP {e.code}: {err_body}")
+        except Exception as e:
+            LAST_ERROR = f"Network [{base}]: {e}"
+            logger.error(f"Binance [{base}] Error: {e}")
+
+    return None
 
 def get_account_summary_text():
     """Hisob va balans haqida to'liq xabar matni (HTML)."""
+    from html import escape as html_escape
     acc_data = binance_api_call("/api/v3/account", signed=True)
     if not acc_data:
-        return "⚠️ <b>Binance hisobiga ulanishda xatolik yuz berdi.</b>\nAPI kalitlari yoki tarmoq holatini tekshiring."
+        err_detail = LAST_ERROR or "Tarmoq javob bermadi."
+        return (
+            "⚠️ <b>Binance hisobiga ulanishda xatolik yuz berdi.</b>\n\n"
+            f"🔍 <b>Tafsilot:</b> <code>{html_escape(str(err_detail))}</code>\n\n"
+            "💡 <i>Iltimos, API kalit ruxsatlari yoki IP cheklovlarini tekshiring.</i>"
+        )
 
     account_type = acc_data.get("accountType", "SPOT")
     can_trade = "✅ Faol" if acc_data.get("canTrade") else "❌ Taqiqlangan"

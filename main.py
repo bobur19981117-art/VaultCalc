@@ -108,12 +108,12 @@ if GEMINI_AVAILABLE and GEMINI_API_KEY:
 MAIN_KEYBOARD = {
     "keyboard": [
         [
-            {"text": "📱 Albom Ilovasi", "web_app": {"url": "https://boburchat-bot.onrender.com/app"}},
+            {"text": "🟡 Binance Pro Ilovasi", "web_app": {"url": "https://boburchat-bot.onrender.com/app"}},
             {"text": "📥 Media Yuklovchi"}
         ],
-        [{"text": "📁 Albom Bo‘limlari"}, {"text": "📖 Qalbga yetib boradigan so‘zlar"}],
+        [{"text": "🟡 Binance Portfel"}, {"text": "📖 Qalbga yetib boradigan so‘zlar"}],
         [{"text": "🎲 Qalb iqtibosi"}, {"text": "📊 Tizim holati"}],
-        [{"text": "🟡 Binance Portfel"}, {"text": "ℹ️ Yordam"}]
+        [{"text": "ℹ️ Yordam"}]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -845,8 +845,26 @@ def handle_message(message):
         return
 
     # Binance & Crypto handlers
-    if BINANCE_AVAILABLE and text in ["/binance", "/crypto", "🟡 Binance Portfel", "🟡 Binance", "💰 Binance Balans", "📈 Kripto"]:
-        send_message(chat_id, get_account_summary_text(), msg_id, reply_markup=get_binance_markup("balance"), parse_mode="HTML")
+    if text in ["/binance", "/crypto", "🟡 Binance Portfel", "🟡 Binance", "💰 Binance Balans", "📈 Kripto"]:
+        binance_intro = (
+            "🟡 <b>BINANCE PRO — INTERAKTIV KRIPTO ILOVASI</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            "👤 <b>Hisob:</b> <code>SPOT (VIP 0)</code>\n"
+            "🟢 <b>Savdo ruxsati:</b> Faol ✅ | <b>Yechish:</b> Ruxsat ✅\n"
+            "🛡️ <b>Shlyuz:</b> Cloudflare 24/7 Serverless Edge\n\n"
+            "Quyidagi <b>«🚀 Binance Ilovasini ochish»</b> tugmasini bosing — to‘liq interaktiv panel telefoningizda ochiladi:\n\n"
+            "• 💰 <b>Portfel & Balans:</b> Spot va Funding aktivlaringiz ($ va UZS)\n"
+            "• 📈 <b>Jonli Bozor:</b> BTC, ETH, TON, SOL narxlari va 24s dinamika\n"
+            "• ⚡ <b>Tezkor Savdo:</b> Spot bozorida Market/Limit buyurtmalar\n"
+            "• 📊 <b>Ochiq orderlar:</b> Buyurtmalarni boshqarish va bekor qilish"
+        )
+        markup = {
+            "inline_keyboard": [
+                [{"text": "🚀 Binance Ilovasini ochish", "web_app": {"url": "https://boburchat-bot.onrender.com/app"}}],
+                [{"text": "📈 Jonli Kripto Narxlar", "callback_data": "binance_tab_prices"}]
+            ]
+        }
+        send_message(chat_id, binance_intro, msg_id, reply_markup=markup, parse_mode="HTML")
         return
 
     if BINANCE_AVAILABLE and (text.startswith("/price ") or text.startswith("/narx ")):
@@ -976,15 +994,24 @@ def binance_debug():
         result["traceback"] = traceback.format_exc()
     return JSONResponse(content=result)
 
-# --- Telegram Mini App & Catalog API Routes ---
+# --- Telegram Mini App (Binance Pro) & Catalog API Routes ---
 
-WEBAPP_HTML_PATH = os.path.join(os.path.dirname(__file__), "album_webapp.html")
+BINANCE_WEBAPP_PATH = os.path.join(os.path.dirname(__file__), "binance_webapp.html")
+ALBUM_WEBAPP_PATH = os.path.join(os.path.dirname(__file__), "album_webapp.html")
 
 @app.get("/app", response_class=HTMLResponse)
-@app.get("/album", response_class=HTMLResponse)
+@app.get("/binance", response_class=HTMLResponse)
+@app.get("/binance_app", response_class=HTMLResponse)
 def serve_webapp():
-    if os.path.exists(WEBAPP_HTML_PATH):
-        with open(WEBAPP_HTML_PATH, "r", encoding="utf-8") as f:
+    if os.path.exists(BINANCE_WEBAPP_PATH):
+        with open(BINANCE_WEBAPP_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return HTMLResponse("<h1>Binance Pro Ilovasi yuklanmadi</h1>", status_code=404)
+
+@app.get("/album", response_class=HTMLResponse)
+def serve_album_webapp():
+    if os.path.exists(ALBUM_WEBAPP_PATH):
+        with open(ALBUM_WEBAPP_PATH, "r", encoding="utf-8") as f:
             return f.read()
     return HTMLResponse("<h1>Albom Ilovasi yuklanmadi</h1>", status_code=404)
 

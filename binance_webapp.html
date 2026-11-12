@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Binance Pro AI — Telegram Mini App</title>
+  
+  <!-- Telegram Web App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0b0e11;
+      --bg-card: #181a20;
+      --bg-secondary: #202630;
+      --bg-input: #2b313a;
+      --primary: #f0b90b;
+      --primary-hover: #fcd535;
+      --text-main: #eaecef;
+      --text-muted: #848e9c;
+      --text-dim: #5e6673;
+      --border: #2b313a;
+      --green: #0ecb81;
+      --green-bg: rgba(14, 203, 129, 0.12);
+      --red: #f6465d;
+      --red-bg: rgba(246, 70, 93, 0.12);
+      --radius: 14px;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      overflow-x: hidden;
+      font-size: 14px;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 14, 17, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .binance-logo {
+      width: 28px;
+      height: 28px;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-title span {
+      color: var(--primary);
+    }
+
+    .vip-badge {
+      background: rgba(240, 185, 11, 0.15);
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(240, 185, 11, 0.3);
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* Container */
+    .container {
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Hero Balance Card */
+    .balance-card {
+      background: linear-gradient(135deg, #181a20 0%, #1e2329 100%);
+      border: 1px solid rgba(240, 185, 11, 0.25);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(240, 185, 11, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .balance-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .balance-refresh {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      transition: color 0.2s;
+    }
+
+    .balance-refresh:active {
+      color: var(--primary);
+    }
+
+    .balance-amount {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      letter-spacing: -1px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .balance-fiat {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pnl-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--green-bg);
+      color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Action Buttons */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .action-btn:active {
+      transform: scale(0.96);
+      background: rgba(240, 185, 11, 0.1);
+      border-color: var(--primary);
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+    }
+
+    /* Ticker Tape */
+    .ticker-bar {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+
+    .ticker-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ticker-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      min-width: 130px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ticker-pair {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .ticker-price {
+      font-size: 13px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .ticker-change {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Tab Contents */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Asset List */
+    .asset-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .asset-item:last-child {
+      border-bottom: none;
+    }
+
+    .asset-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .asset-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .asset-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .asset-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .asset-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .asset-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .asset-amount {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .asset-usd {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 30px 16px;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    /* Markets Table */
+    .market-table-header {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .market-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      padding: 14px 12px;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .market-row:active {
+      background: var(--bg-secondary);
+    }
+
+    .market-pair {
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .market-pair span {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .market-price {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .market-change-badge {
+      justify-self: end;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      min-width: 65px;
+      text-align: center;
+    }
+
+    .positive {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .negative {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    /* Trade Box */
+    .trade-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .trade-type-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--bg-main);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .trade-toggle-btn {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      background: none;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .trade-toggle-btn.active.buy {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .trade-toggle-btn.active.sell {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-box input {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      outline: none;
+      width: 100%;
+    }
+
+    .input-unit {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .percent-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .percent-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 0;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .percent-btn:active {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 6px;
+    }
+
+    .submit-btn.buy {
+      background: var(--green);
+      color: #ffffff;
+    }
+
+    .submit-btn.sell {
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11, 14, 17, 0.98);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 6px;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: color 0.15s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Modal Toast */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="brand-section">
+      <svg class="binance-logo" viewBox="0 0 126.61 126.61" fill="none">
+        <path d="M63.31 0L37.1 26.21L49.19 38.3L63.31 24.18L77.43 38.3L89.52 26.21L63.31 0Z" fill="#F0B90B"/>
+        <path d="M12.92 50.39L0 63.31L12.92 76.22L25.01 64.13L12.92 50.39Z" fill="#F0B90B"/>
+        <path d="M63.31 48.36L49.19 62.48L37.1 50.39L25.01 62.48L12.92 50.39L0 63.31L37.1 100.41L63.31 74.2L89.52 100.41L126.62 63.31L113.7 50.39L101.61 62.48L89.52 50.39L77.43 62.48L63.31 48.36Z" fill="#F0B90B"/>
+        <path d="M113.7 50.39L101.61 64.13L113.7 76.22L126.62 63.31L113.7 50.39Z" fill="#F0B90B"/>
+        <path d="M63.31 100.41L49.19 86.29L37.1 98.38L63.31 126.61L89.52 98.38L77.43 86.29L63.31 100.41Z" fill="#F0B90B"/>
+      </svg>
+      <div>
+        <div class="brand-title">BINANCE <span>PRO</span> <span class="vip-badge">VIP 0</span></div>
+      </div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span id="gateway-status">SPOT Faol</span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Balance Hero Card -->
+    <section class="balance-card">
+      <div class="balance-header">
+        <div class="balance-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          Umumiy Portfel Balansi
+        </div>
+        <button class="balance-refresh" id="refresh-btn" onclick="fetchFullAccountData(true)">
+          <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Yangilash
+        </button>
+      </div>
+
+      <div class="balance-amount" id="total-usd-balance">$0.00</div>
+      <div class="balance-fiat">
+        <span id="total-uzs-balance">≈ 0 UZS</span>
+        <span class="pnl-badge" id="pnl-badge">🟢 +0.00%</span>
+      </div>
+
+      <div class="action-grid">
+        <button class="action-btn" onclick="showToast('Depozit: USDT TRC-20 manzili nusxalandi')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          Depozit
+        </button>
+        <button class="action-btn" onclick="switchTab('trade')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 8-6-6-6 6M12 2v20"/></svg>
+          Savdo
+        </button>
+        <button class="action-btn" onclick="switchTab('markets')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+          Bozor
+        </button>
+        <button class="action-btn" onclick="showToast('O\'tkazma: Spot va Funding sinxron')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16"/></svg>
+          O'tkazma
+        </button>
+      </div>
+    </section>
+
+    <!-- Live Ticker Slider -->
+    <div class="ticker-bar" id="ticker-bar">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- TAB 1: PORTFEL (PORTFOLIO) -->
+    <div class="tab-content active" id="tab-portfolio">
+      <div class="card">
+        <div class="card-title">
+          <span>Kripto Aktivlarim</span>
+          <span style="font-size: 11px; color: var(--text-muted);" id="asset-count">0 ta aktiv</span>
+        </div>
+        <div id="assets-list">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <p>Hamyoningizda hozircha aktivlar yo‘q.</p>
+            <p style="font-size: 11px; margin-top: 4px; color: var(--text-dim);">P2P yoki tashqi hamyon orqali USDT kiritishingiz mumkin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: BOZOR (MARKETS) -->
+    <div class="tab-content" id="tab-markets">
+      <div class="card" style="padding: 10px 0;">
+        <div class="market-table-header">
+          <span>Juftlik</span>
+          <span style="text-align: right;">Narx</span>
+          <span style="text-align: right;">24s O‘zgarish</span>
+        </div>
+        <div id="markets-list">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SAVDO (TRADE) -->
+    <div class="tab-content" id="tab-trade">
+      <div class="card">
+        <div class="card-title">
+          <span id="trade-pair-title">BTC/USDT Spot Savdo</span>
+          <span style="color: var(--primary); font-family: var(--font-mono);" id="trade-current-price">$0.00</span>
+        </div>
+
+        <form class="trade-form" onsubmit="executeTrade(event)">
+          <div class="trade-type-toggle">
+            <button type="button" class="trade-toggle-btn active buy" id="side-buy-btn" onclick="setTradeSide('BUY')">Sotib olish</button>
+            <button type="button" class="trade-toggle-btn" id="side-sell-btn" onclick="setTradeSide('SELL')">Sotish</button>
+          </div>
+
+          <div class="input-group">
+            <div class="input-label">
+              <span>Buyurtma turi</span>
+              <span style="color: var(--primary);">Bozor narxi (Market)</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-label">
+              <span>Miqdor</span>
+              <span id="available-trade-balance">Mavjud: 0.00 USDT</span>
+            </div>
+            <div class="input-box">
+              <input type="number" step="any" id="trade-amount-input" placeholder="0.00" required>
+              <span class="input-unit" id="trade-amount-unit">USDT</span>
+            </div>
+          </div>
+
+          <div class="percent-grid">
+            <button type="button" class="percent-btn" onclick="setPercent(25)">25%</button>
+            <button type="button" class="percent-btn" onclick="setPercent(50)">50%</button>
+            <button type="button" class="percent-btn" onclick="setPercent(75)">75%</button>
+            <button type="button" class="percent-btn" onclick="setPercent(100)">100%</button>
+          </div>
+
+          <button type="submit" class="submit-btn buy" id="submit-trade-btn">BTC Sotib olish</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 4: BUYURTMALAR (ORDERS) -->
+    <div class="tab-content" id="tab-orders">
+      <div class="card">
+        <div class="card-title">
+          <span>Ochiq Buyurtmalar</span>
+          <span style="font-size: 11px; color: var(--text-muted);" id="orders-count">0 ta order</span>
+        </div>
+        <div id="orders-list">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            <p>Hozirda ochiq buyurtmalar yo‘q.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: SOZLAMALAR (SETTINGS) -->
+    <div class="tab-content" id="tab-settings">
+      <div class="card">
+        <div class="card-title">API & Xavfsizlik Holati</div>
+        <div class="asset-item">
+          <div class="asset-left">
+            <div class="asset-icon">🔑</div>
+            <div class="asset-info">
+              <div class="asset-name">Binance API Key</div>
+              <div class="asset-sub">UZ2Q1pap...ctcV8GxF</div>
+            </div>
+          </div>
+          <div class="asset-right">
+            <span class="pnl-badge">Ulangan ✅</span>
+          </div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-left">
+            <div class="asset-icon">🛡️</div>
+            <div class="asset-info">
+              <div class="asset-name">Shlyuz / Proxy</div>
+              <div class="asset-sub">Cloudflare Serverless Edge</div>
+            </div>
+          </div>
+          <div class="asset-right">
+            <span style="font-size: 11px; color: var(--green); font-weight: 700;">24/7 Uzluksiz</span>
+          </div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-left">
+            <div class="asset-icon">⚡</div>
+            <div class="asset-info">
+              <div class="asset-name">Savdo Komissiyasi</div>
+              <div class="asset-sub">Maker 0.1% | Taker 0.1%</div>
+            </div>
+          </div>
+          <div class="asset-right">
+            <span style="font-size: 11px; color: var(--text-muted);">Standart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('portfolio')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+      <span>Portfel</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('markets')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+      <span>Bozor</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('trade')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 8-6-6-6 6M12 2v20"/></svg>
+      <span>Savdo</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('orders')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      <span>Orderlar</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Sozlamalar</span>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div class="toast" id="toast-msg">
+    <span id="toast-text">Xabar</span>
+  </div>
+
+  <script>
+    // Configuration
+    const API_KEY = "UZ2Q1papdNj6lfYRqvWdb9oRCKyBuzEozojkbBedctcV8GxFJ7M3tstzCgOFDY0N";
+    const SECRET_KEY = "FtVOgHUJZLlqEPg1gqmbg9BJKfqXfKhSM7QP7Z85GcLtvJLs4qLXmG5KezwmfbNd";
+    const BASE_URL = "https://binance-proxy.boburjonnushonov.workers.dev";
+    const UZS_RATE = 12850; // USD to UZS
+
+    let currentTradeSide = 'BUY';
+    let currentTradeSymbol = 'BTCUSDT';
+    let currentPriceMap = {};
+    let balancesData = [];
+
+    // Telegram Web App init
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.expand();
+      tg.headerColor = '#0b0e11';
+      tg.backgroundColor = '#0b0e11';
+    }
+
+    function haptic() {
+      if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+      }
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast-msg');
+      document.getElementById('toast-text').innerText = text;
+      toast.classList.add('show');
+      haptic();
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // Tab switching
+    function switchTab(tabId) {
+      haptic();
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
+
+      const navIndices = ['portfolio', 'markets', 'trade', 'orders', 'settings'];
+      const idx = navIndices.indexOf(tabId);
+      if (idx !== -1) {
+        document.querySelectorAll('.nav-item')[idx].classList.add('active');
+      }
+
+      if (tabId === 'orders') fetchOpenOrders();
+    }
+
+    // Web Crypto HMAC-SHA256
+    async function signHmacSha256(queryString, secret) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+      );
+      const sigBuf = await crypto.subtle.sign("HMAC", key, enc.encode(queryString));
+      return Array.from(new Uint8Array(sigBuf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    // API Helper
+    async function binanceFetch(endpoint, params = {}, method = 'GET', signed = false) {
+      let serverTime = Date.now();
+      try {
+        const timeRes = await fetch(`${BASE_URL}/api/v3/time`);
+        if (timeRes.ok) {
+          const tData = await timeRes.json();
+          serverTime = tData.serverTime;
+        }
+      } catch (e) {}
+
+      let queryString = '';
+      if (signed) {
+        params.timestamp = serverTime;
+        params.recvWindow = 60000;
+        const qp = new URLSearchParams(params).toString();
+        const signature = await signHmacSha256(qp, SECRET_KEY);
+        queryString = `${qp}&signature=${signature}`;
+      } else {
+        queryString = new URLSearchParams(params).toString();
+      }
+
+      let url = `${BASE_URL}${endpoint}`;
+      let body = null;
+      let headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'X-MBX-APIKEY': API_KEY
+      };
+
+      if (method === 'GET' || method === 'DELETE') {
+        if (queryString) url += `?${queryString}`;
+      } else if (method === 'POST') {
+        headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        body = queryString;
+      }
+
+      const res = await fetch(url, { method, headers, body });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText);
+      }
+      return await res.json();
+    }
+
+    // Fetch Full Account Data
+    async function fetchFullAccountData(manual = false) {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.style.animation = 'spin 0.8s linear infinite';
+
+      try {
+        // 1. Fetch Market Prices first
+        await fetchMarketPrices();
+
+        // 2. Fetch Spot Account
+        const account = await binanceFetch('/api/v3/account', {}, 'GET', true);
+        
+        let totalUSD = 0;
+        balancesData = [];
+
+        if (account && account.balances) {
+          account.balances.forEach(b => {
+            const free = parseFloat(b.free);
+            const locked = parseFloat(b.locked);
+            const total = free + locked;
+            if (total > 0) {
+              let priceInUsdt = 1;
+              if (b.asset === 'USDT' || b.asset === 'FDUSD') {
+                priceInUsdt = 1;
+              } else if (currentPriceMap[`${b.asset}USDT`]) {
+                priceInUsdt = currentPriceMap[`${b.asset}USDT`].price;
+              }
+              const valUsd = total * priceInUsdt;
+              totalUSD += valUsd;
+              balancesData.push({
+                asset: b.asset,
+                free,
+                locked,
+                total,
+                price: priceInUsdt,
+                usdVal: valUsd
+              });
+            }
+          });
+        }
+
+        // Render Balance
+        document.getElementById('total-usd-balance').innerText = `$${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const uzsTotal = totalUSD * UZS_RATE;
+        document.getElementById('total-uzs-balance').innerText = `≈ ${uzsTotal.toLocaleString('uz-UZ')} UZS`;
+
+        renderAssets();
+        if (manual) showToast('Hisob ma\'lumotlari yangilandi ✅');
+      } catch (err) {
+        console.error('Fetch account error:', err);
+        if (manual) showToast('Yangilashda xatolik: ' + err.message.slice(0, 30));
+      } finally {
+        if (refreshIcon) refreshIcon.style.animation = 'none';
+      }
+    }
+
+    // Render Assets
+    function renderAssets() {
+      const list = document.getElementById('assets-list');
+      const count = document.getElementById('asset-count');
+      count.innerText = `${balancesData.length} ta aktiv`;
+
+      if (balancesData.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <p>Hamyoningizda hozircha aktivlar yo‘q.</p>
+            <p style="font-size: 11px; margin-top: 4px; color: var(--text-dim);">P2P yoki tashqi hamyon orqali USDT depozit qilishingiz mumkin.</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = balancesData.map(b => `
+        <div class="asset-item" onclick="openTradeForAsset('${b.asset}')">
+          <div class="asset-left">
+            <div class="asset-icon">${b.asset.slice(0, 3)}</div>
+            <div class="asset-info">
+              <div class="asset-name">${b.asset}</div>
+              <div class="asset-sub">Narx: $${b.price.toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="asset-right">
+            <div class="asset-amount">${b.total.toFixed(4)}</div>
+            <div class="asset-usd">≈ $${b.usdVal.toFixed(2)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Fetch Market Prices
+    async function fetchMarketPrices() {
+      const symbols = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "TONUSDT", "BNBUSDT", "XRPUSDT", "DOGEUSDT", "SUIUSDT", "NEARUSDT", "PEPEUSDT"];
+      try {
+        const query = encodeURIComponent(JSON.stringify(symbols));
+        const res = await fetch(`${BASE_URL}/api/v3/ticker/24hr?symbols=${query}`);
+        if (!res.ok) return;
+        const tickers = await res.json();
+
+        const tickerBar = document.getElementById('ticker-bar');
+        const marketsList = document.getElementById('markets-list');
+
+        tickers.forEach(t => {
+          const sym = t.symbol;
+          const p = parseFloat(t.lastPrice);
+          const ch = parseFloat(t.priceChangePercent);
+          currentPriceMap[sym] = { price: p, change: ch };
+        });
+
+        // Render Ticker Bar
+        tickerBar.innerHTML = tickers.slice(0, 5).map(t => {
+          const ch = parseFloat(t.priceChangePercent);
+          const sign = ch >= 0 ? '+' : '';
+          const cls = ch >= 0 ? 'positive' : 'negative';
+          return `
+            <div class="ticker-item" onclick="selectPair('${t.symbol}')">
+              <div class="ticker-pair">${t.symbol.replace('USDT', '')} <span class="${cls}">${sign}${ch.toFixed(2)}%</span></div>
+              <div class="ticker-price">$${parseFloat(t.lastPrice).toLocaleString()}</div>
+            </div>
+          `;
+        }).join('');
+
+        // Render Markets List
+        marketsList.innerHTML = tickers.map(t => {
+          const ch = parseFloat(t.priceChangePercent);
+          const sign = ch >= 0 ? '+' : '';
+          const cls = ch >= 0 ? 'positive' : 'negative';
+          const p = parseFloat(t.lastPrice);
+          const priceStr = p >= 1 ? `$${p.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : `$${p.toFixed(6)}`;
+          return `
+            <div class="market-row" onclick="selectPair('${t.symbol}')">
+              <div class="market-pair">
+                ${t.symbol.replace('USDT', '')} <span>/USDT</span>
+              </div>
+              <div class="market-price">${priceStr}</div>
+              <div class="market-change-badge ${cls}">${sign}${ch.toFixed(2)}%</div>
+            </div>
+          `;
+        }).join('');
+
+        // Update trade price
+        if (currentPriceMap[currentTradeSymbol]) {
+          document.getElementById('trade-current-price').innerText = `$${currentPriceMap[currentTradeSymbol].price.toLocaleString()}`;
+        }
+      } catch (e) {
+        console.error('Ticker error:', e);
+      }
+    }
+
+    // Trade Pair Selection
+    function selectPair(symbol) {
+      currentTradeSymbol = symbol;
+      document.getElementById('trade-pair-title').innerText = `${symbol.replace('USDT', '')}/USDT Spot Savdo`;
+      document.getElementById('submit-trade-btn').innerText = `${symbol.replace('USDT', '')} ${currentTradeSide === 'BUY' ? 'Sotib olish' : 'Sotish'}`;
+      if (currentPriceMap[symbol]) {
+        document.getElementById('trade-current-price').innerText = `$${currentPriceMap[symbol].price.toLocaleString()}`;
+      }
+      switchTab('trade');
+    }
+
+    function setTradeSide(side) {
+      haptic();
+      currentTradeSide = side;
+      const buyBtn = document.getElementById('side-buy-btn');
+      const sellBtn = document.getElementById('side-sell-btn');
+      const submitBtn = document.getElementById('submit-trade-btn');
+
+      if (side === 'BUY') {
+        buyBtn.className = 'trade-toggle-btn active buy';
+        sellBtn.className = 'trade-toggle-btn';
+        submitBtn.className = 'submit-btn buy';
+        submitBtn.innerText = `${currentTradeSymbol.replace('USDT', '')} Sotib olish`;
+        document.getElementById('trade-amount-unit').innerText = 'USDT';
+      } else {
+        buyBtn.className = 'trade-toggle-btn';
+        sellBtn.className = 'trade-toggle-btn active sell';
+        submitBtn.className = 'submit-btn sell';
+        submitBtn.innerText = `${currentTradeSymbol.replace('USDT', '')} Sotish`;
+        document.getElementById('trade-amount-unit').innerText = currentTradeSymbol.replace('USDT', '');
+      }
+    }
+
+    function setPercent(p) {
+      haptic();
+      const input = document.getElementById('trade-amount-input');
+      input.value = (10 * (p / 100)).toFixed(2);
+    }
+
+    async function executeTrade(e) {
+      e.preventDefault();
+      haptic();
+      const amount = parseFloat(document.getElementById('trade-amount-input').value);
+      if (!amount || amount <= 0) {
+        showToast('Iltimos, miqdorni kiriting!');
+        return;
+      }
+
+      if (!confirm(`${currentTradeSymbol} juftligida ${amount} miqdorida ${currentTradeSide} buyurtmasini tasdiqlaysizmi?`)) {
+        return;
+      }
+
+      showToast('Buyurtma yuborilmoqda...');
+      try {
+        const res = await binanceFetch('/api/v3/order', {
+          symbol: currentTradeSymbol,
+          side: currentTradeSide,
+          type: 'MARKET',
+          quantity: amount
+        }, 'POST', true);
+
+        if (res && res.orderId) {
+          showToast(`Buyurtma bajarildi! ID: ${res.orderId} 🎉`);
+          document.getElementById('trade-amount-input').value = '';
+          fetchFullAccountData(false);
+        }
+      } catch (err) {
+        showToast(`Savdo xatoligi: ${err.message.slice(0, 45)}`);
+      }
+    }
+
+    // Fetch Open Orders
+    async function fetchOpenOrders() {
+      try {
+        const orders = await binanceFetch('/api/v3/openOrders', {}, 'GET', true);
+        const list = document.getElementById('orders-list');
+        const count = document.getElementById('orders-count');
+        count.innerText = `${orders.length} ta order`;
+
+        if (!orders || orders.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+              <p>Hozirda ochiq buyurtmalar yo‘q.</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = orders.map(o => `
+          <div class="asset-item">
+            <div class="asset-left">
+              <div class="asset-info">
+                <div class="asset-name">${o.symbol} <span class="${o.side === 'BUY' ? 'positive' : 'negative'}" style="font-size: 10px; padding: 1px 4px; border-radius: 4px;">${o.side}</span></div>
+                <div class="asset-sub">Narx: $${parseFloat(o.price).toLocaleString()} | Miqdor: ${o.origQty}</div>
+              </div>
+            </div>
+            <div class="asset-right">
+              <button onclick="cancelOrder('${o.symbol}', ${o.orderId})" style="background: none; border: 1px solid var(--red); color: var(--red); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">Bekor qilish</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error('Fetch orders error:', e);
+      }
+    }
+
+    async function cancelOrder(symbol, orderId) {
+      if (!confirm('Ushbu buyurtmani bekor qilmoqchimisiz?')) return;
+      try {
+        await binanceFetch('/api/v3/order', { symbol, orderId }, 'DELETE', true);
+        showToast('Buyurtma bekor qilindi ✅');
+        fetchOpenOrders();
+      } catch (e) {
+        showToast('Bekor qilishda xatolik: ' + e.message);
+      }
+    }
+
+    // Startup
+    fetchFullAccountData(false);
+    setInterval(fetchMarketPrices, 8000); // Live price updates every 8s
+  </script>
+</body>
+</html>

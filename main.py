@@ -50,6 +50,16 @@ from album_catalog import (
     get_media_item_by_id
 )
 
+# Binance AI & Crypto Module
+try:
+    from binance_module import (
+        get_account_summary_text, get_crypto_prices_text,
+        get_open_orders_text, get_binance_markup
+    )
+    BINANCE_AVAILABLE = True
+except ImportError:
+    BINANCE_AVAILABLE = False
+
 # Optional Gemini AI
 try:
     import google.generativeai as genai
@@ -103,7 +113,7 @@ MAIN_KEYBOARD = {
         ],
         [{"text": "📁 Albom Bo‘limlari"}, {"text": "📖 Qalbga yetib boradigan so‘zlar"}],
         [{"text": "🎲 Qalb iqtibosi"}, {"text": "📊 Tizim holati"}],
-        [{"text": "ℹ️ Yordam"}]
+        [{"text": "🟡 Binance Portfel"}, {"text": "ℹ️ Yordam"}]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -122,13 +132,13 @@ def keep_typing(chat_id, stop_event, action="typing"):
         send_chat_action(chat_id, action)
         stop_event.wait(4.5)
 
-def send_message(chat_id, text, reply_to_id=None, reply_markup=None):
+def send_message(chat_id, text, reply_to_id=None, reply_markup=None, parse_mode="Markdown"):
     if not text:
         return None
     payload = {
         "chat_id": chat_id,
         "text": text,
-        "parse_mode": "Markdown",
+        "parse_mode": parse_mode,
         "reply_markup": json.dumps(reply_markup or MAIN_KEYBOARD)
     }
     if reply_to_id:
@@ -137,7 +147,7 @@ def send_message(chat_id, text, reply_to_id=None, reply_markup=None):
         res = requests.post(f"{BASE_URL}/sendMessage", data=payload, timeout=20)
         if res.ok:
             return res.json().get("result", {}).get("message_id")
-        # Retry without markdown
+        # Retry without parse_mode
         payload.pop("parse_mode", None)
         res = requests.post(f"{BASE_URL}/sendMessage", data=payload, timeout=20)
         if res.ok:
@@ -146,14 +156,14 @@ def send_message(chat_id, text, reply_to_id=None, reply_markup=None):
         logger.error(f"Error sending message: {e}")
     return None
 
-def edit_message(chat_id, message_id, text, reply_markup=None):
+def edit_message(chat_id, message_id, text, reply_markup=None, parse_mode="Markdown"):
     if not text or not message_id:
         return
     payload = {
         "chat_id": chat_id,
         "message_id": message_id,
         "text": text,
-        "parse_mode": "Markdown"
+        "parse_mode": parse_mode
     }
     if reply_markup is not None:
         payload["reply_markup"] = json.dumps(reply_markup)
@@ -705,6 +715,17 @@ def handle_callback_query(callback_query):
             }, timeout=30)
         return
 
+    # Binance Callbacks
+    if BINANCE_AVAILABLE and query_data.startswith("binance_"):
+        requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id})
+        if query_data in ["binance_tab_balance", "binance_refresh_balance", "binance_refresh_main"]:
+            edit_message(chat_id, message_id, get_account_summary_text(), reply_markup=get_binance_markup("balance"), parse_mode="HTML")
+        elif query_data in ["binance_tab_prices", "binance_refresh_prices"]:
+            edit_message(chat_id, message_id, get_crypto_prices_text(), reply_markup=get_binance_markup("prices"), parse_mode="HTML")
+        elif query_data in ["binance_tab_orders", "binance_refresh_orders"]:
+            edit_message(chat_id, message_id, get_open_orders_text(), reply_markup=get_binance_markup("orders"), parse_mode="HTML")
+        return
+
     requests.post(f"{BASE_URL}/answerCallbackQuery", data={"callback_query_id": cb_id})
 
 # --- Message Handler ---
@@ -750,6 +771,9 @@ def handle_message(message):
             "💻 *Cloud Terminal:*\n"
             "• `/sh <buyruq>` — Serverda buyruq bajarish\n"
             "• `/status` — Server va bot holati\n\n"
+            "🟡 *Binance & Kripto:*\n"
+            "• `/binance` — Portfel, hisob holati va hamyon balansi\n"
+            "• `/price <coin>` — Istalgan kripto narxi (masalan: `/price ton` yoki `/price btc`)\n\n"
             "💬 *AI Savol-Javob:* Istalgan savolingizni yozing, Google Gemini AI bir zumda javob beradi!"
         )
         send_message(chat_id, help_text, msg_id)
@@ -818,6 +842,16 @@ def handle_message(message):
         except Exception as se:
             status_text = f"☁️ *Server Holati:* 24/7 Online ({se})"
         send_message(chat_id, status_text, msg_id)
+        return
+
+    # Binance & Crypto handlers
+    if BINANCE_AVAILABLE and text in ["/binance", "/crypto", "🟡 Binance Portfel", "🟡 Binance", "💰 Binance Balans", "📈 Kripto"]:
+        send_message(chat_id, get_account_summary_text(), msg_id, reply_markup=get_binance_markup("balance"), parse_mode="HTML")
+        return
+
+    if BINANCE_AVAILABLE and (text.startswith("/price ") or text.startswith("/narx ")):
+        coin_sym = text.split(maxsplit=1)[1]
+        send_message(chat_id, get_crypto_prices_text(coin_sym), msg_id, reply_markup=get_binance_markup("prices"), parse_mode="HTML")
         return
 
     # Shell Command execution

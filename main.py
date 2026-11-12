@@ -955,36 +955,22 @@ def binance_debug():
     import traceback
     result = {}
     try:
-        import binance_module
-        result["base_url"] = binance_module.BASE_URL
-        result["api_key_prefix"] = binance_module.API_KEY[:8] + "..." if binance_module.API_KEY else "EMPTY"
-        result["secret_key_len"] = len(binance_module.SECRET_KEY) if binance_module.SECRET_KEY else 0
-        
-        # Test 1: server time
-        try:
-            t = binance_module.get_server_time()
-            result["server_time"] = t
-        except Exception as te:
-            result["server_time_err"] = str(te)
-
-        # Test 2: direct ping to binance.com
-        try:
-            d_res = requests.get("https://api.binance.com/api/v3/ping", timeout=5)
-            result["direct_binance_ping"] = {"status": d_res.status_code, "text": d_res.text}
-        except Exception as de:
-            result["direct_binance_ping_err"] = str(de)
-
-        # Test 3: worker ping
-        try:
-            w_res = requests.get("https://binance-proxy.boburjonnushonov.workers.dev/api/v3/ping", headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
-            result["worker_binance_ping"] = {"status": w_res.status_code, "text": w_res.text}
-        except Exception as we:
-            result["worker_binance_ping_err"] = str(we)
-
-        # Test 4: account call with details
-        acc_call = binance_module.binance_api_call("/api/v3/account", signed=True)
-        result["account_result"] = acc_call
-        result["last_error"] = getattr(binance_module, "LAST_ERROR", None)
+        hosts = [
+            "https://api.binance.com",
+            "https://api1.binance.com",
+            "https://api2.binance.com",
+            "https://api3.binance.com",
+            "https://api4.binance.com",
+            "https://api-gcp.binance.com"
+        ]
+        test_results = {}
+        for h in hosts:
+            try:
+                r = requests.get(f"{h}/api/v3/ping", timeout=3)
+                test_results[h] = {"status": r.status_code, "text": r.text[:100]}
+            except Exception as he:
+                test_results[h] = {"err": str(he)}
+        result["hosts"] = test_results
     except Exception as e:
         result["fatal"] = str(e)
         result["traceback"] = traceback.format_exc()
